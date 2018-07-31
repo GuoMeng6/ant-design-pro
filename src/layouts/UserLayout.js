@@ -51,6 +51,8 @@ class UserLayout extends React.PureComponent {
   }
 
   render() {
+    console.log('************ UserLayout ************', this.props);
+
     const { routerData, match } = this.props;
     return (
       <DocumentTitle title={this.getPageTitle()}>
@@ -77,7 +79,7 @@ class UserLayout extends React.PureComponent {
               <Redirect from="/user" to={getLoginPathWithRedirectPath()} />
             </Switch>
           </div>
-          <GlobalFooter links={links} copyright={copyright} />
+          {/* <GlobalFooter links={links} copyright={copyright} /> */}
         </div>
       </DocumentTitle>
     );
