@@ -2,6 +2,11 @@ import { isUrl } from '../utils/utils';
 
 const menuData = [
   {
+    name: '首页',
+    icon: 'home',
+    path: 'home',
+  },
+  {
     name: '异常页',
     icon: 'warning',
     path: 'exception',
