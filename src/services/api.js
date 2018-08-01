@@ -11,7 +11,6 @@ export async function fakeAccountLogin(params) {
 }
 
 export async function getStandingData(params) {
-  // 执行api请求
   const salesData = [];
   for (let i = 0; i < 12; i += 1) {
     salesData.push({
@@ -26,7 +25,6 @@ export async function getStandingData(params) {
 }
 
 export async function getTimeRanking(params) {
-  // 执行api请求
   const rankingListData = [];
   for (let i = 0; i < 7; i += 1) {
     rankingListData.push({
@@ -38,5 +36,20 @@ export async function getTimeRanking(params) {
   return {
     status: 'ok',
     data: rankingListData,
+  };
+}
+
+export async function getGatherData() {
+  const gatherData = [];
+  for (let i = 0; i < 4; i += 1) {
+    gatherData.push({
+      total: Math.floor(Math.random() * 10000),
+      useCount: i === 3 ? Math.floor(Math.random() * 1000) : Math.floor(Math.random() * 1000),
+      rate: `${Math.floor(Math.random() * 100)}%`,
+    });
+  }
+  return {
+    status: 'ok',
+    data: gatherData,
   };
 }

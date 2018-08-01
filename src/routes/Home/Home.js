@@ -3,12 +3,13 @@ import { connect } from 'dva';
 import { Row, Col, Icon, Card, Tabs, DatePicker, Tooltip } from 'antd';
 import numeral from 'numeral';
 import { ChartCard, Field, Bar } from 'components/Charts';
+import G from '../../gobal';
 import { getTimeDistance } from '../../utils/utils';
 
 import styles from './Home.less';
 
 const { TabPane } = Tabs;
-const { RangePicker } = DatePicker;
+const { MonthPicker } = DatePicker;
 
 const rankingListData = [];
 for (let i = 0; i < 7; i += 1) {
@@ -20,20 +21,27 @@ for (let i = 0; i < 7; i += 1) {
 
 @connect(({ home, loading }) => ({
   home,
-  loading: loading.effects['home/fetch'],
+  loading: loading.effects['home/fetchGatherData'],
 }))
 export default class Home extends Component {
   state = {
-    rangePickerValue: getTimeDistance('year'),
+    rangePickerValue: getTimeDistance('month'),
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const { rangePickerValue } = this.state;
+    dispatch({
+      type: 'home/fetchGatherData',
+      payload: rangePickerValue,
+    });
     dispatch({
       type: 'home/fetchStandingData',
+      payload: rangePickerValue,
     });
     dispatch({
       type: 'home/fetchTimeRanking',
+      payload: rangePickerValue,
     });
   }
 
@@ -44,30 +52,43 @@ export default class Home extends Component {
     });
   }
 
-  handleRangePickerChange = rangePickerValue => {
+  handleMonthPickerChange = monthPickerValue => {
+    const unix = monthPickerValue.unix();
+    const rangePickerValue = [
+      G.moment.unix(unix).startOf('month'),
+      G.moment
+        .unix(unix)
+        .startOf('month')
+        .add(1, 'month')
+        .subtract(1, 'day'),
+    ];
     this.setState({
       rangePickerValue,
     });
     const { dispatch } = this.props;
     dispatch({
       type: 'home/fetchStandingData',
+      payload: rangePickerValue,
     });
     dispatch({
       type: 'home/fetchTimeRanking',
+      payload: rangePickerValue,
     });
   };
 
   selectDate = type => {
+    const rangePickerValue = getTimeDistance(type);
     this.setState({
-      rangePickerValue: getTimeDistance(type),
+      rangePickerValue,
     });
-
     const { dispatch } = this.props;
     dispatch({
       type: 'home/fetchStandingData',
+      payload: rangePickerValue,
     });
     dispatch({
       type: 'home/fetchTimeRanking',
+      payload: rangePickerValue,
     });
   };
 
@@ -88,7 +109,7 @@ export default class Home extends Component {
   render() {
     const { rangePickerValue } = this.state;
     const { home, loading } = this.props;
-    const { timeRanking, standingData } = home;
+    const { gatherData, timeRanking, standingData } = home;
     const salesExtra = (
       <div className={styles.salesExtraWrap}>
         <div className={styles.salesExtra}>
@@ -105,10 +126,10 @@ export default class Home extends Component {
             全年
           </a>
         </div>
-        <RangePicker
-          value={rangePickerValue}
-          onChange={this.handleRangePickerChange}
-          style={{ width: 256 }}
+        <MonthPicker
+          value={rangePickerValue[0]}
+          onChange={this.handleMonthPickerChange}
+          style={{ width: 100 }}
         />
       </div>
     );
@@ -135,13 +156,13 @@ export default class Home extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={() => <h4>{numeral(12560).format('0,0')}</h4>}
-              footer={<Field label="使用率" value="97%" />}
+              total={() => <h4>{numeral(gatherData[0].total).format('0,0')}</h4>}
+              footer={<Field label="使用率" value={gatherData[0].rate} />}
               contentHeight={46}
             >
               <font style={{ marginRight: 16 }}>
                 使用数
-                <span className={styles.trendText}>123</span>
+                <span className={styles.trendText}>{gatherData[0].useCount}</span>
               </font>
             </ChartCard>
           </Col>
@@ -155,13 +176,13 @@ export default class Home extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={numeral(1846).format('0,0')}
-              footer={<Field label="当前使用率" value="68%" />}
+              total={numeral(gatherData[1].total).format('0,0')}
+              footer={<Field label="当前使用率" value={gatherData[1].rate} />}
               contentHeight={46}
             >
               <font style={{ marginRight: 16 }}>
                 使用数
-                <span className={styles.trendText}>101</span>
+                <span className={styles.trendText}>{gatherData[1].useCount}</span>
               </font>
             </ChartCard>
           </Col>
@@ -175,13 +196,13 @@ export default class Home extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={numeral(2560).format('0,0')}
-              footer={<Field label="阅读率" value="70%" />}
+              total={numeral(gatherData[2].total).format('0,0')}
+              footer={<Field label="阅读率" value={gatherData[2].rate} />}
               contentHeight={46}
             >
               <font style={{ marginRight: 16 }}>
                 阅读量
-                <span className={styles.trendText}>1237</span>
+                <span className={styles.trendText}>{gatherData[2].useCount}</span>
               </font>
             </ChartCard>
           </Col>
@@ -195,13 +216,13 @@ export default class Home extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total="356天"
-              footer={<Field label="站坐时间比例" value="66%" />}
+              total={numeral(gatherData[3].total).format('0,0')}
+              footer={<Field label="站坐时间比例" value={gatherData[3].rate} />}
               contentHeight={46}
             >
               <font style={{ marginRight: 16 }}>
                 平均次数
-                <span className={styles.trendText}>22天</span>
+                <span className={styles.trendText}>{gatherData[3].useCount}</span>
               </font>
             </ChartCard>
           </Col>
@@ -229,7 +250,8 @@ export default class Home extends Component {
                               <span>
                                 {item.hours}
                                 <i>小时</i>
-                                {item.minutes} <i>分钟</i>
+                                {item.minutes}
+                                <i>分钟</i>
                               </span>
                             </div>
                           </li>

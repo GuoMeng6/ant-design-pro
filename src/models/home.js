@@ -1,4 +1,4 @@
-import { getStandingData, getTimeRanking } from '../services/api';
+import { getStandingData, getTimeRanking, getGatherData } from '../services/api';
 
 export default {
   namespace: 'home',
@@ -6,11 +6,18 @@ export default {
   state: {
     standingData: [],
     timeRanking: [],
-    salesData: [],
+    gatherData: [{}, {}, {}, {}],
     loading: false,
   },
 
   effects: {
+    *fetchGatherData(_, { call, put }) {
+      const response = yield call(getGatherData);
+      yield put({
+        type: 'saveGatherData',
+        payload: response,
+      });
+    },
     *fetchStandingData({ payload }, { call, put }) {
       const response = yield call(getStandingData, payload);
       yield put({
@@ -28,6 +35,12 @@ export default {
   },
 
   reducers: {
+    saveGatherData(state, { payload }) {
+      return {
+        ...state,
+        gatherData: payload.data,
+      };
+    },
     saveStandingData(state, { payload }) {
       return {
         ...state,
@@ -42,16 +55,10 @@ export default {
     },
     clear() {
       return {
-        visitData: [],
-        visitData2: [],
-        salesData: [],
-        searchData: [],
-        offlineData: [],
-        offlineChartData: [],
-        salesTypeData: [],
-        salesTypeDataOnline: [],
-        salesTypeDataOffline: [],
-        radarData: [],
+        standingData: [],
+        timeRanking: [],
+        gatherData: [{}, {}, {}, {}],
+        loading: false,
       };
     },
   },
