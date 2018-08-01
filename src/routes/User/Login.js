@@ -13,7 +13,7 @@ const { UserName, Password, Submit } = Login;
 export default class LoginPage extends Component {
   state = {
     type: 'account',
-    autoLogin: true,
+    // autoLogin: true,
   };
 
   onTabChange = type => {
@@ -34,11 +34,11 @@ export default class LoginPage extends Component {
     }
   };
 
-  changeAutoLogin = e => {
-    this.setState({
-      autoLogin: e.target.checked,
-    });
-  };
+  // changeAutoLogin = e => {
+  //   this.setState({
+  //     autoLogin: e.target.checked,
+  //   });
+  // };
 
   renderMessage = content => {
     return <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />;
@@ -51,13 +51,14 @@ export default class LoginPage extends Component {
       <div className={styles.main}>
         <Login defaultActiveKey={type} onTabChange={this.onTabChange} onSubmit={this.handleSubmit}>
           <div>
-            <h1 className={styles.login}>登录</h1>
+            <br />
+            {/* <h1 className={styles.login} /> */}
             {login.status === 'error' &&
               login.type === 'account' &&
               !submitting &&
               this.renderMessage('账户或密码错误（admin/888888）')}
-            <UserName name="userName" placeholder="admin/user" />
-            <Password name="password" placeholder="888888/123456" />
+            <UserName name="userName" placeholder="账户" />
+            <Password name="password" placeholder="密码" />
           </div>
           <Submit loading={submitting}>登录</Submit>
         </Login>
