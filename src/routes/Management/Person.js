@@ -7,7 +7,7 @@ export default class Wework extends Component {
   render() {
     return (
       <div className={styles.main}>
-        <h4>hello</h4>
+        <h3>人员管理</h3>
       </div>
     );
   }
