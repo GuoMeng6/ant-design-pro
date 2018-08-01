@@ -3,5 +3,8 @@ module.exports = {
   'primary-color': '#A6D6D0',
   'border-radius-base': '20px',
   'border-radius-sm': '10px',
+  'text-color': '#35536C',
+  'text-color-secondary': '#35536C',
+  'heading-color': '#35536C',
   // 'card-actions-background': '#0f0',
 };
