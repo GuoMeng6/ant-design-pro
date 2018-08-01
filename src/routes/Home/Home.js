@@ -1,32 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import {
-  Row,
-  Col,
-  Icon,
-  Card,
-  Tabs,
-  Table,
-  Radio,
-  DatePicker,
-  Tooltip,
-  Menu,
-  Dropdown,
-} from 'antd';
+import { Row, Col, Icon, Card, Tabs, DatePicker, Tooltip } from 'antd';
 import numeral from 'numeral';
-import {
-  ChartCard,
-  yuan,
-  MiniArea,
-  MiniBar,
-  MiniProgress,
-  Field,
-  Bar,
-  Pie,
-  TimelineChart,
-} from 'components/Charts';
-import Trend from 'components/Trend';
-import NumberInfo from 'components/NumberInfo';
+import { ChartCard, Field, Bar } from 'components/Charts';
 import { getTimeDistance } from '../../utils/utils';
 
 import styles from './Home.less';
@@ -42,20 +18,6 @@ for (let i = 0; i < 7; i += 1) {
   });
 }
 
-const salesData = [];
-for (let i = 0; i < 12; i += 1) {
-  salesData.push({
-    x: `${i + 1}月`,
-    y: Math.floor(Math.random() * 1000) + 200,
-  });
-}
-
-const Yuan = ({ children }) => (
-  <span
-    dangerouslySetInnerHTML={{ __html: yuan(children) }} /* eslint-disable-line react/no-danger */
-  />
-);
-
 @connect(({ home, loading }) => ({
   home,
   loading: loading.effects['home/fetch'],
@@ -67,9 +29,12 @@ export default class Home extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'home/fetch',
-    // });
+    dispatch({
+      type: 'home/fetchStandingData',
+    });
+    dispatch({
+      type: 'home/fetchTimeRanking',
+    });
   }
 
   componentWillUnmount() {
@@ -83,11 +48,13 @@ export default class Home extends Component {
     this.setState({
       rangePickerValue,
     });
-
     const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'chart/fetchSalesData',
-    // });
+    dispatch({
+      type: 'home/fetchStandingData',
+    });
+    dispatch({
+      type: 'home/fetchTimeRanking',
+    });
   };
 
   selectDate = type => {
@@ -96,9 +63,12 @@ export default class Home extends Component {
     });
 
     const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'home/fetchSalesData',
-    // });
+    dispatch({
+      type: 'home/fetchStandingData',
+    });
+    dispatch({
+      type: 'home/fetchTimeRanking',
+    });
   };
 
   isActive(type) {
@@ -118,8 +88,7 @@ export default class Home extends Component {
   render() {
     const { rangePickerValue } = this.state;
     const { home, loading } = this.props;
-    const { visitData } = home;
-
+    const { timeRanking, standingData } = home;
     const salesExtra = (
       <div className={styles.salesExtraWrap}>
         <div className={styles.salesExtra}>
@@ -241,45 +210,28 @@ export default class Home extends Component {
         <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
           <div className={styles.salesCard}>
             <Tabs tabBarExtraContent={salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
-              <TabPane tab="访问量" key="views">
+              <TabPane tab="站立时间趋势" key="views">
                 <Row>
-                  <Col xl={16} lg={12} md={12} sm={24} xs={24}>
+                  <Col xl={16} lg={12} md={12} sm={24} xs={24} className={styles.scalesTab}>
                     <div className={styles.salesBar}>
-                      <Bar height={292} title="访问量趋势" data={salesData} />
+                      <Bar height={292} title="" data={standingData} color="#A6D6D0" />
                     </div>
                   </Col>
                   <Col xl={8} lg={12} md={12} sm={24} xs={24}>
                     <div className={styles.salesRank}>
-                      <h4 className={styles.rankingTitle}>门店访问量排名</h4>
+                      <h4 className={styles.rankingTitle}>人员站立时间排行</h4>
                       <ul className={styles.rankingList}>
-                        {rankingListData.map((item, i) => (
+                        {timeRanking.map((item, i) => (
                           <li key={item.title}>
-                            <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
-                            <span>{item.title}</span>
-                            <span>{numeral(item.total).format('0,0')}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane tab="销售额" key="sales">
-                <Row>
-                  <Col xl={16} lg={12} md={12} sm={24} xs={24}>
-                    <div className={styles.salesBar}>
-                      <Bar height={295} title="销售额趋势" data={salesData} />
-                    </div>
-                  </Col>
-                  <Col xl={8} lg={12} md={12} sm={24} xs={24}>
-                    <div className={styles.salesRank}>
-                      <h4 className={styles.rankingTitle}>门店销售额排名</h4>
-                      <ul className={styles.rankingList}>
-                        {rankingListData.map((item, i) => (
-                          <li key={item.title}>
-                            <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
-                            <span>{item.title}</span>
-                            <span>{numeral(item.total).format('0,0')}</span>
+                            <div>
+                              <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
+                              <span>{item.title}</span>
+                              <span>
+                                {item.hours}
+                                <i>小时</i>
+                                {item.minutes} <i>分钟</i>
+                              </span>
+                            </div>
                           </li>
                         ))}
                       </ul>

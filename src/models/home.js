@@ -1,38 +1,43 @@
-import {} from '../services/api';
+import { getStandingData, getTimeRanking } from '../services/api';
 
 export default {
   namespace: 'home',
 
   state: {
-    visitData: [],
+    standingData: [],
+    timeRanking: [],
     salesData: [],
     loading: false,
   },
 
   effects: {
-    *fetch(_, { call, put }) {
-      // const response = yield call(fakeChartData);
-      // yield put({
-      //   type: 'save',
-      //   payload: response,
-      // });
+    *fetchStandingData({ payload }, { call, put }) {
+      const response = yield call(getStandingData, payload);
+      yield put({
+        type: 'saveStandingData',
+        payload: response,
+      });
     },
-    *fetchSalesData(_, { call, put }) {
-      // const response = yield call(fakeChartData);
-      // yield put({
-      //   type: 'save',
-      //   payload: {
-      //     salesData: response.salesData,
-      //   },
-      // });
+    *fetchTimeRanking({ payload }, { call, put }) {
+      const response = yield call(getTimeRanking, payload);
+      yield put({
+        type: 'saveTimeRanking',
+        payload: response,
+      });
     },
   },
 
   reducers: {
-    save(state, { payload }) {
+    saveStandingData(state, { payload }) {
       return {
         ...state,
-        ...payload,
+        standingData: payload.data,
+      };
+    },
+    saveTimeRanking(state, { payload }) {
+      return {
+        ...state,
+        timeRanking: payload.data,
       };
     },
     clear() {
