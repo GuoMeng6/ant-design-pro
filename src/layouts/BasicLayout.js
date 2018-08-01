@@ -195,11 +195,11 @@ class BasicLayout extends React.PureComponent {
 
   handleNoticeVisibleChange = visible => {
     const { dispatch } = this.props;
-    if (visible) {
-      dispatch({
-        type: 'global/fetchNotices',
-      });
-    }
+    // if (visible) {
+    //   dispatch({
+    //     type: 'global/fetchNotices',
+    //   });
+    // }
   };
 
   render() {
