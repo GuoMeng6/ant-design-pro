@@ -43,8 +43,8 @@ export async function getGatherData() {
   const gatherData = [];
   for (let i = 0; i < 4; i += 1) {
     gatherData.push({
-      total: Math.floor(Math.random() * 10000),
-      useCount: i === 3 ? Math.floor(Math.random() * 1000) : Math.floor(Math.random() * 1000),
+      total: i === 3 ? Math.floor(Math.random() * 100) : Math.floor(Math.random() * 10000),
+      useCount: Math.floor(Math.random() * 1000),
       rate: `${Math.floor(Math.random() * 100)}%`,
     });
   }
