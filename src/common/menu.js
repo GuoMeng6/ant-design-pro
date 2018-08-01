@@ -7,6 +7,17 @@ const menuData = [
     path: 'home',
   },
   {
+    name: '管理',
+    icon: 'calendar',
+    path: 'management',
+    children: [
+      {
+        name: '人员管理',
+        path: 'person',
+      },
+    ],
+  },
+  {
     name: '异常页',
     icon: 'warning',
     path: 'exception',
