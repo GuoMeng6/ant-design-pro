@@ -56,29 +56,32 @@ class UserLayout extends React.PureComponent {
     return (
       <DocumentTitle title={this.getPageTitle()}>
         <div className={styles.container}>
-          <div className={styles.content}>
-            <div className={styles.top}>
-              <div className={styles.header}>
-                <Link to="/">
-                  <img alt="logo" className={styles.logo} src={logo} />
-                  {/* <span className={styles.title}>Ant Design</span> */}
-                </Link>
+          <div className={styles.containers}>
+            <div className={styles.contents}>1</div>
+            <div className={styles.content}>
+              <div className={styles.top}>
+                <div className={styles.header}>
+                  <Link to="/">
+                    <img alt="logo" className={styles.logo} src={logo} />
+                    {/* <span className={styles.title}>Ant Design</span> */}
+                  </Link>
+                </div>
+                <div className={styles.desc}>Create Healthier & Smarter Workplace</div>
               </div>
-              <div className={styles.desc}>Create Healthier & Smarter Workplace</div>
+              <Switch>
+                {getRoutes(match.path, routerData).map(item => (
+                  <Route
+                    key={item.key}
+                    path={item.path}
+                    component={item.component}
+                    exact={item.exact}
+                  />
+                ))}
+                <Redirect from="/user" to={getLoginPathWithRedirectPath()} />
+              </Switch>
             </div>
-            <Switch>
-              {getRoutes(match.path, routerData).map(item => (
-                <Route
-                  key={item.key}
-                  path={item.path}
-                  component={item.component}
-                  exact={item.exact}
-                />
-              ))}
-              <Redirect from="/user" to={getLoginPathWithRedirectPath()} />
-            </Switch>
+            {/* <GlobalFooter links={links} copyright={copyright} /> */}
           </div>
-          {/* <GlobalFooter links={links} copyright={copyright} /> */}
         </div>
       </DocumentTitle>
     );
