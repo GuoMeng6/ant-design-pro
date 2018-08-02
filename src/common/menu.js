@@ -15,6 +15,14 @@ const menuData = [
         name: '人员管理',
         path: 'person',
       },
+      {
+        name: '设备管理',
+        path: 'equipment',
+      },
+      {
+        name: '信息管理',
+        path: 'notice',
+      },
     ],
   },
   {
