@@ -7,3 +7,11 @@ export function getAuthority() {
 export function setAuthority(authority) {
   return localStorage.setItem('antd-pro-authority', authority);
 }
+
+export function setUserInfo(user) {
+  return sessionStorage.setItem('userInfo', JSON.stringify(user));
+}
+
+export function getUserInfo() {
+  return sessionStorage.getItem('userInfo');
+}

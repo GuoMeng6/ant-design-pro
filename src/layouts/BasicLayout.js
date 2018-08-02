@@ -1,8 +1,6 @@
-// import React, { Fragment } from 'react';
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-// import { Layout, Icon, message } from 'antd';
-import { Layout, message } from 'antd';
+import { Layout, Icon, message } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
@@ -11,16 +9,16 @@ import classNames from 'classnames';
 import pathToRegexp from 'path-to-regexp';
 import { enquireScreen, unenquireScreen } from 'enquire-js';
 import GlobalHeader from '../components/GlobalHeader';
-// import GlobalFooter from '../components/GlobalFooter';
+import GlobalFooter from '../components/GlobalFooter';
 import SiderMenu from '../components/SiderMenu';
 import NotFound from '../routes/Exception/404';
 import { getRoutes } from '../utils/utils';
 import Authorized from '../utils/Authorized';
+import { getUserInfo } from '../utils/storage';
 import { getMenuData } from '../common/menu';
 import logo from '../assets/logoGreen.png';
 
-// const { Content, Header, Footer } = Layout;
-const { Content, Header } = Layout;
+const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute, check } = Authorized;
 
 /**
@@ -109,15 +107,28 @@ class BasicLayout extends React.PureComponent {
     };
   }
 
+  componentWillMount() {
+    const userInfo = getUserInfo();
+    console.log('********* BasicLayout **********', JSON.parse(userInfo));
+    const { dispatch } = this.props;
+    // return;
+    if (userInfo) {
+      dispatch({
+        type: 'user/saveUser',
+        payload: JSON.parse(userInfo),
+      });
+    } else {
+      dispatch({
+        type: 'login/logout',
+      });
+    }
+  }
+
   componentDidMount() {
     this.enquireHandler = enquireScreen(mobile => {
       this.setState({
         isMobile: mobile,
       });
-    });
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'user/fetchCurrent',
     });
   }
 
@@ -262,7 +273,7 @@ class BasicLayout extends React.PureComponent {
               <Route render={NotFound} />
             </Switch>
           </Content>
-          {/* <Footer style={{ padding: 0 }}>
+          <Footer style={{ padding: 0 }}>
             <GlobalFooter
               links={[
                 {
@@ -290,7 +301,7 @@ class BasicLayout extends React.PureComponent {
                 </Fragment>
               }
             />
-          </Footer> */}
+          </Footer>
         </Layout>
       </Layout>
     );
@@ -306,7 +317,7 @@ class BasicLayout extends React.PureComponent {
 }
 
 export default connect(({ user, global = {}, loading }) => ({
-  currentUser: user.currentUser,
+  currentUser: user.user,
   collapsed: global.collapsed,
   fetchingNotices: loading.effects['global/fetchNotices'],
   notices: global.notices,

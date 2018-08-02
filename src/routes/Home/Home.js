@@ -216,7 +216,7 @@ export default class Home extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={numeral(gatherData[3].total).format('0,0')+'天'}
+              total={`${numeral(gatherData[3].total).format('0,0')  }天`}
               footer={<Field label="站坐时间比例" value={gatherData[3].rate} />}
               contentHeight={46}
             >

@@ -8,7 +8,7 @@ const menuData = [
   },
   {
     name: '管理',
-    icon: 'calendar',
+    icon: 'table',
     path: 'management',
     children: [
       {
