@@ -1,12 +1,18 @@
 import { stringify } from 'qs';
 import request from '../utils/request';
 
-export async function fakeAccountLogin(params) {
+export async function login(params) {
   // 执行api请求
   return {
     status: 'ok',
     type: params.userName === 'admin' ? 'admin' : 'account',
     currentAuthority: 'user',
+    user: {
+      name: 'Serati Ma',
+      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+      userId: '00000001',
+      token: 'XXXX-XXXX-XXXX-XXXX',
+    },
   };
 }
 
