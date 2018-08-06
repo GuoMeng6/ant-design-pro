@@ -22,6 +22,7 @@ export default class Wework extends Component {
     },
     loading: false,
     visible: false,
+    editValue: {},
   };
 
   componentDidMount() {
@@ -40,7 +41,10 @@ export default class Wework extends Component {
   };
 
   onEdit(text, record, index) {
-    // console.log('********* 编辑 ******** ', text, record, index);
+    this.setState({
+      visible: true,
+      editValue: text,
+    });
   }
 
   onDelete(text, record, index) {
@@ -137,12 +141,12 @@ export default class Wework extends Component {
   };
 
   handleCancel = () => {
-    this.setState({ visible: false });
+    this.setState({ visible: false, editValue: {} });
   };
 
   render() {
     const { manaPerson } = this.props;
-    const { filteredInfo, pagination, loading, visible } = this.state;
+    const { filteredInfo, pagination, loading, visible, editValue } = this.state;
     const columns = this.getColumns(filteredInfo);
     // console.log('********* manaPerson ********* ', manaPerson);
     return (
@@ -189,6 +193,7 @@ export default class Wework extends Component {
         <PersonModal
           visible={visible}
           loading={loading}
+          editValue={editValue}
           handleOk={this.handleOk.bind(this)}
           handleCancel={this.handleCancel.bind(this)}
         />

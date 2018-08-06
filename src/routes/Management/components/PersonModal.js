@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Button, Input, InputNumber, Row, Col, Form, Icon, Upload } from 'antd';
+import { Modal, Button, Input, Form, Icon, Upload } from 'antd';
+import G from '../../../gobal';
 import styles from './PersonModal.less';
 
 const FormItem = Form.Item;
@@ -15,6 +16,29 @@ class PersonModal extends Component {
     imageUrl: '',
     avatarLoading: false,
   };
+
+  componentWillReceiveProps(nextProps) {
+    const { visible, editValue } = nextProps;
+    if (this.visible !== visible && !G._.isEqual(this.editValue, editValue)) {
+      this.visible = visible;
+      this.editValue = editValue;
+      if (visible && !G._.isEmpty(editValue)) {
+        nextProps.form.setFieldsValue({
+          name: editValue.name,
+          phone: editValue.phone,
+          duty: editValue.duty,
+          mark: editValue.mark,
+        });
+      } else {
+        nextProps.form.setFieldsValue({
+          name: '',
+          phone: '',
+          duty: '',
+          mark: '',
+        });
+      }
+    }
+  }
 
   normFile = e => {
     if (!e || !e.fileList) {
@@ -89,9 +113,6 @@ class PersonModal extends Component {
           </Button>,
         ]}
       >
-        {/* <Row>
-          <Col span={24}>111111111111</Col>
-        </Row> */}
         <FormItem {...formItemLayout} label="头像">
           {getFieldDecorator('upload', {
             valuePropName: 'fileList',
