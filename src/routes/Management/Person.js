@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Row, Col, Table, Button, Input, Divider, Modal } from 'antd';
 
 import styles from './Person.less';
+import PersonModal from './components/PersonModal';
 
 @connect(({ management, loading }) => ({
   management,
@@ -184,24 +185,12 @@ export default class Wework extends Component {
           </Col>
         </Row>
         {/* 弹窗 */}
-        <Modal
+        <PersonModal
           visible={visible}
-          title="新增用户"
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          footer={[
-            <Button key="back" onClick={this.handleCancel}>
-              关闭
-            </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
-              提交
-            </Button>,
-          ]}
-        >
-          <Row className={styles.lageBox}>
-            <Col span={24}>111111111111</Col>
-          </Row>
-        </Modal>
+          loading={loading}
+          handleOk={this.handleOk.bind(this)}
+          handleCancel={this.handleCancel.bind(this)}
+        />
       </div>
     );
   }
