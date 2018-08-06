@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider, Modal } from 'antd';
+import { Row, Col, Table, Button, Input, Divider } from 'antd';
 
 import styles from './Person.less';
 import PersonModal from './components/PersonModal';
 
-@connect(({ management, loading }) => ({
-  management,
-  loading: loading.effects['management/fetch'],
+@connect(({ manaPerson, loading }) => ({
+  manaPerson,
+  loading: loading.effects['manaPerson/fetch'],
 }))
 export default class Wework extends Component {
   // 表单以及分页
@@ -27,12 +27,12 @@ export default class Wework extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'management/fetch',
+      type: 'manaPerson/fetch',
     });
   }
 
   onSearch() {
-    console.log('******** 搜索 ******** ', this.state);
+    // console.log('******** 搜索 ******** ', this.state);
   }
 
   onChangeSearchInfo = e => {
@@ -40,11 +40,11 @@ export default class Wework extends Component {
   };
 
   onEdit(text, record, index) {
-    console.log('********* 编辑 ******** ', text, record, index);
+    // console.log('********* 编辑 ******** ', text, record, index);
   }
 
   onDelete(text, record, index) {
-    console.log('********* 删除 ******** ', text, record, index);
+    // console.log('********* 删除 ******** ', text, record, index);
   }
 
   getColumns(filteredInfo) {
@@ -128,7 +128,7 @@ export default class Wework extends Component {
   };
 
   handleChange = (pagination, filters, sorter) => {
-    console.log('Various parameters', pagination, filters, sorter);
+    // console.log('Various parameters', pagination, filters, sorter);
     this.setState({
       filteredInfo: filters,
       pagination,
@@ -140,10 +140,10 @@ export default class Wework extends Component {
   };
 
   render() {
-    const { management } = this.props;
+    const { manaPerson } = this.props;
     const { filteredInfo, pagination, loading, visible } = this.state;
     const columns = this.getColumns(filteredInfo);
-    // console.log('********* management ********* ', management);
+    // console.log('********* manaPerson ********* ', manaPerson);
     return (
       <div className={styles.main}>
         <h3>人员管理</h3>
@@ -177,7 +177,7 @@ export default class Wework extends Component {
           <Col span={24}>
             <Table
               rowKey="id"
-              dataSource={management.personnelList}
+              dataSource={manaPerson.personnelList}
               columns={columns}
               onChange={this.handleChange.bind(this)}
               pagination={pagination}

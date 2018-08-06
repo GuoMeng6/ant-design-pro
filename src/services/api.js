@@ -1,5 +1,5 @@
-import { stringify } from 'qs';
-import request from '../utils/request';
+// import { stringify } from 'qs';
+// import request from '../utils/request';
 
 // 登录
 export async function login(params) {
@@ -18,7 +18,7 @@ export async function login(params) {
 }
 
 // 首页获取站立时间趋势数据
-export async function getStandingData(params) {
+export async function getStandingData() {
   const salesData = [];
   for (let i = 0; i < 12; i += 1) {
     salesData.push({
@@ -33,7 +33,7 @@ export async function getStandingData(params) {
 }
 
 // 首页获取站立时间排行
-export async function getTimeRanking(params) {
+export async function getTimeRanking() {
   const rankingListData = [];
   for (let i = 0; i < 7; i += 1) {
     rankingListData.push({
@@ -78,6 +78,27 @@ export async function getPersonnelList() {
       duty: random1 === 0 ? '市场部' : random1 === 1 ? '人事部' : '技术部',
       status: random2 === 0 ? '10002' : random2 === 1 ? '1004、1005' : '未使用',
       mark: random3 === 0 ? '内部员工' : random3 === 1 ? '管理员' : '游客',
+    });
+  }
+  return {
+    status: 'ok',
+    data: userData,
+  };
+}
+// 获取设备列表
+export async function getEquipmentlList() {
+  const userData = [];
+  for (let i = 0; i < 150; i += 1) {
+    const random1 = parseInt((Math.random() * 1000) % 2);
+    const random2 = parseInt((Math.random() * 1000) % 3);
+    const random3 = parseInt((Math.random() * 1000) % 3);
+    userData.push({
+      id: i + 1,
+      daskId: `daskid${i}`,
+      status: random1 === 0 ? '使用中' : '空闲',
+      user: `lilei${i}`,
+      mark: random2 === 0 ? '备注非法' : random2 === 1 ? '备注合格' : '未备注',
+      lastTime: random3 === 0 ? '20180501' : random3 === 1 ? '20180604' : '20180101',
     });
   }
   return {

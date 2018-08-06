@@ -1,23 +1,25 @@
-import { getPersonnelList } from '../services/api';
+import { getEquipmentlList } from '../services/api';
 
 export default {
-  namespace: 'management',
+  namespace: 'manaEquip',
 
   state: {
-    data: {
-      list: [],
-      pagination: {},
-      data: [],
-      personnelList: [],
-    },
+    // equipData: {
+    //   list: [],
+    //   pagination: {},
+    //   data: [],
+    //   equipmentlList: [],
+    // },
+    equipmentlList: [],
   },
 
   effects: {
-    *fetch({ payload }, { call, put }) {
-      const response = yield call(getPersonnelList, payload);
+    *fetchEquip({ payload }, { call, put }) {
+      const response = yield call(getEquipmentlList, payload);
+      console.log('********* fetchEquip ********* ', response);
       if (response.status === 'ok') {
         yield put({
-          type: 'save',
+          type: 'equipSave',
           payload: response.data,
         });
       }
@@ -41,10 +43,10 @@ export default {
   },
 
   reducers: {
-    save(state, action) {
+    equipSave(state, action) {
       return {
         ...state,
-        personnelList: action.payload,
+        equipmentlList: action.payload,
       };
     },
   },
