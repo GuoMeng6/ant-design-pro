@@ -109,7 +109,7 @@ class BasicLayout extends React.PureComponent {
 
   componentWillMount() {
     const userInfo = getUserInfo();
-    console.log('********* BasicLayout **********', JSON.parse(userInfo));
+    // console.log('********* BasicLayout **********', JSON.parse(userInfo));
     const { dispatch } = this.props;
     // return;
     if (userInfo) {
@@ -277,6 +277,12 @@ class BasicLayout extends React.PureComponent {
             <GlobalFooter
               links={[
                 {
+                  key: 'githubs',
+                  title: <img src={require('./../assets/favicon.png')} alt="pic" />,
+                  href: 'https://github.com/ant-design/ant-design-pro',
+                  blankTarget: true,
+                },
+                {
                   key: 'Pro 首页',
                   title: 'Pro 首页',
                   href: 'http://pro.ant.design',
@@ -297,7 +303,7 @@ class BasicLayout extends React.PureComponent {
               ]}
               copyright={
                 <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
+                  Copyright <Icon type="copyright" /> 2018 站坐（宁波）技术—需要修改
                 </Fragment>
               }
             />

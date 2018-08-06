@@ -1,36 +1,9 @@
-// import React, { Fragment } from 'react';
 import React from 'react';
 import { Link, Redirect, Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
-// import { Icon } from 'antd';
-// import GlobalFooter from '../components/GlobalFooter';
 import styles from './UserLayout.less';
 import logo from '../assets/logoGreen.png';
 import { getRoutes, getPageQuery, getQueryPath } from '../utils/utils';
-
-// const links = [
-//   {
-//     key: 'help',
-//     title: '帮助',
-//     href: '',
-//   },
-//   {
-//     key: 'privacy',
-//     title: '隐私',
-//     href: '',
-//   },
-//   {
-//     key: 'terms',
-//     title: '条款',
-//     href: '',
-//   },
-// ];
-
-// const copyright = (
-//   <Fragment>
-//     Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
-//   </Fragment>
-// );
 
 function getLoginPathWithRedirectPath() {
   const params = getPageQuery();
@@ -63,7 +36,6 @@ class UserLayout extends React.PureComponent {
                 <div className={styles.header}>
                   <Link to="/">
                     <img alt="logo" className={styles.logo} src={logo} />
-                    {/* <span className={styles.title}>Ant Design</span> */}
                   </Link>
                 </div>
                 <div className={styles.desc}>Create Healthier & Smarter Workplace</div>
@@ -79,8 +51,9 @@ class UserLayout extends React.PureComponent {
                 ))}
                 <Redirect from="/user" to={getLoginPathWithRedirectPath()} />
               </Switch>
+              <p className={styles.ps}>帮助 隐私 条款</p>
+              <p className={styles.ps}>2018 站坐（宁波）技术—需要修改</p>
             </div>
-            {/* <GlobalFooter links={links} copyright={copyright} /> */}
           </div>
         </div>
       </DocumentTitle>
