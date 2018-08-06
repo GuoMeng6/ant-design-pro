@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, Input, Row, Col, Form, Icon, Upload } from 'antd';
+import { Modal, Button, Input, InputNumber, Row, Col, Form, Icon, Upload } from 'antd';
 import styles from './PersonModal.less';
 
 const FormItem = Form.Item;
@@ -16,24 +16,53 @@ class PersonModal extends Component {
     avatarLoading: false,
   };
 
+  normFile = e => {
+    if (!e || !e.fileList) {
+      return e;
+    }
+    const { fileList } = e;
+    return fileList;
+  };
+
+  checkPhone = (rule, value, callback) => {
+    if (!value) {
+      callback(' ');
+      return;
+    }
+    const re = /^1[3|4|5|8][0-9]\d{4,8}$/;
+    if (value.length === 11 || re.test(value)) {
+      callback();
+    } else {
+      callback('手机号格式有误');
+    }
+  };
+
+  okHandle = () => {
+    const { form, handleOk } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      form.resetFields();
+      handleOk(fieldsValue);
+    });
+  };
+
   handleChange = info => {
     if (info.file.status === 'uploading') {
       this.setState({ avatarLoading: true });
       return;
     }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl =>
+    if (info.file.status === 'error') {
+      getBase64(info.file.originFileObj, imageUrl => {
         this.setState({
           imageUrl,
           avatarLoading: false,
-        })
-      );
+        });
+      });
     }
   };
 
   render() {
-    const { visible, loading, handleCancel, handleOk, form } = this.props;
+    const { visible, loading, handleCancel, form } = this.props;
     const { imageUrl, avatarLoading } = this.state;
     const { getFieldDecorator } = form;
     const uploadButton = (
@@ -49,13 +78,13 @@ class PersonModal extends Component {
       <Modal
         visible={visible}
         title="新增用户"
-        onOk={handleOk}
+        onOk={this.okHandle}
         onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
             关闭
           </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+          <Button key="submit" type="primary" loading={loading} onClick={this.okHandle}>
             提交
           </Button>,
         ]}
@@ -63,12 +92,7 @@ class PersonModal extends Component {
         {/* <Row>
           <Col span={24}>111111111111</Col>
         </Row> */}
-        <FormItem
-          {...formItemLayout}
-          label="Upload"
-          showUploadList={false}
-          onChange={this.handleChange}
-        >
+        <FormItem {...formItemLayout} label="头像">
           {getFieldDecorator('upload', {
             valuePropName: 'fileList',
             getValueFromEvent: this.normFile,
@@ -76,12 +100,66 @@ class PersonModal extends Component {
             <Upload
               className={styles.avatarUploader}
               name="avatar"
-              action="/upload.do"
-              listType="picture"
+              listType="picture-card"
+              showUploadList={false}
+              action="//jsonplaceholder.typicode.com/posts/"
+              onChange={this.handleChange.bind(this)}
             >
-              {imageUrl ? <img src={imageUrl} alt="avatar" /> : uploadButton}
+              {imageUrl ? (
+                <img className={styles.avatar} src={imageUrl} alt="avatar" />
+              ) : (
+                uploadButton
+              )}
             </Upload>
           )}
+        </FormItem>
+        <br />
+        <FormItem {...formItemLayout} label="姓名">
+          {getFieldDecorator('name', {
+            rules: [
+              {
+                required: true,
+                message: '姓名不能为空',
+              },
+              {
+                max: 20,
+                message: '最大长度20',
+              },
+            ],
+          })(<Input placeholder="请输入姓名" />)}
+        </FormItem>
+        <FormItem {...formItemLayout} label="手机">
+          {getFieldDecorator('phone', {
+            rules: [
+              {
+                required: true,
+                message: '手机号不能为空',
+              },
+              {
+                validator: this.checkPhone.bind(this),
+              },
+            ],
+          })(<Input placeholder="请输入手机号" />)}
+        </FormItem>
+        <FormItem {...formItemLayout} label="职务">
+          {getFieldDecorator('duty', {
+            rules: [
+              {
+                max: 10,
+                message: '最大长度10',
+              },
+            ],
+          })(<Input placeholder="请输入职务" />)}
+        </FormItem>
+        <FormItem {...formItemLayout} label="备注">
+          {getFieldDecorator('mark', {
+            rules: [
+              {
+                max: 50,
+                message: '最大长度50',
+              },
+            ],
+          })(<Input placeholder="请输入职务" />)}
         </FormItem>
       </Modal>
     );

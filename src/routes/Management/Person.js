@@ -120,7 +120,8 @@ export default class Wework extends Component {
     });
   };
 
-  handleOk = () => {
+  handleOk = fieldsValue => {
+    console.log('******* handleOK ******* ', fieldsValue);
     this.setState({ loading: true });
     setTimeout(() => {
       this.setState({ loading: false, visible: false });
