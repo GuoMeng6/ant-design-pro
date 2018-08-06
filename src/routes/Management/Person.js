@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider } from 'antd';
+import { Row, Col, Table, Button, Input, Divider, Modal } from 'antd';
 
 import styles from './Person.less';
 
@@ -9,9 +9,11 @@ import styles from './Person.less';
   loading: loading.effects['management/fetch'],
 }))
 export default class Wework extends Component {
+  // 表单以及分页
   state = {
     filteredInfo: {},
-    sortedInfo: {},
+    loading: false,
+    visible: false,
   };
 
   componentDidMount() {
@@ -21,17 +23,36 @@ export default class Wework extends Component {
     });
   }
 
-  handleChange = (pagination, filters, sorter) => {
-    console.log('Various parameters', pagination, filters, sorter);
+  handleChange = filters => {
+    // console.log('Various parameters', pagination, filters, sorter);
     this.setState({
       filteredInfo: filters,
-      sortedInfo: sorter,
     });
   };
 
+  // 弹窗
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleOk = () => {
+    this.setState({ loading: true });
+    setTimeout(() => {
+      this.setState({ loading: false, visible: false });
+    }, 3000);
+  };
+
+  handleCancel = () => {
+    this.setState({ visible: false });
+  };
+  // 弹窗
+
   render() {
     const { management } = this.props;
-    const { filteredInfo, sortedInfo } = this.state;
+    const { filteredInfo } = this.state;
+    const { visible, loading } = this.state;
     const columns = [
       {
         title: '序号',
@@ -83,7 +104,7 @@ export default class Wework extends Component {
         <Row className={styles.lageBox}>
           {/* 查询 */}
           <Col span={12}>
-            <Button icon="plus" type="primary">
+            <Button icon="plus" type="primary" onClick={this.showModal}>
               添加
             </Button>
           </Col>
@@ -105,6 +126,25 @@ export default class Wework extends Component {
             />
           </Col>
         </Row>
+        {/* 弹窗 */}
+        <Modal
+          visible={visible}
+          title="新增用户"
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          footer={[
+            <Button key="back" onClick={this.handleCancel}>
+              关闭
+            </Button>,
+            <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
+              提交
+            </Button>,
+          ]}
+        >
+          <Row className={styles.lageBox}>
+            <Col span={24}>111111111111</Col>
+          </Row>
+        </Modal>
       </div>
     );
   }
