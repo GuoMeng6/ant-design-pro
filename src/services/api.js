@@ -1,6 +1,7 @@
 import { stringify } from 'qs';
 import request from '../utils/request';
 
+// 登录
 export async function login(params) {
   // 执行api请求
   return {
@@ -16,6 +17,7 @@ export async function login(params) {
   };
 }
 
+// 首页获取站立时间趋势数据
 export async function getStandingData(params) {
   const salesData = [];
   for (let i = 0; i < 12; i += 1) {
@@ -30,6 +32,7 @@ export async function getStandingData(params) {
   };
 }
 
+// 首页获取站立时间排行
 export async function getTimeRanking(params) {
   const rankingListData = [];
   for (let i = 0; i < 7; i += 1) {
@@ -45,6 +48,7 @@ export async function getTimeRanking(params) {
   };
 }
 
+// 首页获取收集的数据
 export async function getGatherData() {
   const gatherData = [];
   for (let i = 0; i < 4; i += 1) {
@@ -57,5 +61,27 @@ export async function getGatherData() {
   return {
     status: 'ok',
     data: gatherData,
+  };
+}
+
+// 获取人员数组
+export async function getPersonnelList() {
+  const userData = [];
+  for (let i = 0; i < 50; i += 1) {
+    const random1 = parseInt((Math.random() * 1000) % 3);
+    const random2 = parseInt((Math.random() * 1000) % 3);
+    const random3 = parseInt((Math.random() * 1000) % 3);
+    userData.push({
+      id: i,
+      name: `大华${i}`,
+      phone: 13800000000 + i,
+      duty: random1 === 0 ? '市场部' : random1 === 1 ? '人事部' : '技术部',
+      status: random2 === 0 ? '10002' : random2 === 1 ? '1004、1005' : '未使用',
+      mark: random3 === 0 ? '内部员工' : random3 === 1 ? '管理员' : '游客',
+    });
+  }
+  return {
+    status: 'ok',
+    data: userData,
   };
 }
