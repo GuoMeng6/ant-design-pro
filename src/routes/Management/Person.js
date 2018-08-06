@@ -10,8 +10,14 @@ import styles from './Person.less';
 }))
 export default class Wework extends Component {
   state = {
+    searchInfo: '',
     filteredInfo: {},
-    sortedInfo: {},
+    pagination: {
+      current: 1,
+      pageSize: 15,
+      showQuickJumper: true,
+      total: 250,
+    },
   };
 
   componentDidMount() {
@@ -21,41 +27,53 @@ export default class Wework extends Component {
     });
   }
 
-  handleChange = (pagination, filters, sorter) => {
-    console.log('Various parameters', pagination, filters, sorter);
-    this.setState({
-      filteredInfo: filters,
-      sortedInfo: sorter,
-    });
+  onSearch() {
+    console.log('******** 搜索 ******** ', this.state);
+  }
+
+  onChangeSearchInfo = e => {
+    this.setState({ searchInfo: e.target.value });
   };
 
-  render() {
-    const { management } = this.props;
-    const { filteredInfo, sortedInfo } = this.state;
+  onEdit(text, record, index) {
+    console.log('********* 编辑 ******** ', text, record, index);
+  }
+
+  onDelete(text, record, index) {
+    console.log('********* 删除 ******** ', text, record, index);
+  }
+
+  getColumns(filteredInfo) {
     const columns = [
       {
         title: '序号',
         dataIndex: 'id',
+        key: 'id',
       },
       {
         title: '姓名',
         dataIndex: 'name',
+        key: 'name',
       },
       {
         title: '手机',
         dataIndex: 'phone',
+        key: 'phone',
       },
       {
         title: '职务',
         dataIndex: 'duty',
+        key: 'duty',
       },
       {
         title: '使用状态',
         dataIndex: 'status',
+        key: 'status',
       },
       {
         title: '备注',
         dataIndex: 'mark',
+        key: 'mark',
         filters: [
           { text: '管理员', value: '管理员' },
           { text: '内部员工', value: '内部员工' },
@@ -66,15 +84,43 @@ export default class Wework extends Component {
       },
       {
         title: '操作',
-        render: () => (
+        key: 'setting',
+        render: (text, record, index) => (
           <Fragment>
-            <a href="">编辑</a>
+            <a
+              onClick={() => {
+                this.onEdit(text, record, index);
+              }}
+            >
+              编辑
+            </a>
             <Divider type="vertical" />
-            <a href="">删除</a>
+            <a
+              onClick={() => {
+                this.onDelete(text, record, index);
+              }}
+            >
+              删除
+            </a>
           </Fragment>
         ),
       },
     ];
+    return columns;
+  }
+
+  handleChange = (pagination, filters, sorter) => {
+    console.log('Various parameters', pagination, filters, sorter);
+    this.setState({
+      filteredInfo: filters,
+      pagination,
+    });
+  };
+
+  render() {
+    const { management } = this.props;
+    const { filteredInfo, pagination } = this.state;
+    const columns = this.getColumns(filteredInfo);
     // console.log('********* management ********* ', management);
     return (
       <div className={styles.main}>
@@ -88,10 +134,19 @@ export default class Wework extends Component {
             </Button>
           </Col>
           <Col span={12}>
-            <Button className={styles.rights} icon="search" type="primary">
+            <Button
+              className={styles.rights}
+              icon="search"
+              type="primary"
+              onClick={this.onSearch.bind(this)}
+            >
               搜索
             </Button>
-            <Input className={styles.widthInput} placeholder="姓名 / 手机 / 备注" />
+            <Input
+              className={styles.widthInput}
+              placeholder="姓名 / 手机 / 备注"
+              onChange={this.onChangeSearchInfo.bind(this)}
+            />
           </Col>
           <br />
         </Row>
@@ -99,9 +154,11 @@ export default class Wework extends Component {
           {/* 表单 */}
           <Col span={24}>
             <Table
+              rowKey="id"
               dataSource={management.personnelList}
               columns={columns}
               onChange={this.handleChange.bind(this)}
+              pagination={pagination}
             />
           </Col>
         </Row>

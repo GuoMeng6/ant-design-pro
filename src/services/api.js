@@ -67,7 +67,7 @@ export async function getGatherData() {
 // 获取人员数组
 export async function getPersonnelList() {
   const userData = [];
-  for (let i = 0; i < 50; i += 1) {
+  for (let i = 0; i < 150; i += 1) {
     const random1 = parseInt((Math.random() * 1000) % 3);
     const random2 = parseInt((Math.random() * 1000) % 3);
     const random3 = parseInt((Math.random() * 1000) % 3);
