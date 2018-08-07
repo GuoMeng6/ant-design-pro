@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, Row, Col, Button } from 'antd';
 import { convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { Editor } from 'react-draft-wysiwyg';
@@ -16,28 +16,43 @@ for (let i = 10; i < 36; i += 1) {
 
 class NewNoticeForm extends Component {
   state = {
-    editorState: {},
+    editorState: '',
   };
+
+  onEditorStateChange(editorState) {
+    // console.log(
+    //   '******** onEditorStateChange ******* ',
+    //   draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    // );
+
+    this.setState({
+      editorState: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+    });
+  }
 
   handleChange(value) {
     console.log(`Selected: ${value}`);
   }
 
-  onEditorStateChange(editorState) {
-    console.log(
-      '******** onEditorStateChange ******* ',
-      draftToHtml(convertToRaw(editorState.getCurrentContent()))
-    );
-
-    this.setState({
-      editorState,
+  handleCommit() {
+    const { form } = this.props;
+    form.validateFields((err, values) => {
+      const { editorState } = this.state;
     });
+  }
+
+  checkEditor(rule, value, callback) {
+    const { editorState } = this.state;
+    if (editorState === '' || editorState.length === 8) {
+      callback('请填写内容');
+    } else {
+      callback();
+    }
   }
 
   render() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
-    const { editorState } = this.state;
     return (
       <Form>
         <FormItem>
@@ -69,19 +84,27 @@ class NewNoticeForm extends Component {
         </FormItem>
         <FormItem>
           {getFieldDecorator('editor', {
-            rules: [{ required: true, message: '请填写内容' }],
+            rules: [{ validator: this.checkEditor.bind(this) }],
           })(
-            <div style={{ height: 400 }}>
-              <Editor
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName="editorClassName"
-                editorStyle={{ width: '100%', height: 370, backgroundColor: '#ffffff' }}
-                onEditorStateChange={this.onEditorStateChange.bind(this)}
-              />
-            </div>
+            <Editor
+              toolbarClassName="toolbarClassName"
+              wrapperClassName="wrapperClassName"
+              editorClassName="editorClassName"
+              editorStyle={{ width: '100%', height: 350, backgroundColor: '#ffffff' }}
+              onEditorStateChange={this.onEditorStateChange.bind(this)}
+            />
           )}
         </FormItem>
+        <Row>
+          <Col span={24} style={{ textAlign: 'left' }}>
+            <Button type="primary" htmlType="submit" onClick={this.handleCommit.bind(this)}>
+              发布
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={() => {}}>
+              取消
+            </Button>
+          </Col>
+        </Row>
       </Form>
     );
   }
