@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, Row, Col, Button } from 'antd';
 import { convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { Editor } from 'react-draft-wysiwyg';
@@ -19,10 +19,6 @@ class NewNoticeForm extends Component {
     editorState: {},
   };
 
-  handleChange(value) {
-    console.log(`Selected: ${value}`);
-  }
-
   onEditorStateChange(editorState) {
     console.log(
       '******** onEditorStateChange ******* ',
@@ -34,12 +30,26 @@ class NewNoticeForm extends Component {
     });
   }
 
+  handleChange(value) {
+    console.log(`Selected: ${value}`);
+  }
+
+  handleCommit(e) {
+    console.log('********* e ********* ', e);
+    this.props.form.validateFields((err, values) => {
+      console.log('Received values of form: ', { err, values });
+    });
+  }
+
+  checkEditor(rule, value, callback) {
+    console.log('******** checkEditor ******** ', { rule, value });
+  }
+
   render() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
-    const { editorState } = this.state;
     return (
-      <Form>
+      <Form onSubmit={this.handleCommit.bind(this)}>
         <FormItem>
           {getFieldDecorator('title', {
             rules: [
@@ -69,19 +79,29 @@ class NewNoticeForm extends Component {
         </FormItem>
         <FormItem>
           {getFieldDecorator('editor', {
-            rules: [{ required: true, message: '请填写内容' }],
+            rules: [{ validator: this.checkEditor.bind(this) }],
           })(
             <div style={{ height: 500, backgroundColor: '#ffffff' }}>
               <Editor
                 toolbarClassName="toolbarClassName"
                 wrapperClassName="wrapperClassName"
                 editorClassName="editorClassName"
-                editorStyle={{ width: '100%', height: 500 }}
+                editorStyle={{ width: '100%' }}
                 onEditorStateChange={this.onEditorStateChange.bind(this)}
               />
             </div>
           )}
         </FormItem>
+        <Row>
+          <Col span={24} style={{ textAlign: 'left' }}>
+            <Button type="primary" htmlType="submit">
+              发布
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={() => {}}>
+              取消
+            </Button>
+          </Col>
+        </Row>
       </Form>
     );
   }
