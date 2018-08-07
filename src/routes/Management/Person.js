@@ -40,7 +40,7 @@ export default class Wework extends Component {
     this.setState({ searchInfo: e.target.value });
   };
 
-  onEdit(text, record, index) {
+  onEdit(text) {
     this.setState({
       visible: true,
       editValue: text,
