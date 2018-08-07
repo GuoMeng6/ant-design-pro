@@ -1,17 +1,17 @@
-import { getPersonnelList } from '../services/api';
+import { getNoticeList } from '../services/api';
 
 export default {
-  namespace: 'manaPerson',
+  namespace: 'manaNotice',
 
   state: {
     data: {
-      personnelList: [],
+      noticeList: [],
     },
   },
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(getPersonnelList, payload);
+      const response = yield call(getNoticeList, payload);
       if (response.status === 'ok') {
         yield put({
           type: 'save',
@@ -25,7 +25,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        personnelList: action.payload,
+        noticeList: action.payload,
       };
     },
   },

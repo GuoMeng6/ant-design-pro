@@ -1,3 +1,4 @@
+import G from '../gobal';
 // import { stringify } from 'qs';
 // import request from '../utils/request';
 
@@ -99,6 +100,25 @@ export async function getEquipmentlList() {
       user: `lilei${i}`,
       mark: random2 === 0 ? '备注非法' : random2 === 1 ? '备注合格' : '未备注',
       lastTime: random3 === 0 ? '20180501' : random3 === 1 ? '20180604' : '20180101',
+    });
+  }
+  return {
+    status: 'ok',
+    data: userData,
+  };
+}
+
+// 获去通知列表
+export async function getNoticeList() {
+  const userData = [];
+  const unix = G.moment().unix();
+  for (let i = 0; i < 150; i += 1) {
+    userData.push({
+      id: i + 1,
+      noticeId: `notice${i}`,
+      title: `上海自来水来自海上${i}`,
+      receiver: `大明 ${i}`,
+      createdAt: G.moment.unix(unix + i * 600).format('MM/DD  hh:mm'),
     });
   }
   return {
