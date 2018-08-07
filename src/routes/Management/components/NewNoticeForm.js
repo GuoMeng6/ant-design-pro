@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Select } from 'antd';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const SelectOption = Select.Option;
 
@@ -11,13 +13,26 @@ for (let i = 10; i < 36; i += 1) {
 }
 
 class NewNoticeForm extends Component {
+  state = {
+    editorState: {},
+  };
+
   handleChange(value) {
     console.log(`Selected: ${value}`);
+  }
+
+  onEditorStateChange(editorState) {
+    console.log('******** onEditorStateChange ******* ', JSON.stringify(editorState));
+
+    this.setState({
+      editorState,
+    });
   }
 
   render() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
+    const { editorState } = this.state;
     return (
       <Form>
         <FormItem>
@@ -48,6 +63,21 @@ class NewNoticeForm extends Component {
             >
               {children}
             </Select>
+          )}
+        </FormItem>
+        <FormItem>
+          {getFieldDecorator('editor', {
+            rules: [{ required: true, message: '请填写内容' }],
+          })(
+            <div style={{ height: 500, backgroundColor: '#ffffff' }}>
+              <Editor
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName="editorClassName"
+                editorStyle={{ width: '100%', height: 500 }}
+                onEditorStateChange={this.onEditorStateChange.bind(this)}
+              />
+            </div>
           )}
         </FormItem>
       </Form>

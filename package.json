@@ -43,6 +43,7 @@
     "react-container-query": "^0.11.0",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.4.1",
+    "react-draft-wysiwyg": "^1.12.13",
     "react-fittext": "^1.0.0",
     "rollbar": "^2.3.4",
     "setprototypeof": "^1.1.0",
