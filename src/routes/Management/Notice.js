@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider } from 'antd';
+import { Row, Col, Table, Button, Input, Divider, Drawer, Icon } from 'antd';
 
 import styles from './Person.less';
 
@@ -18,7 +18,27 @@ export default class Notice extends Component {
       showQuickJumper: true,
       total: 250,
     },
+    visible: false,
+    detail: {
+      title: '标题',
+      lookNum: 20,
+      lastTime: '2018-04',
+      content: '<p>Hello World</p>'
+    }
   };
+  //详情
+  showDrawer = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  onClose = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+  //详情
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -34,6 +54,19 @@ export default class Notice extends Component {
   onChangeSearchInfo = e => {
     this.setState({ searchInfo: e.target.value });
   };
+
+  onDetail(text, record, index) {
+    console.log('********* 详情 ******** ', text, record, index);
+    this.setState({
+      detail: {
+        title: text.title,
+        lookNum: 20,
+        lastTime: text.createdAt,
+        content: '<p>Hello World</p>'
+      }
+    });
+    this.showDrawer();
+  }
 
   getColumns(filteredInfo) {
     const columns = [
@@ -62,9 +95,13 @@ export default class Notice extends Component {
         key: 'setting',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={() => {}}>复制</a>
+            <a onClick={() => { }}>复制</a>
             <Divider type="vertical" />
-            <a onClick={() => {}}>置顶</a>
+            <a onClick={() => { }}>置顶</a>
+            <Divider type="vertical" />
+            <a onClick={() => {
+              this.onDetail(text, record, index);
+            }}>详情</a>
           </Fragment>
         ),
       },
@@ -129,6 +166,19 @@ export default class Notice extends Component {
             />
           </Col>
         </Row>
+        <Drawer
+          title={this.state.detail.title}
+          placement="right"
+          closable={false}
+          onClose={this.onClose}
+          visible={this.state.visible}
+        >
+          <p>
+            <Icon type="eye-o" style={{ marginRight: '6px' }}></Icon>{this.state.detail.lookNum}
+            <Icon type="clock-circle-o" style={{ marginLeft: '10px', marginRight: '6px' }}></Icon>{this.state.detail.lastTime}
+          </p>
+          <div dangerouslySetInnerHTML={{ __html: this.state.detail.content }}></div>
+        </Drawer>
       </div>
     );
   }
