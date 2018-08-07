@@ -71,12 +71,12 @@ class NewNoticeForm extends Component {
           {getFieldDecorator('editor', {
             rules: [{ required: true, message: '请填写内容' }],
           })(
-            <div style={{ height: 500, backgroundColor: '#ffffff' }}>
+            <div style={{ height: 400 }}>
               <Editor
                 toolbarClassName="toolbarClassName"
                 wrapperClassName="wrapperClassName"
                 editorClassName="editorClassName"
-                editorStyle={{ width: '100%', height: 500 }}
+                editorStyle={{ width: '100%', height: 370, backgroundColor: '#ffffff' }}
                 onEditorStateChange={this.onEditorStateChange.bind(this)}
               />
             </div>
