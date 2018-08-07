@@ -16,17 +16,17 @@ for (let i = 10; i < 36; i += 1) {
 
 class NewNoticeForm extends Component {
   state = {
-    editorState: {},
+    editorState: '',
   };
 
   onEditorStateChange(editorState) {
-    console.log(
-      '******** onEditorStateChange ******* ',
-      draftToHtml(convertToRaw(editorState.getCurrentContent()))
-    );
+    // console.log(
+    //   '******** onEditorStateChange ******* ',
+    //   draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    // );
 
     this.setState({
-      editorState,
+      editorState: draftToHtml(convertToRaw(editorState.getCurrentContent())),
     });
   }
 
@@ -34,22 +34,27 @@ class NewNoticeForm extends Component {
     console.log(`Selected: ${value}`);
   }
 
-  handleCommit(e) {
-    console.log('********* e ********* ', e);
-    this.props.form.validateFields((err, values) => {
-      console.log('Received values of form: ', { err, values });
+  handleCommit() {
+    const { form } = this.props;
+    form.validateFields((err, values) => {
+      const { editorState } = this.state;
     });
   }
 
   checkEditor(rule, value, callback) {
-    console.log('******** checkEditor ******** ', { rule, value });
+    const { editorState } = this.state;
+    if (editorState === '' || editorState.length === 8) {
+      callback('请填写内容');
+    } else {
+      callback();
+    }
   }
 
   render() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
     return (
-      <Form onSubmit={this.handleCommit.bind(this)}>
+      <Form>
         <FormItem>
           {getFieldDecorator('title', {
             rules: [
@@ -81,20 +86,18 @@ class NewNoticeForm extends Component {
           {getFieldDecorator('editor', {
             rules: [{ validator: this.checkEditor.bind(this) }],
           })(
-            <div style={{ height: 500, backgroundColor: '#ffffff' }}>
-              <Editor
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName="editorClassName"
-                editorStyle={{ width: '100%' }}
-                onEditorStateChange={this.onEditorStateChange.bind(this)}
-              />
-            </div>
+            <Editor
+              toolbarClassName="toolbarClassName"
+              wrapperClassName="wrapperClassName"
+              editorClassName="editorClassName"
+              editorStyle={{ width: '100%', height: 350, backgroundColor: '#ffffff' }}
+              onEditorStateChange={this.onEditorStateChange.bind(this)}
+            />
           )}
         </FormItem>
         <Row>
           <Col span={24} style={{ textAlign: 'left' }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" onClick={this.handleCommit.bind(this)}>
               发布
             </Button>
             <Button style={{ marginLeft: 8 }} onClick={() => {}}>
