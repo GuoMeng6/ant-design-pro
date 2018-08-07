@@ -124,12 +124,16 @@ export default class Wework extends Component {
     });
   };
 
-  handleOk = fieldsValue => {
-    console.log('******* handleOK ******* ', fieldsValue);
+  handleOk = () => {
+    // console.log('******* handleOK ******* ', fieldsValue);
     this.setState({ loading: true });
     setTimeout(() => {
       this.setState({ loading: false, visible: false });
     }, 3000);
+  }
+
+  handleCancel = () => {
+    this.setState({ visible: false, editValue: {} });
   };
 
   handleChange = (pagination, filters, sorter) => {
@@ -138,10 +142,6 @@ export default class Wework extends Component {
       filteredInfo: filters,
       pagination,
     });
-  };
-
-  handleCancel = () => {
-    this.setState({ visible: false, editValue: {} });
   };
 
   render() {
