@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Select } from 'antd';
+import { convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -22,7 +24,10 @@ class NewNoticeForm extends Component {
   }
 
   onEditorStateChange(editorState) {
-    console.log('******** onEditorStateChange ******* ', JSON.stringify(editorState));
+    console.log(
+      '******** onEditorStateChange ******* ',
+      draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    );
 
     this.setState({
       editorState,
@@ -56,9 +61,6 @@ class NewNoticeForm extends Component {
               size="large"
               placeholder="请选择接收人"
               onChange={this.handleChange.bind(this)}
-              filterOption={(inputValue, option) => {
-                console.log('********** filterOption ********* ', { inputValue, option });
-              }}
               style={{ width: '100%' }}
             >
               {children}
