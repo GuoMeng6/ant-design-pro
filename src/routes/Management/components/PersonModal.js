@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import * as qiniu from 'qiniu-js';
+import * as qiniuNode from 'qiniu';
 import { Modal, Button, Input, Form, Icon, Upload } from 'antd';
 import G from '../../../gobal';
 import styles from './PersonModal.less';
 
 const FormItem = Form.Item;
+
+const ACCESSKEY = 'h07mPP3LHfjO8BHJfCyIRsiichflVYIHtyNkXNoM';
+const SECRETKEY = '6keig4uqFJFLjs80aLAPfjb3rnaMaiPOgRNJ9uik';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -86,56 +90,34 @@ class PersonModal extends Component {
     }
   };
 
-  next(value) {
-    console.log('******* next ******* ', value);
-  }
+  next(value) {}
 
   error(err) {
-    console.log('******* error ******* ', err);
+    this.setState({ avatarLoading: false });
   }
 
   complete(response) {
-    console.log('******* complete ******* ', response);
+    this.setState({ avatarLoading: false });
   }
 
   beforeUpload(file) {
-    const isJPG = file.type === 'image/jpeg';
-    const isPNG = file.type === 'image/png';
-    const isGIF = file.type === 'image/gif';
-    // console.log('******* beforeUpload ******** ', file, isJPG, isPNG, isGIF);
-    if (!isJPG && !isPNG && !isGIF) {
-      // message.error('格式不支持');
-      return false;
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    console.log(file.size, isLt2M);
-    if (!isLt2M) {
-      // message.error('图片大小不能超过2MB!');
-    }
     const { user } = this.props.user;
-    const config = {
-      useCdnDomain: true,
-    };
-    const putExtra = {
-      fname: '',
-      params: {},
-      mimeType: ['image/png', 'image/jpeg', 'image/gif'],
-    };
-    const observable = qiniu.upload(
-      file,
-      '000001.png',
-      'h07mPP3LHfjO8BHJfCyIRsiichflVYIHtyNkXNoM:ZyKB9eOlJ8mmTdH_VumDxehPjXI=:eyJzY29wZSI6ImRzaG93OjAwMDAwMS5wbmciLCJkZWFkbGluZSI6MTUzMzY0NTc0M30=',
-      putExtra,
-      config
-    );
+    const config = { useCdnDomain: true };
+    const putExtra = { mimeType: ['image/png', 'image/jpeg', 'image/gif'] };
+    const avatarUrl = `${user.userId}-${G.moment().unix()}.png`;
+    const bucket = `dshow:${avatarUrl}`;
+    const mac = new qiniuNode.auth.digest.Mac(ACCESSKEY, SECRETKEY);
+    const options = { scope: bucket };
+    const putPolicy = new qiniuNode.rs.PutPolicy(options);
+    const token = putPolicy.uploadToken(mac);
+    this.setState({ avatarLoading: true });
+    const observable = qiniu.upload(file, avatarUrl, token, putExtra, config);
     observable.subscribe(this.next.bind(this), this.error.bind(this), this.complete.bind(this));
     return false;
-    // return (isJPG && isLt2M) || (isPNG && isLt2M) || (isGIF && isLt2M);
   }
 
   render() {
     const { visible, loading, handleCancel, form, user } = this.props;
-
     const { imageUrl, avatarLoading } = this.state;
     const { getFieldDecorator } = form;
     const uploadButton = (
@@ -171,8 +153,8 @@ class PersonModal extends Component {
               className={styles.avatarUploader}
               name="avatar"
               listType="picture-card"
+              accept="image/*"
               showUploadList={false}
-              // action="http://upload.qiniup.com"
               onChange={this.handleChange.bind(this)}
               beforeUpload={this.beforeUpload.bind(this)}
             >
