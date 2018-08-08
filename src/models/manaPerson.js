@@ -5,7 +5,9 @@ export default {
 
   state: {
     data: {
-      personnelList: [],
+      dataList: [],
+      currentPage: 1,
+      currentNum: 15,
     },
   },
 
@@ -25,7 +27,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        personnelList: action.payload,
+        data: action.payload,
       };
     },
   },

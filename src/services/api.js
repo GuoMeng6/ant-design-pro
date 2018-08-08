@@ -66,16 +66,16 @@ export async function getGatherData() {
 }
 
 // 获取人员数组
-export async function getPersonnelList() {
+export async function getPersonnelList(payload) {
   const userData = [];
-  for (let i = 0; i < 150; i += 1) {
+  for (let i = 0; i < payload.currentNum; i += 1) {
     const random1 = parseInt((Math.random() * 1000) % 3);
     const random2 = parseInt((Math.random() * 1000) % 3);
     const random3 = parseInt((Math.random() * 1000) % 3);
     userData.push({
-      id: i,
-      name: `大华${i}`,
-      phone: 13800000000 + i,
+      id: (payload.currentPage - 1) * 10 + i + 1,
+      name: `大华 第${payload.currentPage}页 ${i}`,
+      phone: `${payload.quire || G.moment().unix()}-${i}`,
       duty: random1 === 0 ? '市场部' : random1 === 1 ? '人事部' : '技术部',
       status: random2 === 0 ? '10002' : random2 === 1 ? '1004、1005' : '未使用',
       mark: random3 === 0 ? '内部员工' : random3 === 1 ? '管理员' : '游客',
@@ -83,7 +83,13 @@ export async function getPersonnelList() {
   }
   return {
     status: 'ok',
-    data: userData,
+    data: {
+      currentPage: payload.currentPage,
+      totalPage: payload.quire ? 10 : 20,
+      totalNum: payload.quire ? 150 : 300,
+      currentNum: payload.currentNum,
+      dataList: userData,
+    },
   };
 }
 // 获取设备列表
@@ -118,8 +124,9 @@ export async function getNoticeList() {
       noticeId: `notice${i}`,
       title: `上海自来水来自海上${i}`,
       receiver: ['id10', 'id11'],
-      editor: '<p>hello</p>',
+      editor: '<p>Hello World</p>',
       createdAt: G.moment.unix(unix + i * 600).format('MM/DD  hh:mm'),
+      topping: false,
     });
   }
   return {

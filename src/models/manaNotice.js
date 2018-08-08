@@ -49,6 +49,7 @@ export default {
         id: G.moment().unix(),
         noticeId: G.moment().unix(),
         createdAt: G.moment().format('MM/DD  hh:mm'),
+        topping: false,
       });
       return {
         ...state,

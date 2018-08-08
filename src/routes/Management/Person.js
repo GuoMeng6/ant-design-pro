@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider } from 'antd';
+import { Row, Col, Table, Button, Input, Divider, Pagination } from 'antd';
 
 import styles from './Person.less';
 import PersonModal from './components/PersonModal';
@@ -13,32 +13,28 @@ import PersonModal from './components/PersonModal';
 export default class Wework extends Component {
   // 表单以及分页
   state = {
-    searchInfo: '',
+    quire: '',
     filteredInfo: {},
-    pagination: {
-      current: 1,
-      pageSize: 15,
-      showQuickJumper: true,
-      total: 250,
-    },
     loading: false,
     visible: false,
     editValue: {},
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'manaPerson/fetch',
-    });
+    const { manaPerson } = this.props;
+    const { currentPage, currentNum } = manaPerson.data;
+    this.fetchDataList(currentPage, currentNum);
   }
 
   onSearch() {
-    // console.log('******** 搜索 ******** ', this.state);
+    const { manaPerson } = this.props;
+    const { currentNum } = manaPerson.data;
+    const { quire } = this.state;
+    this.fetchDataList(1, currentNum, quire);
   }
 
   onChangeSearchInfo = e => {
-    this.setState({ searchInfo: e.target.value });
+    this.setState({ quire: e.target.value });
   };
 
   onEdit(text) {
@@ -137,19 +133,32 @@ export default class Wework extends Component {
     this.setState({ visible: false, editValue: {} });
   };
 
-  handleChange = (pagination, filters, sorter) => {
-    // console.log('Various parameters', pagination, filters, sorter);
+  handleChange = (pagination, filters) => {
     this.setState({
       filteredInfo: filters,
-      pagination,
     });
   };
 
+  pageChange = pageNumber => {
+    const { manaPerson } = this.props;
+    const { currentNum } = manaPerson.data;
+    const { quire } = this.state;
+    this.fetchDataList(pageNumber, currentNum, quire);
+  };
+
+  fetchDataList(currentPage, currentNum, quire) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'manaPerson/fetch',
+      payload: { currentPage, currentNum, quire },
+    });
+  }
+
   render() {
     const { manaPerson, user } = this.props;
-    const { filteredInfo, pagination, loading, visible, editValue } = this.state;
+    const { filteredInfo, loading, visible, editValue } = this.state;
     const columns = this.getColumns(filteredInfo);
-    // console.log('********* manaPerson ********* ', user);
+    const { currentNum, currentPage, totalNum } = manaPerson.data;
     return (
       <div className={styles.main}>
         <h3>人员管理</h3>
@@ -183,10 +192,18 @@ export default class Wework extends Component {
           <Col span={24}>
             <Table
               rowKey="id"
-              dataSource={manaPerson.personnelList}
+              dataSource={manaPerson.data.dataList}
               columns={columns}
               onChange={this.handleChange.bind(this)}
-              pagination={pagination}
+              pagination={false}
+            />
+            <Pagination
+              style={{ marginTop: 20, float: 'right' }}
+              current={currentPage}
+              showQuickJumper
+              total={totalNum}
+              pageSize={currentNum}
+              onChange={this.pageChange.bind(this)}
             />
           </Col>
         </Row>

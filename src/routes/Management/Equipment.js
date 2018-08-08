@@ -5,8 +5,6 @@ import { Row, Col, Table, Button, Input, Divider, Popconfirm, message } from 'an
 import styles from './Person.less';
 import EquipModal from './components/EquipModal.js';
 
-const text = '真的解除绑定吗?解除绑定后，该用户将被强制退出该设备，导致用户无法正常使用（可重新登录使用）';
-
 @connect(({ manaEquip, loading }) => ({
   manaEquip,
   loading: loading.effects['manaEquip/fetchEquip'],
@@ -45,15 +43,17 @@ export default class Wework extends Component {
   untied(text, record, index) {
     console.log('********* 解绑 ******** ', text, record, index);
   }
+
   untiedConfirm() {
     console.log('******解除绑定的回调******');
   }
+
   // 解除弹窗
   showModal = () => {
     this.setState({
       visible: true,
     });
-  }
+  };
 
   handleOk = () => {
     // console.log('******* handleOK ******* ', fieldsValue);
@@ -61,12 +61,12 @@ export default class Wework extends Component {
     setTimeout(() => {
       this.setState({ loading: false, visible: false });
     }, 3000);
-  }
+  };
 
   handleCancel = () => {
     this.setState({ visible: false, editValue: {} });
-  }
-  //解除弹窗
+  };
+  // 解除弹窗
 
   onMack(text, record, index) {
     console.log('********* 标注 ******** ', text, record, index);
@@ -118,13 +118,12 @@ export default class Wework extends Component {
           <Fragment>
             <Popconfirm
               placement="left"
-              title="真的解除绑定吗? 解除绑定后，该用户将被强制退出该设备，导致用户无法正常使用（可重新登录使用）"
+              title="解除绑定后，该用户将被强制退出该设备，导致用户无法正常使用（可重新登录使用）"
               onConfirm={this.untiedConfirm.bind(this)}
-              okText="解除"
-              cancelText="取消操作">
-              <a>
-                解绑
-              </a>
+              okText="解绑"
+              cancelText="取消"
+            >
+              <a>解绑</a>
             </Popconfirm>
             <Divider type="vertical" />
             <a

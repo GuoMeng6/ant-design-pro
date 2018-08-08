@@ -37,7 +37,7 @@ class NewNoticeForm extends Component {
       if (contentBlock) {
         const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
         const editorState = EditorState.createWithContent(contentState);
-        this.setState({ editor: editorState });
+        this.setState({ editor: editorState, editorState: copyValue.editor });
       }
     }
   }
@@ -141,7 +141,7 @@ class NewNoticeForm extends Component {
               wrapperClassName="wrapperClassName"
               editorClassName="editorClassName"
               editorStyle={{ width: '100%', height: 350, backgroundColor: '#ffffff' }}
-              toolbarStyle={{ color: '#000', opacity: '0.65' }}
+              // toolbarStyle={{ color: '#000', opacity: '0.65' }}
               onEditorStateChange={this.onEditorStateChange.bind(this)}
             />
           )}
