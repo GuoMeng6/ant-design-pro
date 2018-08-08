@@ -100,7 +100,7 @@ class NewNoticeForm extends Component {
             <Button type="primary" htmlType="submit" onClick={this.handleCommit.bind(this)}>
               发布
             </Button>
-            <Button style={{ marginLeft: 8 }} onClick={() => {}}>
+            <Button style={{ marginLeft: 8 }} onClick={() => { history.back(-1) }}>
               取消
             </Button>
           </Col>
