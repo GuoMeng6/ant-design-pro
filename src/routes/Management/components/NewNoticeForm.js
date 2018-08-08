@@ -91,6 +91,7 @@ class NewNoticeForm extends Component {
               wrapperClassName="wrapperClassName"
               editorClassName="editorClassName"
               editorStyle={{ width: '100%', height: 350, backgroundColor: '#ffffff' }}
+              toolbarStyle={{ color: '#000', opacity: '0.65' }}
               onEditorStateChange={this.onEditorStateChange.bind(this)}
             />
           )}

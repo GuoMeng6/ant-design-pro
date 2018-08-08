@@ -90,7 +90,7 @@ class PersonModal extends Component {
     }
   };
 
-  next(value) {}
+  next(value) { }
 
   error(err) {
     this.setState({ avatarLoading: false });
@@ -161,8 +161,8 @@ class PersonModal extends Component {
               {imageUrl ? (
                 <img className={styles.avatar} src={imageUrl} alt="avatar" />
               ) : (
-                uploadButton
-              )}
+                  uploadButton
+                )}
             </Upload>
           )}
         </FormItem>
@@ -208,8 +208,8 @@ class PersonModal extends Component {
           {getFieldDecorator('mark', {
             rules: [
               {
-                max: 50,
-                message: '最大长度50',
+                max: 100,
+                message: '最大长度100',
               },
             ],
           })(<Input placeholder="请输入职务" />)}

@@ -95,9 +95,9 @@ export default class Notice extends Component {
         key: 'setting',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={() => { }}>复制</a>
-            <Divider type="vertical" />
             <a onClick={() => { }}>置顶</a>
+            <Divider type="vertical" />
+            <a onClick={() => { }}>复制</a>
             <Divider type="vertical" />
             <a onClick={() => {
               this.onDetail(text, record, index);
@@ -167,6 +167,7 @@ export default class Notice extends Component {
           </Col>
         </Row>
         <Drawer
+          width={512}
           title={this.state.detail.title}
           placement="right"
           closable={false}
