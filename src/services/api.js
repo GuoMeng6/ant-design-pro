@@ -117,12 +117,20 @@ export async function getNoticeList() {
       id: i + 1,
       noticeId: `notice${i}`,
       title: `上海自来水来自海上${i}`,
-      receiver: `大明 ${i}`,
+      receiver: ['id10', 'id11'],
+      editor: '<p>hello</p>',
       createdAt: G.moment.unix(unix + i * 600).format('MM/DD  hh:mm'),
     });
   }
   return {
     status: 'ok',
     data: userData,
+  };
+}
+
+// 发送通知
+export async function sendNotice(params) {
+  return {
+    status: 'ok',
   };
 }

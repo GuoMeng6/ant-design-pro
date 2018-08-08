@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Form, Input, Select, Row, Col, Button } from 'antd';
-import { convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import G from '../../../gobal';
@@ -13,20 +14,38 @@ const FormItem = Form.Item;
 const children = [];
 const valueOfAll = [];
 for (let i = 10; i < 36; i += 1) {
-  children.push(<SelectOption key={`hai${i}`}>{i.toString(36) + i}</SelectOption>);
-  valueOfAll.push(`hai${i}`);
+  children.push(<SelectOption key={`id${i}`}>{i.toString(36) + i}</SelectOption>);
+  valueOfAll.push(`id${i}`);
 }
 children.unshift(<SelectOption key="all">全部</SelectOption>);
 
 class NewNoticeForm extends Component {
   state = {
     editorState: '',
+    editor: EditorState.createEmpty(),
     value: [],
   };
+
+  componentDidMount() {
+    const { copyValue, form } = this.props;
+    if (copyValue) {
+      form.setFieldsValue({
+        person: copyValue.receiver,
+        title: copyValue.title,
+      });
+      const contentBlock = htmlToDraft(copyValue.editor);
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+        const editorState = EditorState.createWithContent(contentState);
+        this.setState({ editor: editorState });
+      }
+    }
+  }
 
   onEditorStateChange(editorState) {
     this.setState({
       editorState: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+      editor: editorState,
     });
   }
 
@@ -37,12 +56,12 @@ class NewNoticeForm extends Component {
     });
   }
 
-  handleChange(value) {
-    const isContainerAll = G._.find(value, o => {
+  handleChange(values) {
+    const isContainerAll = G._.find(values, o => {
       return o === 'all';
     });
     this.setState({
-      value: isContainerAll ? valueOfAll : value,
+      value: isContainerAll ? valueOfAll : values,
     });
     if (isContainerAll) {
       setTimeout(() => {
@@ -52,9 +71,21 @@ class NewNoticeForm extends Component {
   }
 
   handleCommit() {
-    const { form } = this.props;
+    const { form, dispatch } = this.props;
     form.validateFields((err, values) => {
       const { editorState } = this.state;
+      if (err) {
+        return;
+      }
+      dispatch({
+        type: 'manaNotice/sendNotice',
+        payload: {
+          title: values.title,
+          receiver: values.person,
+          editor: editorState,
+        },
+      });
+      history.back(-1);
     });
   }
 
@@ -69,8 +100,8 @@ class NewNoticeForm extends Component {
 
   render() {
     const { form } = this.props;
-    const { value } = this.state;
     const { getFieldDecorator } = form;
+    const { editor } = this.state;
     return (
       <Form>
         <FormItem>
@@ -105,6 +136,7 @@ class NewNoticeForm extends Component {
             rules: [{ validator: this.checkEditor.bind(this) }],
           })(
             <Editor
+              editorState={editor}
               toolbarClassName="toolbarClassName"
               wrapperClassName="wrapperClassName"
               editorClassName="editorClassName"
@@ -121,8 +153,6 @@ class NewNoticeForm extends Component {
             <Button
               style={{ marginLeft: 8 }}
               onClick={() => {
-                this.selectAll();
-                return;
                 history.back(-1);
               }}
             >

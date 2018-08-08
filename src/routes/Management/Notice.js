@@ -23,14 +23,8 @@ export default class Notice extends Component {
       title: '标题',
       lookNum: 20,
       lastTime: '2018-04',
-      content: '<p>Hello World</p>'
-    }
-  };
-  //详情
-  showDrawer = () => {
-    this.setState({
-      visible: true,
-    });
+      content: '<p>Hello World</p>',
+    },
   };
 
   onClose = () => {
@@ -38,12 +32,16 @@ export default class Notice extends Component {
       visible: false,
     });
   };
-  //详情
+  // 详情
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'manaNotice/fetch',
+    });
+    dispatch({
+      type: 'manaNotice/setCopyValue',
+      payload: '',
     });
   }
 
@@ -62,8 +60,8 @@ export default class Notice extends Component {
         title: text.title,
         lookNum: 20,
         lastTime: text.createdAt,
-        content: '<p>Hello World</p>'
-      }
+        content: '<p>Hello World</p>',
+      },
     });
     this.showDrawer();
   }
@@ -82,7 +80,7 @@ export default class Notice extends Component {
       },
       {
         title: '接收人',
-        dataIndex: 'receiver',
+        render: text => <font>{text.receiver.length}</font>,
         key: 'receiver',
       },
       {
@@ -95,19 +93,30 @@ export default class Notice extends Component {
         key: 'setting',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={() => { }}>复制</a>
+            <a onClick={this.copyPush.bind(this, text)}>复制</a>
             <Divider type="vertical" />
-            <a onClick={() => { }}>置顶</a>
+            <a onClick={() => {}}>置顶</a>
             <Divider type="vertical" />
-            <a onClick={() => {
-              this.onDetail(text, record, index);
-            }}>详情</a>
+            <a
+              onClick={() => {
+                this.onDetail(text, record, index);
+              }}
+            >
+              详情
+            </a>
           </Fragment>
         ),
       },
     ];
     return columns;
   }
+
+  // 详情
+  showDrawer = () => {
+    this.setState({
+      visible: true,
+    });
+  };
 
   handleChange = (pagination, filters, sorter) => {
     // console.log('Various parameters', pagination, filters, sorter);
@@ -116,8 +125,15 @@ export default class Notice extends Component {
     });
   };
 
+  copyPush = value => {
+    this.props.dispatch({
+      type: 'manaNotice/setCopyValue',
+      payload: value,
+    });
+    this.newNotice();
+  };
+
   newNotice() {
-    console.log('*********  新建 ********* ', `${window.location.origin}/#/newNotice`);
     window.location.href = `${window.location.origin}/#/management/newNotice`;
   }
 
@@ -125,7 +141,6 @@ export default class Notice extends Component {
     const { manaNotice } = this.props;
     const { filteredInfo, pagination } = this.state;
     const columns = this.getColumns(filteredInfo);
-    // console.log('********* manaPerson ********* ', manaPerson);
     return (
       <div className={styles.main}>
         <h3>通知列表</h3>
@@ -174,10 +189,12 @@ export default class Notice extends Component {
           visible={this.state.visible}
         >
           <p>
-            <Icon type="eye-o" style={{ marginRight: '6px' }}></Icon>{this.state.detail.lookNum}
-            <Icon type="clock-circle-o" style={{ marginLeft: '10px', marginRight: '6px' }}></Icon>{this.state.detail.lastTime}
+            <Icon type="eye-o" style={{ marginRight: '6px' }} />
+            {this.state.detail.lookNum}
+            <Icon type="clock-circle-o" style={{ marginLeft: '10px', marginRight: '6px' }} />
+            {this.state.detail.lastTime}
           </p>
-          <div dangerouslySetInnerHTML={{ __html: this.state.detail.content }}></div>
+          <div dangerouslySetInnerHTML={{ __html: this.state.detail.content }} />
         </Drawer>
       </div>
     );
