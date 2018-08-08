@@ -63,8 +63,8 @@ class EquipModal extends Component {
           {getFieldDecorator('mark', {
             rules: [
               {
-                max: 255,
-                message: '最大长度255',
+                max: 100,
+                message: '最大长度100',
               },
             ],
           })(<Input placeholder="请输入备注信息" />)}

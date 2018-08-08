@@ -19,12 +19,15 @@
   border-radius: 10px;
 }
 .contents {
-  width: 40%;
-  height: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 410px;
+  height: 347px;
   background-image: url('./../assets/backchart.png');
   background-repeat: no-repeat;
-  background-position: center 100px;
-  background-size: 100% 70%;
+  background-position: center top;
+  background-size: 100% 100%;
   float: left;
   margin: 0 5%;
   color: rgba(255, 255, 255, 0);
@@ -32,7 +35,7 @@
 .content {
   width: 50%;
   height: 100%;
-  float: left;
+  float: right;
   text-align: center;
 }
 
@@ -66,11 +69,15 @@
 
 .desc {
   font-size: @font-size-base;
-  color: @text-color-secondary;
   margin-top: 12px;
   margin-bottom: 40px;
+  color: #9AA9B5;
+  font-style: italic;
 }
 .ps {
   font-size: 14px;
   color: #9aa9b5;
+}
+.ps:first-of-type{
+  margin-top: 70px;
 }

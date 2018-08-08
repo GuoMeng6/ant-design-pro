@@ -93,9 +93,9 @@ export default class Notice extends Component {
         key: 'setting',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={this.copyPush.bind(this, text)}>复制</a>
+            <a onClick={this.copyPush.bind(this, text)}>置顶</a>
             <Divider type="vertical" />
-            <a onClick={() => {}}>置顶</a>
+            <a onClick={() => {}}>复制</a>
             <Divider type="vertical" />
             <a
               onClick={() => {
@@ -182,6 +182,7 @@ export default class Notice extends Component {
           </Col>
         </Row>
         <Drawer
+          width={512}
           title={this.state.detail.title}
           placement="right"
           closable={false}

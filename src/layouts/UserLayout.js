@@ -51,8 +51,8 @@ class UserLayout extends React.PureComponent {
                 ))}
                 <Redirect from="/user" to={getLoginPathWithRedirectPath()} />
               </Switch>
-              <p className={styles.ps}>帮助 隐私 条款</p>
-              <p className={styles.ps}>2018 站坐（宁波）技术—需要修改</p>
+              <p className={styles.ps}>帮助&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;隐私&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;条款</p>
+              <p className={styles.ps}>Copyright©2018 站坐（宁波）技术部出品</p>
             </div>
           </div>
         </div>

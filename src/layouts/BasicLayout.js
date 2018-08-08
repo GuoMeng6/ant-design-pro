@@ -18,6 +18,7 @@ import { getUserInfo } from '../utils/storage';
 import { getMenuData } from '../common/menu';
 import logo from '../assets/logoGreen.png';
 
+
 const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute, check } = Authorized;
 
@@ -276,34 +277,20 @@ class BasicLayout extends React.PureComponent {
             <GlobalFooter
               links={[
                 {
-                  key: 'githubs',
-                  title: <img src={require('./../assets/favicon.png')} alt="pic" />,
+                  key: '9AM',
+                  title: <span><img src={require('./../assets/favicon.png')} alt="pic" align="absmiddle" style={{ width: '14px', height: '14px' }} /> 9AM</span>,
                   href: 'https://github.com/ant-design/ant-design-pro',
                   blankTarget: true,
                 },
                 {
-                  key: 'Pro 首页',
-                  title: 'Pro 首页',
-                  href: 'http://pro.ant.design',
-                  blankTarget: true,
-                },
-                {
-                  key: 'github',
-                  title: <Icon type="github" />,
+                  key: 'OfficeWell',
+                  title: <span><img src={require('./../assets/officewell.png')} alt="pic" align="absmiddle" style={{ width: '15px', height: '15px' }} /> OfficeWell</span>,
                   href: 'https://github.com/ant-design/ant-design-pro',
-                  blankTarget: true,
-                },
-                {
-                  key: 'Ant Design',
-                  title: 'Ant Design',
-                  href: 'http://ant.design',
                   blankTarget: true,
                 },
               ]}
               copyright={
-                <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 站坐（宁波）技术—需要修改
-                </Fragment>
+                <Fragment>Copyright©2018 站坐（宁波）技术部出品</Fragment>
               }
             />
           </Footer>
