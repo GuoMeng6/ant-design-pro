@@ -13,7 +13,10 @@ module.exports = {
     'linebreak-style': 0,
     'generator-star-spacing': [0],
     'consistent-return': [0],
-    'class-methods-use-this': ['error', { exceptMethods: ['getColumns', 'onEdit', 'onDelete'] }],
+    'class-methods-use-this': [
+      'error',
+      { exceptMethods: ['getColumns', 'onEdit', 'onDelete', 'beforeUpload'] },
+    ],
     'react/forbid-prop-types': [0],
     'react/jsx-filename-extension': [1, { extensions: ['.js'] }],
     'global-require': [1],

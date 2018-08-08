@@ -5,8 +5,9 @@ import { Row, Col, Table, Button, Input, Divider } from 'antd';
 import styles from './Person.less';
 import PersonModal from './components/PersonModal';
 
-@connect(({ manaPerson, loading }) => ({
+@connect(({ manaPerson, user, loading }) => ({
   manaPerson,
+  user,
   loading: loading.effects['manaPerson/fetch'],
 }))
 export default class Wework extends Component {
@@ -130,7 +131,7 @@ export default class Wework extends Component {
     setTimeout(() => {
       this.setState({ loading: false, visible: false });
     }, 3000);
-  }
+  };
 
   handleCancel = () => {
     this.setState({ visible: false, editValue: {} });
@@ -145,10 +146,10 @@ export default class Wework extends Component {
   };
 
   render() {
-    const { manaPerson } = this.props;
+    const { manaPerson, user } = this.props;
     const { filteredInfo, pagination, loading, visible, editValue } = this.state;
     const columns = this.getColumns(filteredInfo);
-    // console.log('********* manaPerson ********* ', manaPerson);
+    // console.log('********* manaPerson ********* ', user);
     return (
       <div className={styles.main}>
         <h3>人员管理</h3>
@@ -191,6 +192,7 @@ export default class Wework extends Component {
         </Row>
         {/* 弹窗 */}
         <PersonModal
+          user={user}
           visible={visible}
           loading={loading}
           editValue={editValue}

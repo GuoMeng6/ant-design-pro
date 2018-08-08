@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as qiniu from 'qiniu-js';
 import { Modal, Button, Input, Form, Icon, Upload } from 'antd';
 import G from '../../../gobal';
 import styles from './PersonModal.less';
@@ -85,8 +86,56 @@ class PersonModal extends Component {
     }
   };
 
+  next(value) {
+    console.log('******* next ******* ', value);
+  }
+
+  error(err) {
+    console.log('******* error ******* ', err);
+  }
+
+  complete(response) {
+    console.log('******* complete ******* ', response);
+  }
+
+  beforeUpload(file) {
+    const isJPG = file.type === 'image/jpeg';
+    const isPNG = file.type === 'image/png';
+    const isGIF = file.type === 'image/gif';
+    // console.log('******* beforeUpload ******** ', file, isJPG, isPNG, isGIF);
+    if (!isJPG && !isPNG && !isGIF) {
+      // message.error('格式不支持');
+      return false;
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    console.log(file.size, isLt2M);
+    if (!isLt2M) {
+      // message.error('图片大小不能超过2MB!');
+    }
+    const { user } = this.props.user;
+    const config = {
+      useCdnDomain: true,
+    };
+    const putExtra = {
+      fname: '',
+      params: {},
+      mimeType: ['image/png', 'image/jpeg', 'image/gif'],
+    };
+    const observable = qiniu.upload(
+      file,
+      '000001.png',
+      'h07mPP3LHfjO8BHJfCyIRsiichflVYIHtyNkXNoM:ZyKB9eOlJ8mmTdH_VumDxehPjXI=:eyJzY29wZSI6ImRzaG93OjAwMDAwMS5wbmciLCJkZWFkbGluZSI6MTUzMzY0NTc0M30=',
+      putExtra,
+      config
+    );
+    observable.subscribe(this.next.bind(this), this.error.bind(this), this.complete.bind(this));
+    return false;
+    // return (isJPG && isLt2M) || (isPNG && isLt2M) || (isGIF && isLt2M);
+  }
+
   render() {
-    const { visible, loading, handleCancel, form } = this.props;
+    const { visible, loading, handleCancel, form, user } = this.props;
+
     const { imageUrl, avatarLoading } = this.state;
     const { getFieldDecorator } = form;
     const uploadButton = (
@@ -123,8 +172,9 @@ class PersonModal extends Component {
               name="avatar"
               listType="picture-card"
               showUploadList={false}
-              action="//jsonplaceholder.typicode.com/posts/"
+              // action="http://upload.qiniup.com"
               onChange={this.handleChange.bind(this)}
+              beforeUpload={this.beforeUpload.bind(this)}
             >
               {imageUrl ? (
                 <img className={styles.avatar} src={imageUrl} alt="avatar" />
