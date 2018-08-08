@@ -3,7 +3,11 @@ import { getEquipmentlList } from '../services/api';
 export default {
   namespace: 'manaEquip',
   state: {
-    equipmentlList: [],
+    data: {
+      dataList: [],
+      currentPage: 1,
+      currentNum: 15,
+    },
   },
 
   effects: {
@@ -22,7 +26,7 @@ export default {
     equipSave(state, action) {
       return {
         ...state,
-        equipmentlList: action.payload,
+        data: action.payload,
       };
     },
   },

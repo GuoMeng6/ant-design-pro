@@ -93,24 +93,30 @@ export async function getPersonnelList(payload) {
   };
 }
 // 获取设备列表
-export async function getEquipmentlList() {
+export async function getEquipmentlList(payload) {
   const userData = [];
-  for (let i = 0; i < 150; i += 1) {
+  for (let i = 0; i < payload.currentNum; i += 1) {
     const random1 = parseInt((Math.random() * 1000) % 2);
     const random2 = parseInt((Math.random() * 1000) % 3);
     const random3 = parseInt((Math.random() * 1000) % 3);
     userData.push({
-      id: i + 1,
-      daskId: `daskid${i}`,
+      id: (payload.currentPage - 1) * 10 + i + 1,
+      daskId: `deskId${(payload.currentPage - 1) * 10 + i + 1}`,
       status: random1 === 0 ? '使用中' : '空闲',
-      user: `lilei${i}`,
+      user: `lilei 第${payload.currentPage}页 ${(payload.currentPage - 1) * 10 + i + 1}`,
       mark: random2 === 0 ? '备注非法' : random2 === 1 ? '备注合格' : '未备注',
       lastTime: random3 === 0 ? '20180501' : random3 === 1 ? '20180604' : '20180101',
     });
   }
   return {
     status: 'ok',
-    data: userData,
+    data: {
+      currentPage: payload.currentPage,
+      totalPage: payload.quire ? 10 : 20,
+      totalNum: payload.quire ? 150 : 300,
+      currentNum: payload.currentNum,
+      dataList: userData,
+    },
   };
 }
 

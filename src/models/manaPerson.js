@@ -2,7 +2,6 @@ import { getPersonnelList } from '../services/api';
 
 export default {
   namespace: 'manaPerson',
-
   state: {
     data: {
       dataList: [],

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider, Popconfirm, message } from 'antd';
+import { Row, Col, Table, Button, Input, Divider, Popconfirm, message, Pagination } from 'antd';
 
 import styles from './Person.less';
 import EquipModal from './components/EquipModal.js';
@@ -12,32 +12,28 @@ import EquipModal from './components/EquipModal.js';
 export default class Wework extends Component {
   // 表单以及分页
   state = {
-    searchInfo: '',
+    quire: '',
     filteredInfo: {},
-    pagination: {
-      current: 1,
-      pageSize: 15,
-      showQuickJumper: true,
-      total: 250,
-    },
     loading: false,
     visible: false,
     editValue: {},
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'manaEquip/fetchEquip',
-    });
+    const { manaEquip } = this.props;
+    const { currentPage, currentNum } = manaEquip.data;
+    this.fetchDataList(currentPage, currentNum);
   }
 
   onSearch() {
-    // console.log('******** 搜索 ******** ', this.state);
+    const { manaEquip } = this.props;
+    const { currentNum } = manaEquip.data;
+    const { quire } = this.state;
+    this.fetchDataList(1, currentNum, quire);
   }
 
   onChangeSearchInfo = e => {
-    this.setState({ searchInfo: e.target.value });
+    this.setState({ quire: e.target.value });
   };
 
   untied(text, record, index) {
@@ -66,8 +62,8 @@ export default class Wework extends Component {
   handleCancel = () => {
     this.setState({ visible: false, editValue: {} });
   };
-  // 解除弹窗
 
+  // 解除弹窗
   onMack(text, record, index) {
     console.log('********* 标注 ******** ', text, record, index);
     this.setState({
@@ -140,19 +136,34 @@ export default class Wework extends Component {
     return columns;
   }
 
-  handleChange = (pagination, filters, sorter) => {
+  handleChange = (filters, sorter) => {
     // console.log('Various parameters', pagination, filters, sorter);
     this.setState({
       filteredInfo: filters,
-      pagination,
     });
   };
 
+  pageChange = pageNumber => {
+    const { manaEquip } = this.props;
+    const { currentNum } = manaEquip.data;
+    const { quire } = this.state;
+    this.fetchDataList(pageNumber, currentNum, quire);
+  };
+
+  fetchDataList(currentPage, currentNum) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'manaEquip/fetchEquip',
+      payload: { currentPage, currentNum },
+    });
+  }
+
   render() {
     const { manaEquip } = this.props;
-    const { filteredInfo, pagination, visible, loading, editValue } = this.state;
+    const { filteredInfo, visible, loading, editValue } = this.state;
     const columns = this.getColumns(filteredInfo);
-    // console.log('********* manaEquip ********* ', manaEquip);
+    const { currentNum, currentPage, totalNum } = manaEquip.data;
+    // console.log('********* manaEquip ********* ', manaEquip.data);
     return (
       <div className={styles.main}>
         <h3>设备管理</h3>
@@ -181,10 +192,18 @@ export default class Wework extends Component {
           <Col span={24}>
             <Table
               rowKey="id"
-              dataSource={manaEquip.equipmentlList}
+              dataSource={manaEquip.data.dataList}
               columns={columns}
               onChange={this.handleChange.bind(this)}
-              pagination={pagination}
+              pagination={false}
+            />
+            <Pagination
+              style={{ marginTop: 20, float: 'right' }}
+              current={currentPage}
+              showQuickJumper
+              total={totalNum}
+              pageSize={currentNum}
+              onChange={this.pageChange.bind(this)}
             />
           </Col>
         </Row>
