@@ -23,7 +23,7 @@ export default {
   lessLoaderOptions: {
     javascriptEnabled: true,
   },
-  disableDynamicImport: true,
+  disableDynamicImport: false, //true 默认关掉了动态加载
   publicPath: '/',
   hash: true,
 };
