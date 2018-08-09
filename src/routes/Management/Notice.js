@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Table, Button, Input, Divider, Drawer, Icon } from 'antd';
 
+import G from '../../gobal';
 import styles from './Person.less';
 
 @connect(({ manaNotice, loading }) => ({
@@ -134,6 +135,10 @@ export default class Notice extends Component {
   };
 
   newNotice() {
+    if (G.env === 'prod') {
+      window.location.href = `${window.location.origin}/home/#/management/newNotice`;
+      return;
+    }
     window.location.href = `${window.location.origin}/#/management/newNotice`;
   }
 

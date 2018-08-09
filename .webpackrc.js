@@ -24,6 +24,7 @@ export default {
     javascriptEnabled: true,
   },
   disableDynamicImport: false, //true 默认关掉了动态加载
-  publicPath: '/',
+  // publicPath: '/',
+  publicPath: 'http://39.108.86.241/home/',
   hash: true,
 };
