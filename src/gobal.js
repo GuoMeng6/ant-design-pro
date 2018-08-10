@@ -2,9 +2,9 @@ import moment from 'moment';
 import _ from 'lodash';
 
 moment.locale('zh-cn');
-// const env = 'api';
+const env = 'api';
 // let env = 'dev';
-const env = 'prod';
+// const env = 'prod';
 
 let API_URL = '/api';
 if (env === 'prod') {

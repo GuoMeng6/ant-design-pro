@@ -2,16 +2,26 @@ import './polyfill';
 import dva from 'dva';
 
 import createHistory from 'history/createHashHistory';
+import { createLogger } from 'redux-logger';
 // user BrowserHistory
 // import createHistory from 'history/createBrowserHistory';
 import createLoading from 'dva-loading';
+import G from './gobal';
 import 'moment/locale/zh-cn';
 import './rollbar';
 
 import './index.less';
+
+const onAction = [];
+// 开发环境启用redux-logger
+/* eslint-disable no-undef */
+if (G.env === 'api' || G.env === 'dev') {
+  onAction.push(createLogger({ collapsed: () => true }));
+}
 // 1. Initialize
 const app = dva({
   history: createHistory(),
+  onAction,
 });
 
 // 2. Plugins

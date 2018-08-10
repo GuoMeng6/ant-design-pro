@@ -14,6 +14,7 @@ export default class Wework extends Component {
   state = {
     quire: '',
     filteredInfo: {},
+    sorter: {},
     loading: false,
     visible: false,
     editValue: {},
@@ -36,13 +37,9 @@ export default class Wework extends Component {
     this.setState({ quire: e.target.value });
   };
 
-  untied(text, record, index) {
-    console.log('********* 解绑 ******** ', text, record, index);
-  }
+  untied(text, record, index) {}
 
-  untiedConfirm() {
-    console.log('******解除绑定的回调******');
-  }
+  untiedConfirm() {}
 
   // 解除弹窗
   showModal = () => {
@@ -65,7 +62,6 @@ export default class Wework extends Component {
 
   // 解除弹窗
   onMack(text, record, index) {
-    console.log('********* 标注 ******** ', text, record, index);
     this.setState({
       visible: true,
       editValue: text,
@@ -83,6 +79,7 @@ export default class Wework extends Component {
         title: '桌子编号',
         dataIndex: 'daskId',
         key: 'daskId',
+        sorter: true,
       },
       {
         title: '状态',
@@ -136,8 +133,8 @@ export default class Wework extends Component {
     return columns;
   }
 
-  handleChange = (filters, sorter) => {
-    // console.log('Various parameters', pagination, filters, sorter);
+  handleChange = (pagination, filters, sorter) => {
+    // console.log('********** handleChange ************ ', sorter);
     this.setState({
       filteredInfo: filters,
     });

@@ -90,14 +90,17 @@ class PersonModal extends Component {
     }
   };
 
-  next(value) { }
+  next(value) {}
 
   error(err) {
     this.setState({ avatarLoading: false });
   }
 
   complete(response) {
-    this.setState({ avatarLoading: false });
+    this.setState({
+      avatarLoading: false,
+      imageUrl: `http://pd36a7jvw.bkt.clouddn.com/${response.key}`,
+    });
   }
 
   beforeUpload(file) {
@@ -161,8 +164,8 @@ class PersonModal extends Component {
               {imageUrl ? (
                 <img className={styles.avatar} src={imageUrl} alt="avatar" />
               ) : (
-                  uploadButton
-                )}
+                uploadButton
+              )}
             </Upload>
           )}
         </FormItem>

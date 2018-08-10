@@ -55,7 +55,6 @@ export default class Notice extends Component {
   };
 
   onDetail(text, record, index) {
-    console.log('********* 详情 ******** ', text, record, index);
     this.setState({
       detail: {
         title: text.title,
