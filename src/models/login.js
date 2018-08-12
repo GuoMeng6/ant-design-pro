@@ -1,5 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
+import { message } from 'antd';
 import { login } from '../services/api';
 import { setAuthority, setUserInfo } from '../utils/storage';
 import { reloadAuthorized } from '../utils/Authorized';
@@ -15,20 +16,21 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(login, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      });
-      yield put({
-        type: 'user/user',
-        payload: response.user,
-      });
-      // Login successfully
-      if (response.status === 'ok') {
+      console.log('******* effects ******* ', response);
+      if (response.status === 'success') {
+        yield put({
+          type: 'changeLoginStatus',
+          payload: response,
+        });
+        yield put({
+          type: 'user/user',
+          payload: response.user,
+        });
         reloadAuthorized();
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
+        console.log('****** redirect ******', redirect);
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
           if (redirectUrlParams.origin === urlParams.origin) {
@@ -38,11 +40,13 @@ export default {
             }
           } else {
             window.location.href = redirect;
-            return;
           }
         }
         yield put(routerRedux.replace(redirect || '/'));
+      } else {
+        message.error(response.message);
       }
+      // return;
     },
     *logout(_, { put }) {
       yield put({
@@ -51,6 +55,10 @@ export default {
           status: false,
           currentAuthority: 'guest',
         },
+      });
+      yield put({
+        type: 'user/user',
+        payload: {},
       });
       reloadAuthorized();
       yield put(

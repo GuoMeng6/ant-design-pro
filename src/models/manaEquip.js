@@ -1,4 +1,4 @@
-import { getEquipmentlList } from '../services/api';
+import { getResourceList } from '../services/api';
 
 export default {
   namespace: 'manaEquip',
@@ -11,8 +11,10 @@ export default {
   },
 
   effects: {
-    *fetchEquip({ payload }, { call, put }) {
-      const response = yield call(getEquipmentlList, payload);
+    *resourceList({ payload }, { call, put }) {
+      const response = yield call(getResourceList, payload);
+
+      return;
       if (response.status === 'ok') {
         yield put({
           type: 'equipSave',

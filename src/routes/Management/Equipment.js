@@ -7,7 +7,7 @@ import EquipModal from './components/EquipModal.js';
 
 @connect(({ manaEquip, loading }) => ({
   manaEquip,
-  loading: loading.effects['manaEquip/fetchEquip'],
+  loading: loading.effects['manaEquip/resourceList'],
 }))
 export default class Wework extends Component {
   // 表单以及分页
@@ -148,9 +148,11 @@ export default class Wework extends Component {
   };
 
   fetchDataList(currentPage, currentNum) {
+    console.log('******** fetchDataList ********', { currentPage, currentNum });
+
     const { dispatch } = this.props;
     dispatch({
-      type: 'manaEquip/fetchEquip',
+      type: 'manaEquip/resourceList',
       payload: { currentPage, currentNum },
     });
   }

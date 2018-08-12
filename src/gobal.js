@@ -2,15 +2,16 @@ import moment from 'moment';
 import _ from 'lodash';
 
 moment.locale('zh-cn');
-const env = 'api';
+const env = 'dev';
 // let env = 'dev';
 // const env = 'prod';
 
-let API_URL = '/api';
+let API_URL = 'http://39.108.86.241:9201';
 if (env === 'prod') {
-  API_URL = 'https://wework2018apis.azure-api.cn/';
+  API_URL = 'http://39.108.86.241:9201';
 } else if (env === 'dev') {
-  API_URL = 'https://wework2018apis-dev.azure-api.cn/';
+  // API_URL = 'http://192.168.1.141:7001';
+  API_URL = 'http://39.108.86.241:9201';
 }
 
 export default {

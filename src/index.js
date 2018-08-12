@@ -6,11 +6,13 @@ import { createLogger } from 'redux-logger';
 // user BrowserHistory
 // import createHistory from 'history/createBrowserHistory';
 import createLoading from 'dva-loading';
-import G from './gobal';
 import 'moment/locale/zh-cn';
+import G from './gobal';
 import './rollbar';
 
 import './index.less';
+
+console.log('****** G ******* ', G);
 
 const onAction = [];
 // 开发环境启用redux-logger

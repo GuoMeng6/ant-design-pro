@@ -12,7 +12,7 @@ const { UserName, Password, Submit } = Login;
 }))
 export default class LoginPage extends Component {
   state = {
-    type: 'account',
+    // type: 'account',
     // autoLogin: true,
   };
 
@@ -53,11 +53,11 @@ export default class LoginPage extends Component {
           <div>
             <br />
             {/* <h1 className={styles.login} /> */}
-            {login.status === 'error' &&
+            {/* {login.status === 'error' &&
               login.type === 'account' &&
               !submitting &&
-              this.renderMessage('账户或密码错误（admin/888888）')}
-            <UserName name="userName" placeholder="账户" />
+              this.renderMessage('账户或密码错误（admin/888888）')} */}
+            <UserName name="username" placeholder="账户" />
             <Password name="password" placeholder="密码" />
           </div>
           <Submit loading={submitting}>登录</Submit>

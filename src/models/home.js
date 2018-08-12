@@ -1,4 +1,4 @@
-import { getStandingData, getTimeRanking, getGatherData } from '../services/api';
+import { getStandingData, getTimeRanking, getHomeData } from '../services/api';
 
 export default {
   namespace: 'home',
@@ -11,8 +11,9 @@ export default {
   },
 
   effects: {
-    *fetchGatherData(_, { call, put }) {
-      const response = yield call(getGatherData);
+    *homeData(_, { call, put }) {
+      const response = yield call(getHomeData);
+      return;
       yield put({
         type: 'saveGatherData',
         payload: response,

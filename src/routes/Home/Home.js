@@ -21,7 +21,7 @@ for (let i = 0; i < 7; i += 1) {
 
 @connect(({ home, loading }) => ({
   home,
-  loading: loading.effects['home/fetchGatherData'],
+  loading: loading.effects['home/homeData'],
 }))
 export default class Home extends Component {
   state = {
@@ -31,18 +31,18 @@ export default class Home extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     const { rangePickerValue } = this.state;
-    dispatch({
-      type: 'home/fetchGatherData',
-      payload: rangePickerValue,
-    });
-    dispatch({
-      type: 'home/fetchStandingData',
-      payload: rangePickerValue,
-    });
-    dispatch({
-      type: 'home/fetchTimeRanking',
-      payload: rangePickerValue,
-    });
+    // dispatch({
+    //   type: 'home/homeData',
+    //   payload: rangePickerValue,
+    // });
+    // dispatch({
+    //   type: 'home/fetchStandingData',
+    //   payload: rangePickerValue,
+    // });
+    // dispatch({
+    //   type: 'home/fetchTimeRanking',
+    //   payload: rangePickerValue,
+    // });
   }
 
   componentWillUnmount() {

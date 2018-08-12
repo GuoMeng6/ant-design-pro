@@ -1,19 +1,45 @@
 import G from '../gobal';
 // import { stringify } from 'qs';
-// import request from '../utils/request';
+import store from '../index';
+import request from '../utils/request';
 
+const { API_URL } = G;
 // 登录
 export async function login(params) {
   // 执行api请求
+  // return request(`${API_URL}/space/login`, {
+  //   method: 'POST',
+  //   body: params,
+  // });
   return {
-    status: 'ok',
+    status: 'success',
     type: params.userName === 'admin' ? 'admin' : 'account',
     currentAuthority: 'user',
     user: {
       name: 'Serati Ma',
       avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
       userId: '00000001',
-      token: 'XXXX-XXXX-XXXX-XXXX',
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI4ZDQ2OGQ0YS1lM2RlLTRmMjYtOTY3OC1hN2Y3Y2ZkZjVhMjIiLCJ1c2VyTmFtZSI6IjlhbS1tYW5hZ2VyIiwibmlja05hbWUiOiI5YW0tbWFuYWdlciIsImNvbXBhbnlJZCI6MTEsImRlcGFydG1lbnQiOjAsInBvc2l0aW9uIjpudWxsLCJwaG9uZSI6bnVsbCwiYXZhdGFyIjoiMTExMSIsImRuIjoiY249OWFtLW1hbmFnZXIsb3U9OWFtLGRjPVNwYWNlU2VydmVyLGRjPWNvbSIsImlhdCI6MTUzMzk4NjU4OCwiZXhwIjoxNTMzOTkwMTg4fQ.jYBHfVWqGq2quR7WRjFCdzYzqRKsjj09oNcvRSGcU8A',
+    },
+  };
+}
+
+// 登出
+export async function logout(params) {
+  // return request(`${API_URL}/space/logout`, {
+  //   method: 'POST',
+  // });
+  return {
+    status: 'success',
+    type: params.userName === 'admin' ? 'admin' : 'account',
+    currentAuthority: 'user',
+    user: {
+      name: 'Serati Ma',
+      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+      userId: '00000001',
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI4ZDQ2OGQ0YS1lM2RlLTRmMjYtOTY3OC1hN2Y3Y2ZkZjVhMjIiLCJ1c2VyTmFtZSI6IjlhbS1tYW5hZ2VyIiwibmlja05hbWUiOiI5YW0tbWFuYWdlciIsImNvbXBhbnlJZCI6MTEsImRlcGFydG1lbnQiOjAsInBvc2l0aW9uIjpudWxsLCJwaG9uZSI6bnVsbCwiYXZhdGFyIjoiMTExMSIsImRuIjoiY249OWFtLW1hbmFnZXIsb3U9OWFtLGRjPVNwYWNlU2VydmVyLGRjPWNvbSIsImlhdCI6MTUzMzk4NjU4OCwiZXhwIjoxNTMzOTkwMTg4fQ.jYBHfVWqGq2quR7WRjFCdzYzqRKsjj09oNcvRSGcU8A',
     },
   };
 }
@@ -50,7 +76,10 @@ export async function getTimeRanking() {
 }
 
 // 首页获取收集的数据
-export async function getGatherData() {
+export async function getHomeData() {
+  return request(`${G.API_URL}/space/homeData`, {
+    method: 'GET',
+  });
   const gatherData = [];
   for (let i = 0; i < 4; i += 1) {
     gatherData.push({
@@ -67,6 +96,11 @@ export async function getGatherData() {
 
 // 获取人员数组
 export async function getPersonnelList(payload) {
+  console.log('******* getPersonnelList ***** ', store.getState().user, payload);
+
+  return request(`${G.API_URL}/space/personList?token=${store.getState().user.user.token}`, {
+    method: 'GET',
+  });
   const userData = [];
   for (let i = 0; i < payload.currentNum; i += 1) {
     const random1 = parseInt((Math.random() * 1000) % 3);
@@ -93,7 +127,27 @@ export async function getPersonnelList(payload) {
   };
 }
 // 获取设备列表
-export async function getEquipmentlList(payload) {
+export async function getResourceList(payload) {
+  console.log('******* payload ******* ', payload);
+
+  // return G.request(
+  //   'post',
+  //   '/space/resourceList',
+  //   { token: '' },
+  //   {
+  //     data: payload,
+  //   }
+  // )
+  //   .then(res => {
+  //     console.log('******** res ******* ', res);
+  //   })
+  //   .catch(err => {
+  //     console.log('******** err ******* ', err);
+  //   });
+  return request('/space/resourceList', {
+    method: 'POST',
+    body: payload,
+  });
   const userData = [];
   for (let i = 0; i < payload.currentNum; i += 1) {
     const random1 = parseInt((Math.random() * 1000) % 2);

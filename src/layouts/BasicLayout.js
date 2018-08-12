@@ -18,7 +18,6 @@ import { getUserInfo } from '../utils/storage';
 import { getMenuData } from '../common/menu';
 import logo from '../assets/logoGreen.png';
 
-
 const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute, check } = Authorized;
 
@@ -111,7 +110,6 @@ class BasicLayout extends React.PureComponent {
   componentWillMount() {
     const userInfo = getUserInfo();
     const { dispatch } = this.props;
-    // return;
     if (userInfo) {
       dispatch({
         type: 'user/saveUser',
@@ -278,20 +276,38 @@ class BasicLayout extends React.PureComponent {
               links={[
                 {
                   key: '9AM',
-                  title: <span><img src={require('./../assets/favicon.png')} alt="pic" align="absmiddle" style={{ width: '14px', height: '14px' }} /> 9AM</span>,
+                  title: (
+                    <span>
+                      <img
+                        src={require('./../assets/favicon.png')}
+                        alt="pic"
+                        align="absmiddle"
+                        style={{ width: '14px', height: '14px' }}
+                      />{' '}
+                      9AM
+                    </span>
+                  ),
                   href: 'https://github.com/ant-design/ant-design-pro',
                   blankTarget: true,
                 },
                 {
                   key: 'OfficeWell',
-                  title: <span><img src={require('./../assets/officewell.png')} alt="pic" align="absmiddle" style={{ width: '15px', height: '15px' }} /> OfficeWell</span>,
+                  title: (
+                    <span>
+                      <img
+                        src={require('./../assets/officewell.png')}
+                        alt="pic"
+                        align="absmiddle"
+                        style={{ width: '15px', height: '15px' }}
+                      />{' '}
+                      OfficeWell
+                    </span>
+                  ),
                   href: 'https://github.com/ant-design/ant-design-pro',
                   blankTarget: true,
                 },
               ]}
-              copyright={
-                <Fragment>Copyright©2018 站坐（宁波）技术部出品</Fragment>
-              }
+              copyright={<Fragment>Copyright©2018 站坐（宁波）技术部出品</Fragment>}
             />
           </Footer>
         </Layout>
