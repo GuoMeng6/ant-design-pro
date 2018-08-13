@@ -3,14 +3,28 @@ import G from '../gobal';
 import store from '../index';
 import request from '../utils/request';
 
-const { API_URL } = G;
+const { API_URL, axios } = G;
 // 登录
 export async function login(params) {
   // 执行api请求
-  // return request(`${API_URL}/space/login`, {
-  //   method: 'POST',
-  //   body: params,
-  // });
+  return request(`${API_URL}/space/login`, {
+    method: 'POST',
+    body: params,
+  });
+  console.log('****** login ****** ', params);
+  axios({
+    method: 'post',
+    url: '/space/login',
+    data: params,
+    withCredentials: true,
+  })
+    .then(res => {
+      console.log('***** res ***** ', res);
+    })
+    .catch(err => {
+      console.log('***** err ***** ', err);
+    });
+  return {};
   return {
     status: 'success',
     type: params.userName === 'admin' ? 'admin' : 'account',

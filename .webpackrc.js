@@ -23,13 +23,13 @@ export default {
   lessLoaderOptions: {
     javascriptEnabled: true,
   },
-  proxy: {
-    '/space': {
-      target: 'http://39.108.86.241:9201', //prot
-      changeOrigin: true,
-      pathRewrite: { '^/space': '' },
-    },
-  },
+  // proxy: {
+  //   '/space': {
+  //     target: 'http://39.108.86.241:9201', //prot
+  //     changeOrigin: true,
+  //     pathRewrite: { '^/space': '' },
+  //   },
+  // },
   disableDynamicImport: false, //true 默认关掉了动态加载
   // publicPath: '/',
   // publicPath: 'http://39.108.86.241/home/',

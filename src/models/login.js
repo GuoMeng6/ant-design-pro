@@ -16,33 +16,21 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(login, payload);
-      console.log('******* effects ******* ', response);
+      yield put({
+        type: 'changeLoginStatus',
+        payload: response,
+      });
+      console.log('******* json ******* ', response);
       if (response.status === 'success') {
-        yield put({
-          type: 'changeLoginStatus',
-          payload: response,
-        });
         yield put({
           type: 'user/user',
           payload: response.user,
         });
         reloadAuthorized();
-        const urlParams = new URL(window.location.href);
         const params = getPageQuery();
-        let { redirect } = params;
+        const { redirect } = params;
         console.log('****** redirect ******', redirect);
-        if (redirect) {
-          const redirectUrlParams = new URL(redirect);
-          if (redirectUrlParams.origin === urlParams.origin) {
-            redirect = redirect.substr(urlParams.origin.length);
-            if (redirect.startsWith('/#')) {
-              redirect = redirect.substr(2);
-            }
-          } else {
-            window.location.href = redirect;
-          }
-        }
-        yield put(routerRedux.replace(redirect || '/'));
+        yield put(routerRedux.replace('/home'));
       } else {
         message.error(response.message);
       }
@@ -74,8 +62,8 @@ export default {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
-      setUserInfo(payload.user);
+      setAuthority(payload.currentAuthority || 'user');
+      setUserInfo(payload.data);
       return {
         ...state,
         status: payload.status,

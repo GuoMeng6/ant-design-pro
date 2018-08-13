@@ -22,15 +22,15 @@ const codeMessage = {
 };
 
 function checkStatus(response) {
-  // if (response.status >= 200 && response.status < 500) {
-  //   return response;
-  // }
-  // const errortext = codeMessage[response.status] || response.statusText;
-  // const error = new Error(errortext);
-  // error.name = response.status;
-  // error.response = response;
-  // throw error;
-  return response;
+  if (response.status >= 200 && response.status < 500) {
+    return response;
+  }
+  const errortext = codeMessage[response.status] || response.statusText;
+  const error = new Error(errortext);
+  error.name = response.status;
+  error.response = response;
+  throw error;
+  // return response;
 }
 
 /**
@@ -41,17 +41,19 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
-  const newOptions = options;
-  const { user } = store.getState().user;
-
+  const defaultOptions = {
+    // credentials: 'include',
+    // redirect: 'follow',
+    // mode: 'no-cors',
+  };
+  const newOptions = { ...defaultOptions, ...options };
   newOptions.headers = {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
     ...newOptions.headers,
   };
+
   newOptions.body = JSON.stringify(newOptions.body);
-
-  console.log('********* fetch ******** ', url, newOptions);
-
+  console.log(newOptions);
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => {
@@ -59,10 +61,7 @@ export default function request(url, options) {
       return response.json();
     })
     .catch(err => {
-      console.log('******* err *******', err, store);
-      // return err;
-      const { dispatch } = store;
-      // dispatch(routerRedux.push('/exception/500'));
+      console.log('******* err *******', err);
       return err;
     });
 }
