@@ -31,8 +31,8 @@ export default class Wework extends Component {
   onSearch() {
     const { manaPerson } = this.props;
     const { currentNum } = manaPerson.data;
-    const { query } = this.state;
-    this.fetchDataList(1, currentNum, query);
+    const { query, filterParam, sortParam } = this.state;
+    this.fetchDataList(1, currentNum, query, filterParam, sortParam);
   }
 
   onChangeSearchInfo = e => {
@@ -151,8 +151,8 @@ export default class Wework extends Component {
       this.setState({ modalLoading: false, visible: false });
       const { manaPerson } = this.props;
       const { currentPage, currentNum } = manaPerson.data;
-      const { query } = this.state;
-      this.fetchDataList(currentPage, currentNum, query);
+      const { query, filterParam, sortParam } = this.state;
+      this.fetchDataList(currentPage, currentNum, query, filterParam, sortParam);
     } else {
       this.setState({ modalLoading: false });
     }
@@ -164,8 +164,8 @@ export default class Wework extends Component {
       this.setState({ modalLoading: false, visible: false, editValue: {} });
       const { manaPerson } = this.props;
       const { currentPage, currentNum } = manaPerson.data;
-      const { query } = this.state;
-      this.fetchDataList(currentPage, currentNum, query);
+      const { query, filterParam, sortParam } = this.state;
+      this.fetchDataList(currentPage, currentNum, query, filterParam, sortParam);
     } else {
       this.setState({ modalLoading: false });
     }
@@ -185,7 +185,6 @@ export default class Wework extends Component {
     if (!G._.isEmpty(sorter)) {
       sortParam = JSON.stringify({ userRank: sorter.order === 'descend' ? 'desc' : 'asc' });
     }
-
     this.setState({
       filterParam,
       sortParam,
@@ -199,8 +198,8 @@ export default class Wework extends Component {
   pageChange = pageNumber => {
     const { manaPerson } = this.props;
     const { currentNum } = manaPerson.data;
-    const { query } = this.state;
-    this.fetchDataList(pageNumber, currentNum, query);
+    const { query, filterParam, sortParam } = this.state;
+    this.fetchDataList(pageNumber, currentNum, query, filterParam, sortParam);
   };
 
   fetchDataList(currentPage, currentNum, query, filterParam, sortParam) {
