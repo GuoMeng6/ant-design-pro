@@ -71,9 +71,15 @@ class PersonModal extends Component {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
+      this.setState({ imageUrl: '' });
       handleOk(fieldsValue, this.state.imageUrl);
     });
   };
+
+  onCancel(handleCancel) {
+    this.setState({ imageUrl: '' });
+    handleCancel();
+  }
 
   handleChange = info => {
     if (info.file.status === 'uploading') {
@@ -137,9 +143,9 @@ class PersonModal extends Component {
         visible={visible}
         title="新增用户"
         onOk={this.okHandle}
-        onCancel={handleCancel}
+        onCancel={this.onCancel.bind(this, handleCancel)}
         footer={[
-          <Button key="back" onClick={handleCancel}>
+          <Button key="back" onClick={this.onCancel.bind(this, handleCancel)}>
             关闭
           </Button>,
           <Button key="submit" type="primary" loading={loading} onClick={this.okHandle}>

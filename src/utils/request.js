@@ -22,7 +22,13 @@ const codeMessage = {
 };
 
 function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
+  const { dispatch } = store;
+  if (response.status >= 200 && response.status < 500) {
+    if (status === 401) {
+      dispatch({
+        type: 'login/logout',
+      });
+    }
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
@@ -64,22 +70,8 @@ export default function request(url, options) {
       console.log('****** err ******* ', err);
       const { dispatch } = store;
       const status = err.name;
-      if (status === 401) {
-        dispatch({
-          type: 'login/logout',
-        });
-        return;
-      }
-      if (status === 403) {
-        dispatch(routerRedux.push('/exception/403'));
-        return;
-      }
       if (status <= 504 && status >= 500) {
         dispatch(routerRedux.push('/exception/500'));
-        return;
-      }
-      if (status >= 404 && status < 422) {
-        dispatch(routerRedux.push('/exception/404'));
       }
     });
 }

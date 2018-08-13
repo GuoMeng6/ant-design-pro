@@ -133,7 +133,18 @@ export default class Wework extends Component {
     console.log('******* handleOK ******* ', fieldsValue, avatar);
     this.setState({ modalLoading: true });
     delete fieldsValue.upload;
-    this.addPerson({ ...fieldsValue, avatar });
+    this.addPerson({ ...fieldsValue, avatar, callback: this.upload.bind(this) });
+  };
+
+  upload = res => {
+    console.log('******** upload ******* ', res);
+    if (res.status === 'success') {
+      this.setState({ modalLoading: false, visible: false });
+      const { manaPerson } = this.props;
+      const { currentPage, currentNum } = manaPerson.data;
+      const { query } = this.state;
+      this.fetchDataList(currentPage, currentNum, query);
+    }
   };
 
   handleCancel = () => {
@@ -171,8 +182,6 @@ export default class Wework extends Component {
 
   render() {
     const { manaPerson, user, loading } = this.props;
-    console.log('****** Person ******* ', manaPerson);
-
     const { filteredInfo, modalLoading, visible, editValue, query } = this.state;
     const columns = this.getColumns(filteredInfo);
     const { currentNum, currentPage, totalNum } = manaPerson.data;

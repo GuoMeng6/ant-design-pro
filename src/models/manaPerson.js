@@ -25,7 +25,13 @@ export default {
     },
     *addPerson({ payload }, { call, put }) {
       const response = yield call(addPerson, payload);
-      console.log('****** addPerson ****** ', response);
+      console.log('****** addPerson ****** ', response, payload);
+      payload.callback(response);
+      if (response && response.status === 'success') {
+        message.success(response.data.data.msg);
+      } else {
+        message.error('添加失败');
+      }
     },
   },
 
