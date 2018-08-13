@@ -12,8 +12,6 @@ import './rollbar';
 
 import './index.less';
 
-console.log('****** G ******* ', G);
-
 const onAction = [];
 // 开发环境启用redux-logger
 /* eslint-disable no-undef */

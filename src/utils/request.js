@@ -22,7 +22,7 @@ const codeMessage = {
 };
 
 function checkStatus(response) {
-  if (response.status >= 200 && response.status < 500) {
+  if (response.status >= 200 && response.status < 300) {
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
@@ -30,7 +30,6 @@ function checkStatus(response) {
   error.name = response.status;
   error.response = response;
   throw error;
-  // return response;
 }
 
 /**
@@ -53,7 +52,8 @@ export default function request(url, options) {
   };
 
   newOptions.body = JSON.stringify(newOptions.body);
-  console.log(newOptions);
+  console.log('******* fetch ******* ', url, newOptions);
+
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => {
@@ -61,7 +61,25 @@ export default function request(url, options) {
       return response.json();
     })
     .catch(err => {
-      console.log('******* err *******', err);
-      return err;
+      console.log('****** err ******* ', err);
+      const { dispatch } = store;
+      const status = err.name;
+      if (status === 401) {
+        dispatch({
+          type: 'login/logout',
+        });
+        return;
+      }
+      if (status === 403) {
+        dispatch(routerRedux.push('/exception/403'));
+        return;
+      }
+      if (status <= 504 && status >= 500) {
+        dispatch(routerRedux.push('/exception/500'));
+        return;
+      }
+      if (status >= 404 && status < 422) {
+        dispatch(routerRedux.push('/exception/404'));
+      }
     });
 }

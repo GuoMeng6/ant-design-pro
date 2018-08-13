@@ -13,9 +13,9 @@ import PersonModal from './components/PersonModal';
 export default class Wework extends Component {
   // 表单以及分页
   state = {
-    quire: '',
+    query: '',
     filteredInfo: {},
-    loading: false,
+    modalLoading: false,
     visible: false,
     editValue: {},
   };
@@ -29,18 +29,18 @@ export default class Wework extends Component {
   onSearch() {
     const { manaPerson } = this.props;
     const { currentNum } = manaPerson.data;
-    const { quire } = this.state;
-    this.fetchDataList(1, currentNum, quire);
+    const { query } = this.state;
+    this.fetchDataList(1, currentNum, query);
   }
 
   onChangeSearchInfo = e => {
-    this.setState({ quire: e.target.value });
+    this.setState({ query: e.target.value });
   };
 
   emitEmpty = () => {
     this.userNameInput.focus();
-    this.setState({ quire: '' });
-  }
+    this.setState({ query: '' });
+  };
 
   onEdit(text) {
     this.setState({
@@ -57,8 +57,12 @@ export default class Wework extends Component {
     const columns = [
       {
         title: '序号',
-        dataIndex: 'id',
-        key: 'id',
+        key: 'uid',
+        render: (text, record, index) => (
+          <Fragment>
+            <font>{index + 1}</font>
+          </Fragment>
+        ),
       },
       {
         title: '姓名',
@@ -72,8 +76,8 @@ export default class Wework extends Component {
       },
       {
         title: '职务',
-        dataIndex: 'duty',
-        key: 'duty',
+        dataIndex: 'position',
+        key: 'position',
       },
       {
         title: '使用状态',
@@ -89,12 +93,11 @@ export default class Wework extends Component {
       },
       {
         title: '备注',
-        dataIndex: 'mark',
-        key: 'mark',
+        dataIndex: 'remark',
+        key: 'remark',
       },
       {
         title: '操作',
-        key: 'setting',
         render: (text, record, index) => (
           <Fragment>
             <a
@@ -126,12 +129,11 @@ export default class Wework extends Component {
     });
   };
 
-  handleOk = () => {
-    // console.log('******* handleOK ******* ', fieldsValue);
-    this.setState({ loading: true });
-    setTimeout(() => {
-      this.setState({ loading: false, visible: false });
-    }, 3000);
+  handleOk = (fieldsValue, avatar) => {
+    console.log('******* handleOK ******* ', fieldsValue, avatar);
+    this.setState({ modalLoading: true });
+    delete fieldsValue.upload;
+    this.addPerson({ ...fieldsValue, avatar });
   };
 
   handleCancel = () => {
@@ -147,24 +149,34 @@ export default class Wework extends Component {
   pageChange = pageNumber => {
     const { manaPerson } = this.props;
     const { currentNum } = manaPerson.data;
-    const { quire } = this.state;
-    this.fetchDataList(pageNumber, currentNum, quire);
+    const { query } = this.state;
+    this.fetchDataList(pageNumber, currentNum, query);
   };
 
-  fetchDataList(currentPage, currentNum, quire) {
+  fetchDataList(currentPage, currentNum, query) {
     const { dispatch } = this.props;
     dispatch({
       type: 'manaPerson/fetch',
-      payload: { currentPage, currentNum, quire },
+      payload: { currentPage, currentNum, query },
+    });
+  }
+
+  addPerson(data) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'manaPerson/addPerson',
+      payload: data,
     });
   }
 
   render() {
-    const { manaPerson, user } = this.props;
-    const { filteredInfo, loading, visible, editValue, quire } = this.state;
+    const { manaPerson, user, loading } = this.props;
+    console.log('****** Person ******* ', manaPerson);
+
+    const { filteredInfo, modalLoading, visible, editValue, query } = this.state;
     const columns = this.getColumns(filteredInfo);
     const { currentNum, currentPage, totalNum } = manaPerson.data;
-    const suffix = quire ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
+    const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     return (
       <div className={styles.main}>
         <h3>人员管理</h3>
@@ -186,11 +198,11 @@ export default class Wework extends Component {
               搜索
             </Button>
             <Input
-              value={quire}
+              value={query}
               className={styles.widthInput}
               placeholder="姓名 / 手机 / 备注"
               suffix={suffix}
-              ref={node => this.userNameInput = node}
+              ref={node => (this.userNameInput = node)}
               onChange={this.onChangeSearchInfo.bind(this)}
             />
           </Col>
@@ -201,7 +213,8 @@ export default class Wework extends Component {
           <Col span={24}>
             <Table
               rowKey="id"
-              dataSource={manaPerson.data.dataList}
+              loading={loading}
+              dataSource={manaPerson.data.rows}
               columns={columns}
               onChange={this.handleChange.bind(this)}
               pagination={false}
@@ -220,7 +233,7 @@ export default class Wework extends Component {
         <PersonModal
           user={user}
           visible={visible}
-          loading={loading}
+          loading={modalLoading}
           editValue={editValue}
           handleOk={this.handleOk.bind(this)}
           handleCancel={this.handleCancel.bind(this)}
