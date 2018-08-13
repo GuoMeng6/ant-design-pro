@@ -71,8 +71,12 @@ class PersonModal extends Component {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       // form.resetFields();
-      this.setState({ imageUrl: '' });
-      handleOk(fieldsValue, this.state.imageUrl);
+      // this.setState({ imageUrl: '' });
+      handleOk(
+        { ...fieldsValue, position: fieldsValue.position || '', remark: fieldsValue.remark || '' },
+        this.state.imageUrl,
+        this.props.editValue.uid
+      );
     });
   };
 
@@ -126,7 +130,7 @@ class PersonModal extends Component {
   }
 
   render() {
-    const { visible, loading, handleCancel, form, user } = this.props;
+    const { visible, loading, handleCancel, form } = this.props;
     const { imageUrl, avatarLoading } = this.state;
     const { getFieldDecorator } = form;
     const uploadButton = (

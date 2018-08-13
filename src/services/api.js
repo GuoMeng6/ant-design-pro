@@ -73,12 +73,18 @@ export async function getHomeData() {
 
 // 获取人员数组
 export async function getPersonnelList(payload) {
-  const { currentNum, currentPage, query } = payload;
+  const { currentNum, currentPage, query, filterParam, sortParam } = payload;
   let url = `${G.API_URL}/space/personList?token=${
     store.getState().user.user.token
   }&currentNum=${currentNum}&currentPage=${currentPage}`;
   if (query) {
     url += `&query=${query}`;
+  }
+  if (filterParam) {
+    url += `&filterParam=${filterParam}`;
+  }
+  if (sortParam) {
+    url += `&sortParam=${sortParam}`;
   }
   return request(url, { method: 'GET' });
 }
@@ -88,6 +94,15 @@ export async function addPerson(payload) {
   const url = `${G.API_URL}/space/personAdd`;
   return request(url, {
     method: 'PUT',
+    body: { ...payload, token: store.getState().user.user.token },
+  });
+}
+
+// 修改或删除人员
+export async function updatePerson(payload) {
+  const url = `${G.API_URL}/space/personUpdate`;
+  return request(url, {
+    method: 'POST',
     body: { ...payload, token: store.getState().user.user.token },
   });
 }

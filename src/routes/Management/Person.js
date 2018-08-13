@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Table, Button, Input, Divider, Pagination, Icon } from 'antd';
 
+import G from '../../gobal';
 import styles from './Person.less';
 import PersonModal from './components/PersonModal';
 
@@ -14,7 +15,8 @@ export default class Wework extends Component {
   // 表单以及分页
   state = {
     query: '',
-    filteredInfo: {},
+    filterParam: '',
+    sortParam: '',
     modalLoading: false,
     visible: false,
     editValue: {},
@@ -49,8 +51,9 @@ export default class Wework extends Component {
     });
   }
 
-  onDelete(text, record, index) {
+  onDelete(text) {
     // console.log('********* 删除 ******** ', text, record, index);
+    this.updatePerson({ uid: text.uid, isDel: true, callback: this.update.bind(this) });
   }
 
   getColumns(filteredInfo) {
@@ -83,13 +86,14 @@ export default class Wework extends Component {
         title: '使用状态',
         dataIndex: 'status',
         key: 'status',
+        sorter: true,
         filters: [
           { text: '全部', value: '全部' },
           { text: '连接中', value: '连接中' },
           { text: '未连接', value: '未连接' },
         ],
-        filteredValue: filteredInfo.mark || null,
-        onFilter: (value, record) => record.mark.includes(value),
+        // filteredValue: filteredInfo.mark || null,
+        // onFilter: (value, record) => record.mark.includes(value),
       },
       {
         title: '备注',
@@ -129,17 +133,35 @@ export default class Wework extends Component {
     });
   };
 
-  handleOk = (fieldsValue, avatar) => {
+  handleOk = (fieldsValue, avatar, uid) => {
     console.log('******* handleOK ******* ', fieldsValue, avatar);
     this.setState({ modalLoading: true });
     delete fieldsValue.upload;
-    this.addPerson({ ...fieldsValue, avatar, callback: this.upload.bind(this) });
+    if (G._.isEmpty(this.state.editValue)) {
+      this.addPerson({ ...fieldsValue, avatar, callback: this.upload.bind(this) });
+      return;
+    }
+    fieldsValue.uid = uid;
+    fieldsValue.isDel = false;
+    this.updatePerson({ ...fieldsValue, avatar, callback: this.update.bind(this) });
   };
 
   upload = res => {
-    console.log('******** upload ******* ', res);
     if (res.status === 'success') {
       this.setState({ modalLoading: false, visible: false });
+      const { manaPerson } = this.props;
+      const { currentPage, currentNum } = manaPerson.data;
+      const { query } = this.state;
+      this.fetchDataList(currentPage, currentNum, query);
+    } else {
+      this.setState({ modalLoading: false });
+    }
+  };
+
+  update = res => {
+    console.log('******** update ******* ', res);
+    if (res.status === 'success') {
+      this.setState({ modalLoading: false, visible: false, editValue: {} });
       const { manaPerson } = this.props;
       const { currentPage, currentNum } = manaPerson.data;
       const { query } = this.state;
@@ -153,10 +175,25 @@ export default class Wework extends Component {
     this.setState({ visible: false, editValue: {} });
   };
 
-  handleChange = (pagination, filters) => {
+  handleChange = (pagination, filters, sorter) => {
+    console.log('******* handleChange ******* ', { filters, sorter });
+    let filterParam = '';
+    let sortParam = '';
+    if (!G._.isEmpty(filters)) {
+      filterParam = JSON.stringify({ userStatus: filters.status });
+    }
+    if (!G._.isEmpty(sorter)) {
+      sortParam = JSON.stringify({ userRank: sorter.order === 'descend' ? 'desc' : 'asc' });
+    }
+
     this.setState({
-      filteredInfo: filters,
+      filterParam,
+      sortParam,
     });
+    const { manaPerson } = this.props;
+    const { currentPage, currentNum } = manaPerson.data;
+    const { query } = this.state;
+    this.fetchDataList(currentPage, currentNum, query, filterParam, sortParam);
   };
 
   pageChange = pageNumber => {
@@ -166,11 +203,11 @@ export default class Wework extends Component {
     this.fetchDataList(pageNumber, currentNum, query);
   };
 
-  fetchDataList(currentPage, currentNum, query) {
+  fetchDataList(currentPage, currentNum, query, filterParam, sortParam) {
     const { dispatch } = this.props;
     dispatch({
       type: 'manaPerson/fetch',
-      payload: { currentPage, currentNum, query },
+      payload: { currentPage, currentNum, query, filterParam, sortParam },
     });
   }
 
@@ -178,6 +215,14 @@ export default class Wework extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'manaPerson/addPerson',
+      payload: data,
+    });
+  }
+
+  updatePerson(data) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'manaPerson/updatePerson',
       payload: data,
     });
   }
@@ -223,7 +268,7 @@ export default class Wework extends Component {
           {/* 表单 */}
           <Col span={24}>
             <Table
-              rowKey="id"
+              rowKey="uid"
               loading={loading}
               dataSource={manaPerson.data.rows}
               columns={columns}

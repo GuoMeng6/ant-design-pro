@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { getPersonnelList, addPerson } from '../services/api';
+import { getPersonnelList, addPerson, updatePerson } from '../services/api';
 
 export default {
   namespace: 'manaPerson',
@@ -33,6 +33,20 @@ export default {
         const { errors } = response.message;
         if (!errors[0]) {
           return message.error('添加失败');
+        }
+        message.error(`${errors[0].field} ${errors[0].message}`);
+      }
+    },
+    *updatePerson({ payload }, { call }) {
+      const response = yield call(updatePerson, payload);
+      console.log('****** updatePerson ****** ', response);
+      payload.callback(response);
+      if (response && response.status === 'success') {
+        message.success(payload.isDel ? '删除成功' : '修改成功');
+      } else {
+        const { errors } = response.message;
+        if (!errors[0]) {
+          return message.error(payload.isDel ? '删除失败' : '修改失败');
         }
         message.error(`${errors[0].field} ${errors[0].message}`);
       }
