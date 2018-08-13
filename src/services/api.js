@@ -3,6 +3,8 @@ import G from '../gobal';
 import store from '../index';
 import request from '../utils/request';
 
+const token =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI4ZDQ2OGQ0YS1lM2RlLTRmMjYtOTY3OC1hN2Y3Y2ZkZjVhMjIiLCJ1c2VyTmFtZSI6IjlhbS1tYW5hZ2VyIiwibmlja05hbWUiOiI5YW0tbWFuYWdlciIsImNvbXBhbnlJZCI6MTEsImRlcGFydG1lbnQiOjAsInBvc2l0aW9uIjpudWxsLCJwaG9uZSI6bnVsbCwiYXZhdGFyIjoiaHR0cDovL3BkMzZhN2p2dy5ia3QuY2xvdWRkbi5jb20vOGQ0NjhkNGEtZTNkZS00ZjI2LTk2NzgtYTdmN2NmZGY1YTIyLTE1MzQxNDI5MjQucG5nIiwiZG4iOiJjbj05YW0tbWFuYWdlcixvdT05YW0sZGM9ZXhhbXBsZSxkYz1vcmciLCJpYXQiOjE1MzQxNDMyMTYsImV4cCI6MTUzNDE0NjgxNn0.jkS1C4b_eeNyIJswuNna5xOZoaAE6ZlQofyLCGf0_aw';
 const { API_URL, axios } = G;
 // 登录
 export async function login(params) {
@@ -11,32 +13,6 @@ export async function login(params) {
     method: 'POST',
     body: params,
   });
-  console.log('****** login ****** ', params);
-  axios({
-    method: 'post',
-    url: '/space/login',
-    data: params,
-    withCredentials: true,
-  })
-    .then(res => {
-      console.log('***** res ***** ', res);
-    })
-    .catch(err => {
-      console.log('***** err ***** ', err);
-    });
-  return {};
-  return {
-    status: 'success',
-    type: params.userName === 'admin' ? 'admin' : 'account',
-    currentAuthority: 'user',
-    user: {
-      name: 'Serati Ma',
-      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-      userId: '00000001',
-      token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI4ZDQ2OGQ0YS1lM2RlLTRmMjYtOTY3OC1hN2Y3Y2ZkZjVhMjIiLCJ1c2VyTmFtZSI6IjlhbS1tYW5hZ2VyIiwibmlja05hbWUiOiI5YW0tbWFuYWdlciIsImNvbXBhbnlJZCI6MTEsImRlcGFydG1lbnQiOjAsInBvc2l0aW9uIjpudWxsLCJwaG9uZSI6bnVsbCwiYXZhdGFyIjoiMTExMSIsImRuIjoiY249OWFtLW1hbmFnZXIsb3U9OWFtLGRjPVNwYWNlU2VydmVyLGRjPWNvbSIsImlhdCI6MTUzMzk4NjU4OCwiZXhwIjoxNTMzOTkwMTg4fQ.jYBHfVWqGq2quR7WRjFCdzYzqRKsjj09oNcvRSGcU8A',
-    },
-  };
 }
 
 // 登出
@@ -110,40 +86,18 @@ export async function getHomeData() {
 
 // 获取人员数组
 export async function getPersonnelList(payload) {
-  console.log('******* getPersonnelList ***** ', store.getState().user, payload);
-
-  return request(`${G.API_URL}/space/personList?token=${store.getState().user.user.token}`, {
-    method: 'GET',
-  });
-  const userData = [];
-  for (let i = 0; i < payload.currentNum; i += 1) {
-    const random1 = parseInt((Math.random() * 1000) % 3);
-    const random2 = parseInt((Math.random() * 1000) % 3);
-    const random3 = parseInt((Math.random() * 1000) % 3);
-    userData.push({
-      id: (payload.currentPage - 1) * 10 + i + 1,
-      name: `大华 第${payload.currentPage}页 ${i}`,
-      phone: `${payload.quire || G.moment().unix()}-${i}`,
-      duty: random1 === 0 ? '市场部' : random1 === 1 ? '人事部' : '技术部',
-      status: random2 === 0 ? '10002' : random2 === 1 ? '1004、1005' : '未使用',
-      mark: random3 === 0 ? '内部员工' : random3 === 1 ? '管理员' : '游客',
-    });
+  const { currentNum, currentPage, query } = payload;
+  let url = `${G.API_URL}/space/personList?token=${
+    store.getState().user.user.token
+  }&currentNum=${currentNum}&currentPage=${currentPage}`;
+  if (query) {
+    url += `&query=${query}`;
   }
-  return {
-    status: 'ok',
-    data: {
-      currentPage: payload.currentPage,
-      totalPage: payload.quire ? 10 : 20,
-      totalNum: payload.quire ? 150 : 300,
-      currentNum: payload.currentNum,
-      dataList: userData,
-    },
-  };
+  return request(url, { method: 'GET' });
 }
 // 获取设备列表
 export async function getResourceList(payload) {
   console.log('******* payload ******* ', payload);
-
   // return G.request(
   //   'post',
   //   '/space/resourceList',

@@ -4,7 +4,7 @@ export default {
   namespace: 'manaPerson',
   state: {
     data: {
-      dataList: [],
+      rows: [],
       currentPage: 1,
       currentNum: 15,
     },
@@ -13,7 +13,8 @@ export default {
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(getPersonnelList, payload);
-      if (response.status === 'ok') {
+      console.log('******** fetch ******** ', response);
+      if (response && response.status === 'success') {
         yield put({
           type: 'save',
           payload: response.data,
@@ -24,9 +25,15 @@ export default {
 
   reducers: {
     save(state, action) {
+      const { currentPage, rows } = action.payload;
+
       return {
         ...state,
-        data: action.payload,
+        data: {
+          ...action.payload,
+          currentPage: Number(currentPage),
+          currentNum: state.data.currentNum,
+        },
       };
     },
   },
