@@ -79,18 +79,18 @@ export default class Wework extends Component {
         title: '使用状态',
         dataIndex: 'status',
         key: 'status',
+        filters: [
+          { text: '全部', value: '全部' },
+          { text: '连接中', value: '连接中' },
+          { text: '未连接', value: '未连接' },
+        ],
+        filteredValue: filteredInfo.mark || null,
+        onFilter: (value, record) => record.mark.includes(value),
       },
       {
         title: '备注',
         dataIndex: 'mark',
         key: 'mark',
-        filters: [
-          { text: '管理员', value: '管理员' },
-          { text: '内部员工', value: '内部员工' },
-          { text: '游客', value: '游客' },
-        ],
-        filteredValue: filteredInfo.mark || null,
-        onFilter: (value, record) => record.mark.includes(value),
       },
       {
         title: '操作',
