@@ -8,12 +8,12 @@ const env = 'dev';
 // const env = 'prod';
 
 let API_URL = '/space';
-if (env === 'prod') {
-  API_URL = 'http://39.108.86.241:9201';
-} else if (env === 'dev') {
-  API_URL = 'http://192.168.1.141:7001';
-  // API_URL = 'http://39.108.86.241:9201';
-}
+// if (env === 'prod') {
+//   API_URL = 'http://39.108.86.241:9201';
+// } else if (env === 'dev') {
+//   API_URL = 'http://192.168.1.141:7001';
+//   // API_URL = 'http://39.108.86.241:9201';
+// }
 
 export default {
   API_URL,

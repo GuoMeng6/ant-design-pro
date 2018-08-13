@@ -1,4 +1,5 @@
 import { getResourceList } from '../services/api';
+import { message } from 'antd';
 
 export default {
   namespace: 'manaEquip',
@@ -13,13 +14,15 @@ export default {
   effects: {
     *resourceList({ payload }, { call, put }) {
       const response = yield call(getResourceList, payload);
-
+      console.log("*****response*****" + JSON.stringify(response));
       return;
-      if (response.status === 'ok') {
+      if (response.status === 'success') {
         yield put({
           type: 'equipSave',
-          payload: response.data,
+          payload: response.rows,
         });
+      } else {
+        message.error(response.message);
       }
     },
   },
