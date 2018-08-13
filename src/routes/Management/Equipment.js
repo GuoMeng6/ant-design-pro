@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider, Popconfirm, message, Pagination } from 'antd';
+import { Row, Col, Table, Button, Input, Divider, Popconfirm, message, Pagination, Icon } from 'antd';
 
 import styles from './Person.less';
 import EquipModal from './components/EquipModal.js';
@@ -37,9 +37,14 @@ export default class Wework extends Component {
     this.setState({ quire: e.target.value });
   };
 
-  untied(text, record, index) {}
+  emitEmpty = () => {
+    this.userNameInput.focus();
+    this.setState({ quire: '' });
+  }
 
-  untiedConfirm() {}
+  untied(text, record, index) { }
+
+  untiedConfirm() { }
 
   // 解除弹窗
   showModal = () => {
@@ -148,7 +153,7 @@ export default class Wework extends Component {
   };
 
   fetchDataList(currentPage, currentNum) {
-    console.log('******** fetchDataList ********', { currentPage, currentNum });
+    // console.log('******** fetchDataList ********', { currentPage, currentNum });
 
     const { dispatch } = this.props;
     dispatch({
@@ -159,9 +164,10 @@ export default class Wework extends Component {
 
   render() {
     const { manaEquip } = this.props;
-    const { filteredInfo, visible, loading, editValue } = this.state;
+    const { filteredInfo, visible, loading, editValue, quire } = this.state;
     const columns = this.getColumns(filteredInfo);
     const { currentNum, currentPage, totalNum } = manaEquip.data;
+    const suffix = quire ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     // console.log('********* manaEquip ********* ', manaEquip.data);
     return (
       <div className={styles.main}>
@@ -179,8 +185,11 @@ export default class Wework extends Component {
               搜索
             </Button>
             <Input
+              value={quire}
               className={styles.widthInput}
               placeholder="设备编号 / 使用者 / 备注"
+              suffix={suffix}
+              ref={node => this.userNameInput = node}
               onChange={this.onChangeSearchInfo.bind(this)}
             />
           </Col>

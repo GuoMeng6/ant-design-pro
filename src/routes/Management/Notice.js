@@ -54,6 +54,11 @@ export default class Notice extends Component {
     this.setState({ searchInfo: e.target.value });
   };
 
+  emitEmpty = () => {
+    this.userNameInput.focus();
+    this.setState({ searchInfo: '' });
+  }
+
   onDetail(text, record, index) {
     this.setState({
       detail: {
@@ -93,7 +98,7 @@ export default class Notice extends Component {
         key: 'setting',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={() => {}}>置顶</a>
+            <a onClick={() => { }}>置顶</a>
             <Divider type="vertical" />
             <a onClick={this.copyPush.bind(this, text)}>复制</a>
             <Divider type="vertical" />
@@ -143,8 +148,9 @@ export default class Notice extends Component {
 
   render() {
     const { manaNotice } = this.props;
-    const { filteredInfo, pagination } = this.state;
+    const { filteredInfo, pagination, searchInfo } = this.state;
     const columns = this.getColumns(filteredInfo);
+    const suffix = searchInfo ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     return (
       <div className={styles.main}>
         <h3>通知列表</h3>
@@ -166,8 +172,11 @@ export default class Notice extends Component {
               搜索
             </Button>
             <Input
+              value={searchInfo}
               className={styles.widthInput}
               placeholder="标题"
+              suffix={suffix}
+              ref={node => this.userNameInput = node}
               onChange={this.onChangeSearchInfo.bind(this)}
             />
           </Col>

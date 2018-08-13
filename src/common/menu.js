@@ -20,7 +20,7 @@ const menuData = [
         path: 'equipment',
       },
       {
-        name: '信息管理',
+        name: '通知管理',
         path: 'notice',
       },
     ],

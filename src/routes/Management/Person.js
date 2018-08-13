@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider, Pagination } from 'antd';
+import { Row, Col, Table, Button, Input, Divider, Pagination, Icon } from 'antd';
 
 import styles from './Person.less';
 import PersonModal from './components/PersonModal';
@@ -36,6 +36,11 @@ export default class Wework extends Component {
   onChangeSearchInfo = e => {
     this.setState({ quire: e.target.value });
   };
+
+  emitEmpty = () => {
+    this.userNameInput.focus();
+    this.setState({ quire: '' });
+  }
 
   onEdit(text) {
     this.setState({
@@ -156,9 +161,10 @@ export default class Wework extends Component {
 
   render() {
     const { manaPerson, user } = this.props;
-    const { filteredInfo, loading, visible, editValue } = this.state;
+    const { filteredInfo, loading, visible, editValue, quire } = this.state;
     const columns = this.getColumns(filteredInfo);
     const { currentNum, currentPage, totalNum } = manaPerson.data;
+    const suffix = quire ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     return (
       <div className={styles.main}>
         <h3>人员管理</h3>
@@ -180,8 +186,11 @@ export default class Wework extends Component {
               搜索
             </Button>
             <Input
+              value={quire}
               className={styles.widthInput}
               placeholder="姓名 / 手机 / 备注"
+              suffix={suffix}
+              ref={node => this.userNameInput = node}
               onChange={this.onChangeSearchInfo.bind(this)}
             />
           </Col>
