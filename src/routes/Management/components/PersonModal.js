@@ -59,7 +59,7 @@ class PersonModal extends Component {
       return;
     }
     const re = /^1[3|4|5|8][0-9]\d{4,8}$/;
-    if (value.length === 11 || re.test(value)) {
+    if (value.length === 11 && re.test(value)) {
       callback();
     } else {
       callback('手机号格式有误');
@@ -70,7 +70,7 @@ class PersonModal extends Component {
     const { form, handleOk } = this.props;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      form.resetFields();
+      // form.resetFields();
       this.setState({ imageUrl: '' });
       handleOk(fieldsValue, this.state.imageUrl);
     });
@@ -96,7 +96,7 @@ class PersonModal extends Component {
     }
   };
 
-  next(value) { }
+  next(value) {}
 
   error(err) {
     this.setState({ avatarLoading: false });
@@ -170,8 +170,8 @@ class PersonModal extends Component {
               {imageUrl ? (
                 <img className={styles.avatar} src={imageUrl} alt="avatar" />
               ) : (
-                  uploadButton
-                )}
+                uploadButton
+              )}
             </Upload>
           )}
         </FormItem>

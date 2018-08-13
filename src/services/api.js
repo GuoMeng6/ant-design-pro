@@ -76,7 +76,7 @@ export async function getPersonnelList(payload) {
   const { currentNum, currentPage, query } = payload;
   let url = `${G.API_URL}/space/personList?token=${
     store.getState().user.user.token
-    }&currentNum=${currentNum}&currentPage=${currentPage}`;
+  }&currentNum=${currentNum}&currentPage=${currentPage}`;
   if (query) {
     url += `&query=${query}`;
   }
@@ -129,29 +129,22 @@ export async function getResourceList(payload) {
 }
 
 // 获去通知列表
-export async function getNoticeList() {
-  const userData = [];
-  const unix = G.moment().unix();
-  for (let i = 0; i < 150; i += 1) {
-    userData.push({
-      id: i + 1,
-      noticeId: `notice${i}`,
-      title: `上海自来水来自海上${i}`,
-      receiver: ['id10', 'id11'],
-      editor: '<p>Hello World</p>',
-      createdAt: G.moment.unix(unix + i * 600).format('MM/DD  hh:mm'),
-      topping: false,
-    });
+export async function getNoticeList(payload) {
+  const { currentNum, currentPage, query } = payload;
+  let url = `${G.API_URL}/space/notificationList?token=${
+    store.getState().user.user.token
+  }&currentNum=${currentNum}&currentPage=${currentPage}`;
+  if (query) {
+    url += `&query=${query}`;
   }
-  return {
-    status: 'ok',
-    data: userData,
-  };
+  return request(url, { method: 'GET' });
 }
 
 // 发送通知
-export async function sendNotice(params) {
-  return {
-    status: 'ok',
-  };
+export async function sendNotice(payload) {
+  const url = `${G.API_URL}/space/notificationAdd`;
+  return request(url, {
+    method: 'PUT',
+    body: { ...payload, token: store.getState().user.user.token },
+  });
 }

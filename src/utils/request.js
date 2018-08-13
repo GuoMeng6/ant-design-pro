@@ -24,9 +24,10 @@ const codeMessage = {
 function checkStatus(response) {
   const { dispatch } = store;
   if (response.status >= 200 && response.status < 500) {
-    if (status === 401) {
+    if (response.status === 401) {
       dispatch({
         type: 'login/logout',
+        payload: { tokenExpired: true },
       });
     }
     return response;
@@ -59,7 +60,6 @@ export default function request(url, options) {
 
   newOptions.body = JSON.stringify(newOptions.body);
   console.log('******* fetch ******* ', url, newOptions);
-
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => {

@@ -5,13 +5,19 @@ export default {
   namespace: 'manaNotice',
 
   state: {
-    noticeList: [],
+    data: {
+      rows: [],
+      currentPage: 1,
+      currentNum: 15,
+    },
     copyValue: '',
   },
 
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(getNoticeList, payload);
+      console.log('******** notice ******* ', response, payload);
+      return;
       if (response.status === 'ok') {
         yield put({
           type: 'save',
@@ -21,6 +27,8 @@ export default {
     },
     *sendNotice({ payload }, { call, put }) {
       const response = yield call(sendNotice, payload);
+      console.log('******** sendNotice ******* ', response);
+      return;
       if (response.status === 'ok') {
         yield put({
           type: 'add',

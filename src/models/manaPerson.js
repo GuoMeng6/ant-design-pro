@@ -23,14 +23,18 @@ export default {
         message.error(response.message);
       }
     },
-    *addPerson({ payload }, { call, put }) {
+    *addPerson({ payload }, { call }) {
       const response = yield call(addPerson, payload);
-      console.log('****** addPerson ****** ', response, payload);
+      console.log('****** addPerson ****** ', response);
       payload.callback(response);
       if (response && response.status === 'success') {
         message.success(response.data.data.msg);
       } else {
-        message.error('添加失败');
+        const { errors } = response.message;
+        if (!errors[0]) {
+          return message.error('添加失败');
+        }
+        message.error(`${errors[0].field} ${errors[0].message}`);
       }
     },
   },

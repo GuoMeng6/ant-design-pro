@@ -82,11 +82,16 @@ class NewNoticeForm extends Component {
         payload: {
           title: values.title,
           receiver: values.person,
-          editor: editorState,
+          content: editorState,
+          callback: this.sendResponse.bind(this),
         },
       });
-      history.back(-1);
     });
+  }
+
+  sendResponse(res) {
+    console.log('****** res ******* ', res);
+    // history.back(-1);
   }
 
   checkEditor(rule, value, callback) {

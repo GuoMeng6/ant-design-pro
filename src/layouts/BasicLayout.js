@@ -117,7 +117,7 @@ class BasicLayout extends React.PureComponent {
       });
     } else {
       dispatch({
-        type: 'login/logout',
+        type: 'login/logoutWithoutToken',
       });
     }
   }

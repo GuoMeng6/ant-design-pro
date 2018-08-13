@@ -16,49 +16,54 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(login, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      });
       if (response.status === 'success') {
+        yield put({
+          type: 'changeLoginStatus',
+          payload: response,
+        });
         yield put({
           type: 'user/user',
           payload: response.data,
         });
         reloadAuthorized();
-        const params = getPageQuery();
-        const { redirect } = params;
         yield put(routerRedux.replace('/home'));
       } else {
         message.error(response.message);
       }
       // return;
     },
-    *logout(_, { call, put }) {
-      const response = yield call(logout);
-      console.log('****** logout ****** ', response);
-      if (response && response.status === 'success') {
-        yield put({
-          type: 'changeLoginStatus',
-          payload: {
-            status: false,
-            currentAuthority: 'guest',
-          },
-        });
-        yield put({
-          type: 'user/user',
-          payload: {},
-        });
-        reloadAuthorized();
-        yield put(
-          routerRedux.push({
-            pathname: '/user/login',
-            search: stringify({
-              redirect: window.location.href,
-            }),
-          })
-        );
+    *logout({ payload = {} }, { call, put }) {
+      if (payload.tokenExpired) {
+        message.error('登录信息过期');
+        yield put({ type: 'logoutWithoutToken' });
+        return;
       }
+      const response = yield call(logout);
+      if (response.status === 'success') {
+        yield put({ type: 'logoutWithoutToken' });
+      }
+    },
+    *logoutWithoutToken(_, { call, put }) {
+      yield put({
+        type: 'changeLoginStatus',
+        payload: {
+          status: false,
+          currentAuthority: 'guest',
+        },
+      });
+      yield put({
+        type: 'user/user',
+        payload: {},
+      });
+      reloadAuthorized();
+      yield put(
+        routerRedux.push({
+          pathname: '/user/login',
+          search: stringify({
+            redirect: window.location.href,
+          }),
+        })
+      );
     },
   },
 

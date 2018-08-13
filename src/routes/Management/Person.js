@@ -144,6 +144,8 @@ export default class Wework extends Component {
       const { currentPage, currentNum } = manaPerson.data;
       const { query } = this.state;
       this.fetchDataList(currentPage, currentNum, query);
+    } else {
+      this.setState({ modalLoading: false });
     }
   };
 

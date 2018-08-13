@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider, Drawer, Icon } from 'antd';
+import { Row, Col, Table, Button, Input, Divider, Drawer, Icon, Pagination } from 'antd';
 
 import G from '../../gobal';
 import styles from './Person.less';
@@ -12,13 +12,7 @@ import styles from './Person.less';
 export default class Notice extends Component {
   // 表单以及分页
   state = {
-    searchInfo: '',
-    pagination: {
-      current: 1,
-      pageSize: 15,
-      showQuickJumper: true,
-      total: 250,
-    },
+    query: '',
     visible: false,
     detail: {
       title: '标题',
@@ -33,13 +27,11 @@ export default class Notice extends Component {
       visible: false,
     });
   };
-  // 详情
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'manaNotice/fetch',
-    });
+    const { dispatch, manaNotice } = this.props;
+    const { currentPage, currentNum } = manaNotice.data;
+    this.fetchDataList(currentPage, currentNum);
     dispatch({
       type: 'manaNotice/setCopyValue',
       payload: '',
@@ -51,13 +43,13 @@ export default class Notice extends Component {
   }
 
   onChangeSearchInfo = e => {
-    this.setState({ searchInfo: e.target.value });
+    this.setState({ query: e.target.value });
   };
 
   emitEmpty = () => {
     this.userNameInput.focus();
-    this.setState({ searchInfo: '' });
-  }
+    this.setState({ query: '' });
+  };
 
   onDetail(text, record, index) {
     this.setState({
@@ -98,7 +90,7 @@ export default class Notice extends Component {
         key: 'setting',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={() => { }}>置顶</a>
+            <a onClick={() => {}}>置顶</a>
             <Divider type="vertical" />
             <a onClick={this.copyPush.bind(this, text)}>复制</a>
             <Divider type="vertical" />
@@ -125,9 +117,6 @@ export default class Notice extends Component {
 
   handleChange = (pagination, filters, sorter) => {
     // console.log('Various parameters', pagination, filters, sorter);
-    this.setState({
-      pagination,
-    });
   };
 
   copyPush = value => {
@@ -138,6 +127,21 @@ export default class Notice extends Component {
     this.newNotice();
   };
 
+  pageChange = pageNumber => {
+    const { manaPerson } = this.props;
+    const { currentNum } = manaPerson.data;
+    const { query } = this.state;
+    this.fetchDataList(pageNumber, currentNum, query);
+  };
+
+  fetchDataList(currentPage, currentNum, query) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'manaNotice/fetch',
+      payload: { currentPage, currentNum, query },
+    });
+  }
+
   newNotice() {
     if (G.env === 'prod') {
       window.location.href = `${window.location.origin}/home/#/management/newNotice`;
@@ -147,10 +151,11 @@ export default class Notice extends Component {
   }
 
   render() {
-    const { manaNotice } = this.props;
-    const { filteredInfo, pagination, searchInfo } = this.state;
+    const { manaNotice, loading } = this.props;
+    const { filteredInfo, query } = this.state;
     const columns = this.getColumns(filteredInfo);
-    const suffix = searchInfo ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
+    const { currentNum, currentPage, totalNum } = manaNotice.data;
+    const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     return (
       <div className={styles.main}>
         <h3>通知列表</h3>
@@ -172,11 +177,11 @@ export default class Notice extends Component {
               搜索
             </Button>
             <Input
-              value={searchInfo}
+              value={query}
               className={styles.widthInput}
               placeholder="标题"
               suffix={suffix}
-              ref={node => this.userNameInput = node}
+              ref={node => (this.userNameInput = node)}
               onChange={this.onChangeSearchInfo.bind(this)}
             />
           </Col>
@@ -187,10 +192,19 @@ export default class Notice extends Component {
           <Col span={24}>
             <Table
               rowKey="id"
+              loading={loading}
               dataSource={manaNotice.noticeList}
               columns={columns}
               onChange={this.handleChange.bind(this)}
-              pagination={pagination}
+              pagination={false}
+            />
+            <Pagination
+              style={{ marginTop: 20, float: 'right' }}
+              current={currentPage}
+              showQuickJumper
+              total={totalNum}
+              pageSize={currentNum}
+              onChange={this.pageChange.bind(this)}
             />
           </Col>
         </Row>
