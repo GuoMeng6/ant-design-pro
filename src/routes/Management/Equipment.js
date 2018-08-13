@@ -12,7 +12,7 @@ import EquipModal from './components/EquipModal.js';
 export default class Wework extends Component {
   // 表单以及分页
   state = {
-    quire: '',
+    query: '',
     filteredInfo: {},
     sorter: {},
     loading: false,
@@ -29,17 +29,17 @@ export default class Wework extends Component {
   onSearch() {
     const { manaEquip } = this.props;
     const { currentNum } = manaEquip.data;
-    const { quire } = this.state;
-    this.fetchDataList(1, currentNum, quire);
+    const { query } = this.state;
+    this.fetchDataList(1, currentNum, query);
   }
 
   onChangeSearchInfo = e => {
-    this.setState({ quire: e.target.value });
+    this.setState({ query: e.target.value });
   };
 
   emitEmpty = () => {
     this.userNameInput.focus();
-    this.setState({ quire: '' });
+    this.setState({ query: '' });
   }
 
   untied(text, record, index) { }
@@ -52,7 +52,7 @@ export default class Wework extends Component {
       visible: true,
     });
   };
-
+  //备注
   handleOk = () => {
     // console.log('******* handleOK ******* ', fieldsValue);
     this.setState({ loading: true });
@@ -65,7 +65,6 @@ export default class Wework extends Component {
     this.setState({ visible: false, editValue: {} });
   };
 
-  // 解除弹窗
   onMack(text, record, index) {
     this.setState({
       visible: true,
@@ -137,37 +136,39 @@ export default class Wework extends Component {
     ];
     return columns;
   }
-
+  //排序筛选
   handleChange = (pagination, filters, sorter) => {
-    // console.log('********** handleChange ************ ', sorter);
+    console.log('********** 排序 ************ ', sorter.order);
+    console.log('********** 排序 ************ ', filters.status);
     this.setState({
       filteredInfo: filters,
+      sorter: sorter
     });
   };
 
   pageChange = pageNumber => {
     const { manaEquip } = this.props;
     const { currentNum } = manaEquip.data;
-    const { quire } = this.state;
-    this.fetchDataList(pageNumber, currentNum, quire);
+    const { query } = this.state;
+    this.fetchDataList(pageNumber, currentNum, query);
   };
 
-  fetchDataList(currentPage, currentNum) {
+  fetchDataList(currentPage, currentNum, query) {
     // console.log('******** fetchDataList ********', { currentPage, currentNum });
 
     const { dispatch } = this.props;
     dispatch({
       type: 'manaEquip/resourceList',
-      payload: { currentPage, currentNum },
+      payload: { currentPage, currentNum, query },
     });
   }
 
   render() {
     const { manaEquip } = this.props;
-    const { filteredInfo, visible, loading, editValue, quire } = this.state;
+    const { filteredInfo, visible, loading, editValue, query } = this.state;
     const columns = this.getColumns(filteredInfo);
     const { currentNum, currentPage, totalNum } = manaEquip.data;
-    const suffix = quire ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
+    const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     // console.log('********* manaEquip ********* ', manaEquip.data);
     return (
       <div className={styles.main}>
@@ -185,7 +186,7 @@ export default class Wework extends Component {
               搜索
             </Button>
             <Input
-              value={quire}
+              value={query}
               className={styles.widthInput}
               placeholder="设备编号 / 使用者 / 备注"
               suffix={suffix}
