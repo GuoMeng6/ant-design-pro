@@ -25,7 +25,8 @@ export default {
   },
   proxy: {
     '/space': {
-      target: 'http://39.108.86.241:9201', //prot
+      // target: 'http://39.108.86.241:9201', //prot
+      target: 'http://192.168.1.141:7001', //prot
       changeOrigin: true,
       pathRewrite: { '^/space': '' },
     },

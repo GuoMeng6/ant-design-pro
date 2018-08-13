@@ -15,7 +15,7 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(login, payload);
+      const response = (yield call(login, payload)).data;
       console.log('******* effects ******* ', response);
       if (response.status === 'success') {
         yield put({

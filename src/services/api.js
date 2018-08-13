@@ -7,22 +7,22 @@ const { API_URL } = G;
 // 登录
 export async function login(params) {
   // 执行api请求
-  // return request(`${API_URL}/space/login`, {
-  //   method: 'POST',
-  //   body: params,
-  // });
-  return {
-    status: 'success',
-    type: params.userName === 'admin' ? 'admin' : 'account',
-    currentAuthority: 'user',
-    user: {
-      name: 'Serati Ma',
-      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-      userId: '00000001',
-      token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI4ZDQ2OGQ0YS1lM2RlLTRmMjYtOTY3OC1hN2Y3Y2ZkZjVhMjIiLCJ1c2VyTmFtZSI6IjlhbS1tYW5hZ2VyIiwibmlja05hbWUiOiI5YW0tbWFuYWdlciIsImNvbXBhbnlJZCI6MTEsImRlcGFydG1lbnQiOjAsInBvc2l0aW9uIjpudWxsLCJwaG9uZSI6bnVsbCwiYXZhdGFyIjoiMTExMSIsImRuIjoiY249OWFtLW1hbmFnZXIsb3U9OWFtLGRjPVNwYWNlU2VydmVyLGRjPWNvbSIsImlhdCI6MTUzMzk4NjU4OCwiZXhwIjoxNTMzOTkwMTg4fQ.jYBHfVWqGq2quR7WRjFCdzYzqRKsjj09oNcvRSGcU8A',
-    },
-  };
+  return request(`${API_URL}/space/login`, {
+    method: 'POST',
+    body: params,
+  });
+  // return {
+  //   status: 'success',
+  //   type: params.userName === 'admin' ? 'admin' : 'account',
+  //   currentAuthority: 'user',
+  //   user: {
+  //     name: 'Serati Ma',
+  //     avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+  //     userId: '00000001',
+  //     token:
+  //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI4ZDQ2OGQ0YS1lM2RlLTRmMjYtOTY3OC1hN2Y3Y2ZkZjVhMjIiLCJ1c2VyTmFtZSI6IjlhbS1tYW5hZ2VyIiwibmlja05hbWUiOiI5YW0tbWFuYWdlciIsImNvbXBhbnlJZCI6MTEsImRlcGFydG1lbnQiOjAsInBvc2l0aW9uIjpudWxsLCJwaG9uZSI6bnVsbCwiYXZhdGFyIjoiMTExMSIsImRuIjoiY249OWFtLW1hbmFnZXIsb3U9OWFtLGRjPVNwYWNlU2VydmVyLGRjPWNvbSIsImlhdCI6MTUzMzk4NjU4OCwiZXhwIjoxNTMzOTkwMTg4fQ.jYBHfVWqGq2quR7WRjFCdzYzqRKsjj09oNcvRSGcU8A',
+  //   },
+  // };
 }
 
 // 登出
