@@ -3,9 +3,7 @@ import G from '../gobal';
 import store from '../index';
 import request from '../utils/request';
 
-const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI4ZDQ2OGQ0YS1lM2RlLTRmMjYtOTY3OC1hN2Y3Y2ZkZjVhMjIiLCJ1c2VyTmFtZSI6IjlhbS1tYW5hZ2VyIiwibmlja05hbWUiOiI5YW0tbWFuYWdlciIsImNvbXBhbnlJZCI6MTEsImRlcGFydG1lbnQiOjAsInBvc2l0aW9uIjpudWxsLCJwaG9uZSI6bnVsbCwiYXZhdGFyIjoiaHR0cDovL3BkMzZhN2p2dy5ia3QuY2xvdWRkbi5jb20vOGQ0NjhkNGEtZTNkZS00ZjI2LTk2NzgtYTdmN2NmZGY1YTIyLTE1MzQxNDI5MjQucG5nIiwiZG4iOiJjbj05YW0tbWFuYWdlcixvdT05YW0sZGM9ZXhhbXBsZSxkYz1vcmciLCJpYXQiOjE1MzQxNDMyMTYsImV4cCI6MTUzNDE0NjgxNn0.jkS1C4b_eeNyIJswuNna5xOZoaAE6ZlQofyLCGf0_aw';
-const { API_URL, axios } = G;
+const { API_URL } = G;
 // 登录
 export async function login(params) {
   // 执行api请求
@@ -95,6 +93,16 @@ export async function getPersonnelList(payload) {
   }
   return request(url, { method: 'GET' });
 }
+
+// 添加人员
+export async function addPerson(payload) {
+  const url = `${G.API_URL}/space/personAdd`;
+  return request(url, {
+    method: 'PUT',
+    body: { ...payload, token: store.getState().user.user.token },
+  });
+}
+
 // 获取设备列表
 export async function getResourceList(payload) {
   console.log('******* payload ******* ', payload);

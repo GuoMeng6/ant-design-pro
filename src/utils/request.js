@@ -52,6 +52,8 @@ export default function request(url, options) {
   };
 
   newOptions.body = JSON.stringify(newOptions.body);
+  console.log('******* fetch ******* ', url, newOptions);
+
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => {

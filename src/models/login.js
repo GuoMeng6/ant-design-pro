@@ -24,7 +24,7 @@ export default {
       if (response.status === 'success') {
         yield put({
           type: 'user/user',
-          payload: response.user,
+          payload: response.data,
         });
         reloadAuthorized();
         const params = getPageQuery();

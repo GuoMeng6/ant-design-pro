@@ -129,12 +129,11 @@ export default class Wework extends Component {
     });
   };
 
-  handleOk = () => {
-    // console.log('******* handleOK ******* ', fieldsValue);
+  handleOk = (fieldsValue, avatar) => {
+    console.log('******* handleOK ******* ', fieldsValue, avatar);
     this.setState({ modalLoading: true });
-    setTimeout(() => {
-      this.setState({ modalLoading: false, visible: false });
-    }, 3000);
+    delete fieldsValue.upload;
+    this.addPerson({ ...fieldsValue, avatar });
   };
 
   handleCancel = () => {
@@ -159,6 +158,14 @@ export default class Wework extends Component {
     dispatch({
       type: 'manaPerson/fetch',
       payload: { currentPage, currentNum, query },
+    });
+  }
+
+  addPerson(data) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'manaPerson/addPerson',
+      payload: data,
     });
   }
 

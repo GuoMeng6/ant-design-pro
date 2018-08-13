@@ -31,15 +31,15 @@ class PersonModal extends Component {
         nextProps.form.setFieldsValue({
           name: editValue.name,
           phone: editValue.phone,
-          duty: editValue.duty,
-          mark: editValue.mark,
+          position: editValue.position,
+          remark: editValue.remark,
         });
       } else {
         nextProps.form.setFieldsValue({
           name: '',
           phone: '',
-          duty: '',
-          mark: '',
+          position: '',
+          remark: '',
         });
       }
     }
@@ -71,7 +71,7 @@ class PersonModal extends Component {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
-      handleOk(fieldsValue);
+      handleOk(fieldsValue, this.state.imageUrl);
     });
   };
 
@@ -198,7 +198,7 @@ class PersonModal extends Component {
           })(<Input placeholder="请输入手机号" />)}
         </FormItem>
         <FormItem {...formItemLayout} label="职务">
-          {getFieldDecorator('duty', {
+          {getFieldDecorator('position', {
             rules: [
               {
                 max: 10,
@@ -208,7 +208,7 @@ class PersonModal extends Component {
           })(<Input placeholder="请输入职务" />)}
         </FormItem>
         <FormItem {...formItemLayout} label="备注">
-          {getFieldDecorator('mark', {
+          {getFieldDecorator('remark', {
             rules: [
               {
                 max: 100,
