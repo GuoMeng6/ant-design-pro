@@ -90,7 +90,7 @@ class PersonModal extends Component {
     }
   };
 
-  next(value) {}
+  next(value) { }
 
   error(err) {
     this.setState({ avatarLoading: false });
@@ -107,7 +107,7 @@ class PersonModal extends Component {
     const { user } = this.props.user;
     const config = { useCdnDomain: true };
     const putExtra = { mimeType: ['image/png', 'image/jpeg', 'image/gif'] };
-    const avatarUrl = `${user.userId}-${G.moment().unix()}.png`;
+    const avatarUrl = `${user.uid}-${G.moment().unix()}.png`;
     const bucket = `dshow:${avatarUrl}`;
     const mac = new qiniuNode.auth.digest.Mac(ACCESSKEY, SECRETKEY);
     const options = { scope: bucket };
@@ -164,8 +164,8 @@ class PersonModal extends Component {
               {imageUrl ? (
                 <img className={styles.avatar} src={imageUrl} alt="avatar" />
               ) : (
-                uploadButton
-              )}
+                  uploadButton
+                )}
             </Upload>
           )}
         </FormItem>

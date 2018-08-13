@@ -143,25 +143,13 @@ export async function getPersonnelList(payload) {
 // 获取设备列表
 export async function getResourceList(payload) {
   console.log('******* payload ******* ', payload);
-
-  // return G.request(
-  //   'post',
-  //   '/space/resourceList',
-  //   { token: '' },
-  //   {
-  //     data: payload,
-  //   }
-  // )
-  //   .then(res => {
-  //     console.log('******** res ******* ', res);
-  //   })
-  //   .catch(err => {
-  //     console.log('******** err ******* ', err);
-  //   });
-  return request('/space/resourceList', {
+  return request(`${G.API_URL}/space/resourceList?token=${store.getState().user.user.token}`, {
     method: 'POST',
-    body: payload,
   });
+  // return request('/space/resourceList', {
+  //   method: 'POST',
+  //   body: payload,
+  // });
   const userData = [];
   for (let i = 0; i < payload.currentNum; i += 1) {
     const random1 = parseInt((Math.random() * 1000) % 2);
