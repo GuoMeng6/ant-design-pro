@@ -54,9 +54,9 @@ export default class Wework extends Component {
     this.setState({ query: '' });
   };
 
-  untied(text, record, index) { }
+  untied(text, record, index) {}
 
-  untiedConfirm() { }
+  untiedConfirm() {}
 
   // 解除弹窗
   showModal = () => {
@@ -102,8 +102,12 @@ export default class Wework extends Component {
         title: '状态',
         dataIndex: 'status',
         key: 'status',
-        filters: [{ text: '全部', value: '1' }, { text: '使用中', value: '2' }, { text: '空闲', value: '3' }, { text: '离线', value: '4' }],
-
+        filters: [
+          { text: '全部', value: '1' },
+          { text: '使用中', value: '2' },
+          { text: '空闲', value: '3' },
+          { text: '离线', value: '4' },
+        ],
       },
       {
         title: '用户',
@@ -160,7 +164,6 @@ export default class Wework extends Component {
     }
     if (!G._.isEmpty(sorter)) {
       sortParam = JSON.stringify({ daskId: sorter.order === 'descend' ? 'desc' : 'asc' });
-      console.log(sortParam);
     }
     this.setState({
       filterParam,

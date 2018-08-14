@@ -5,7 +5,6 @@ import { Row, Col, Table, Button, Input, Divider, Pagination, Icon } from 'antd'
 import G from '../../gobal';
 import styles from './Person.less';
 import PersonModal from './components/PersonModal';
-import { filterBody } from '../../utils/utils';
 
 @connect(({ manaPerson, user, loading }) => ({
   manaPerson,
@@ -16,8 +15,8 @@ export default class Wework extends Component {
   // 表单以及分页
   state = {
     query: '',
-    filterParam: '',
-    sortParam: '',
+    filterParam: {},
+    sortParam: {},
     modalLoading: false,
     visible: false,
     editValue: {},
@@ -25,15 +24,6 @@ export default class Wework extends Component {
 
   componentDidMount() {
     this.fetchDataList();
-    filterBody({
-      a: 'weqwe',
-      b: '',
-      c: { a: 'qwe' },
-      d: {},
-      e: [],
-      f: ['qwe', 'qwe'],
-      g: [{}],
-    });
   }
 
   onSearch() {
@@ -137,7 +127,6 @@ export default class Wework extends Component {
   };
 
   handleOk = (fieldsValue, avatar, uid) => {
-    console.log('******* handleOK ******* ', fieldsValue, avatar);
     this.setState({ modalLoading: true });
     delete fieldsValue.upload;
     if (G._.isEmpty(this.state.editValue)) {
@@ -172,19 +161,19 @@ export default class Wework extends Component {
   };
 
   handleChange = (pagination, filters, sorter) => {
-    let filterParam = '';
-    let sortParam = '';
+    let filterParam = {};
+    let sortParam = {};
     if (!G._.isEmpty(filters && filters.status)) {
-      filterParam = JSON.stringify({ userStatus: filters.status });
+      filterParam = { status: filters.status };
     }
     if (!G._.isEmpty(sorter)) {
-      sortParam = JSON.stringify({ userRank: sorter.order === 'descend' ? 'desc' : 'asc' });
+      sortParam = { status: sorter.order === 'descend' ? 'desc' : 'asc' };
     }
     this.setState({
       filterParam,
       sortParam,
     });
-    this.fetchDataList();
+    this.fetchDataList({ filterParam, sortParam });
   };
 
   pageChange = pageNumber => {
@@ -200,9 +189,9 @@ export default class Wework extends Component {
       payload: {
         currentPage: (value && value.currentPage) || personData.currentPage,
         currentNum: (value && value.currentNum) || personData.currentNum,
-        query,
-        filterParam,
-        sortParam,
+        query: (value && value.query) || query,
+        filterParam: (value && value.filterParam) || filterParam,
+        sortParam: (value && value.sortParam) || sortParam,
       },
     });
   }

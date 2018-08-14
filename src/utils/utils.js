@@ -200,13 +200,20 @@ export function filterUrl(url) {
 
 // 过滤body
 export function filterBody(body) {
-  console.log('***** filterBefore ****** ', body);
   const filter = G._.mapKeys(body, (value, key) => {
-    if (!G._.isEmpty(value)) {
-      console.log('***** filter ****** ', { value, key });
+    if (typeof value !== 'object' && value) {
       return key;
     }
+    if (!G._.isEmpty(value)) {
+      if (value instanceof Array) {
+        if (value.length > 1 || !G._.isEmpty(value[0])) {
+          return key;
+        }
+      } else {
+        return key;
+      }
+    }
   });
-  console.log('***** filterAfter ****** ', filter);
+  delete filter.undefined;
   return filter;
 }

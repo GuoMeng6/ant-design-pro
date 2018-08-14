@@ -73,8 +73,11 @@ export async function getHomeData() {
 
 // 获取人员数组
 export async function getPersonnelList(payload) {
-  return request(`${G.API_URL}/space/personList?token=${
-    store.getState().user.user.token}&${filterUrl(payload)}`, { method: 'GET' });
+  const body = filterBody({ ...payload, token: store.getState().user.user.token });
+  return request(`${G.API_URL}/space/personList`, {
+    method: 'POST',
+    body,
+  });
 }
 
 // 添加人员
@@ -138,7 +141,7 @@ export async function getNoticeList(payload) {
   const { currentNum, currentPage, query } = payload;
   let url = `${G.API_URL}/space/notificationList?token=${
     store.getState().user.user.token
-    }&currentNum=${currentNum}&currentPage=${currentPage}`;
+  }&currentNum=${currentNum}&currentPage=${currentPage}`;
   if (query) {
     url += `&query=${query}`;
   }
