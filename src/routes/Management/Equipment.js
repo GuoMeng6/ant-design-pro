@@ -49,9 +49,17 @@ export default class Wework extends Component {
     this.setState({ query: '' });
   };
 
-  untied(text, record, index) { }
+  untiedConfirm(value) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'manaEquip/release',
+      payload: { id: value.id, callback: this.release.bind(this) },
+    });
+  }
 
-  untiedConfirm() { }
+  release(response) {
+    this.fetchDataList();
+  }
 
   // 解除弹窗
   showModal = () => {
@@ -62,7 +70,6 @@ export default class Wework extends Component {
 
   // 备注
   handleOk = (fieldsValue, id) => {
-    console.log('******* handleOK ******* ', id);
     this.setState({ modalLoading: true });
     // delete fieldsValue.upload;
     if (G._.isEmpty(this.state.editValue)) {
@@ -149,7 +156,7 @@ export default class Wework extends Component {
             <Popconfirm
               placement="left"
               title="解除绑定后，该用户将被强制退出该设备，导致用户无法正常使用（可重新登录使用）"
-              onConfirm={this.untiedConfirm.bind(this)}
+              onConfirm={this.untiedConfirm.bind(this, text)}
               okText="解绑"
               cancelText="取消"
             >

@@ -1,5 +1,6 @@
 import { message } from 'antd';
-import { getResourceList, addRemark } from '../services/api';
+import { getResourceList, addRemark, releaseDevice } from '../services/api';
+
 
 export default {
   namespace: 'manaEquip',
@@ -34,6 +35,15 @@ export default {
           return message.error('添加失败');
         }
         message.error(`${errors[0].field} ${errors[0].message}`);
+      }
+    },
+    *release({ payload }, { call, put }) {
+      const response = yield call(releaseDevice, payload);
+      payload.callback();
+      if (response && response.status === 'success') {
+        message.success('解绑成功');
+      } else {
+        message.error('解绑失败' && (response && response.message));
       }
     },
   },

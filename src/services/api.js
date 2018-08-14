@@ -101,9 +101,9 @@ export async function updatePerson(payload) {
 // 获取设备列表
 export async function getResourceList(payload) {
   const body = filterBody({ ...payload, token: store.getState().user.user.token });
-  console.log('******* getResourceList ******* ', body);
   return request(`${G.API_URL}/space/resourceList`, { method: 'POST', body });
 }
+
 // 设备列表添加备注
 export async function addRemark(payload) {
   const url = `${G.API_URL}/space/resourceRemark`;
@@ -111,6 +111,12 @@ export async function addRemark(payload) {
     method: 'POST',
     body: { ...payload, token: store.getState().user.user.token },
   });
+}
+
+// 解绑设备
+export async function releaseDevice(payload) {
+  const body = filterBody({ ...payload, token: store.getState().user.user.token });
+  return request(`${G.API_URL}/space/resourceRelease`, { method: 'POST', body });
 }
 
 // 获去通知列表
@@ -133,3 +139,4 @@ export async function sendNotice(payload) {
     body: { ...payload, token: store.getState().user.user.token },
   });
 }
+
