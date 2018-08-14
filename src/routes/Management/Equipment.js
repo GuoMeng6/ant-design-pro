@@ -163,13 +163,8 @@ export default class Wework extends Component {
       console.log(sortParam);
     }
     this.setState({
-<<<<<<< HEAD
       filterParam,
       sortParam,
-=======
-      filteredInfo: filters,
-      sorter,
->>>>>>> 8084f6a7d8fd079f0680eb7cbeca730c65661a71
     });
     const { currentPage, currentNum } = manaEquip.data;
     this.fetchDataList(currentPage, currentNum);
