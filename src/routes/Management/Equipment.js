@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Table, Button, Input, Divider, Popconfirm, message, Pagination, Icon } from 'antd';
 
+import G from '../../gobal';
 import styles from './Person.less';
 import EquipModal from './components/EquipModal.js';
 
@@ -13,8 +14,8 @@ export default class Wework extends Component {
   // 表单以及分页
   state = {
     query: '',
-    filteredInfo: {},
-    sorter: {},
+    filterParam: '',
+    sortParam: '',
     loading: false,
     visible: false,
     editValue: {},
@@ -30,7 +31,7 @@ export default class Wework extends Component {
     const { manaEquip } = this.props;
     const { currentNum } = manaEquip.data;
     const { query } = this.state;
-    this.fetchDataList(1, currentNum, query);
+    this.fetchDataList(1, currentNum);
   }
 
   onChangeSearchInfo = e => {
@@ -90,8 +91,6 @@ export default class Wework extends Component {
         dataIndex: 'status',
         key: 'status',
         filters: [{ text: '全部', value: '1' }, { text: '使用中', value: '2' }, { text: '空闲', value: '3' }, { text: '离线', value: '4' }],
-        filteredValue: filteredInfo.mark || null,
-        onFilter: (value, record) => record.mark.includes(value),
       },
       {
         title: '用户',
@@ -138,28 +137,39 @@ export default class Wework extends Component {
   }
   //排序筛选
   handleChange = (pagination, filters, sorter) => {
-    console.log('********** 排序 ************ ', sorter.order);
-    console.log('********** 排序 ************ ', filters.status);
+    const { manaEquip } = this.props;
+    let filterParam = '';
+    let sortParam = '';
+    if (!G._.isEmpty(filters)) {
+      console.log(filters.status);
+      filterParam = JSON.stringify({ stauts: filters.status });
+    }
+    if (!G._.isEmpty(sorter)) {
+      sortParam = JSON.stringify({ daskId: sorter.order === 'descend' ? 'desc' : 'asc' });
+      console.log(sortParam);
+    }
     this.setState({
-      filteredInfo: filters,
-      sorter: sorter
+      filterParam,
+      sortParam,
     });
+    const { currentPage, currentNum } = manaEquip.data;
+    this.fetchDataList(currentPage, currentNum);
   };
 
   pageChange = pageNumber => {
     const { manaEquip } = this.props;
     const { currentNum } = manaEquip.data;
-    const { query } = this.state;
-    this.fetchDataList(pageNumber, currentNum, query);
+    this.fetchDataList(pageNumber, currentNum);
   };
 
-  fetchDataList(currentPage, currentNum, query) {
-    // console.log('******** fetchDataList ********', { currentPage, currentNum });
-
+  fetchDataList(currentPage, currentNum) {
+    console.log('******** fetchDataList ********', { currentPage, currentNum, query });
+    const { query, filterParam, sortParam } = this.state;
     const { dispatch } = this.props;
+
     dispatch({
       type: 'manaEquip/resourceList',
-      payload: { currentPage, currentNum, query },
+      payload: { currentPage, currentNum, query, filterParam, sortParam },
     });
   }
 
@@ -201,7 +211,7 @@ export default class Wework extends Component {
           <Col span={24}>
             <Table
               rowKey="id"
-              dataSource={manaEquip.data.dataList}
+              dataSource={manaEquip.data.rows}
               columns={columns}
               onChange={this.handleChange.bind(this)}
               pagination={false}
