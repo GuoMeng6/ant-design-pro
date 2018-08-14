@@ -5,7 +5,7 @@ export default {
   namespace: 'manaEquip',
   state: {
     data: {
-      dataList: [],
+      rows: [],
       currentPage: 1,
       currentNum: 15,
     },
@@ -14,12 +14,10 @@ export default {
   effects: {
     *resourceList({ payload }, { call, put }) {
       const response = yield call(getResourceList, payload);
-      console.log("*****response*****" + JSON.stringify(response));
-      return;
-      if (response.status === 'success') {
+      if (response && response.status === 'success') {
         yield put({
           type: 'equipSave',
-          payload: response.rows,
+          payload: response.data,
         });
       } else {
         message.error(response.message);
@@ -29,9 +27,14 @@ export default {
 
   reducers: {
     equipSave(state, action) {
+      const { currentPage } = action.payload;
       return {
         ...state,
-        data: action.payload,
+        data: {
+          ...action.payload,
+          currentPage: Number(currentPage),
+          currentNum: state.data.currentNum,
+        },
       };
     },
   },

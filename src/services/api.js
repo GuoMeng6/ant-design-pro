@@ -1,6 +1,7 @@
 import G from '../gobal';
 import store from '../index';
 import request from '../utils/request';
+import { filterUrl, filterBody } from '../utils/utils';
 
 const { API_URL } = G;
 // 登录
@@ -72,20 +73,8 @@ export async function getHomeData() {
 
 // 获取人员数组
 export async function getPersonnelList(payload) {
-  const { currentNum, currentPage, query, filterParam, sortParam } = payload;
-  let url = `${G.API_URL}/space/personList?token=${
-    store.getState().user.user.token
-  }&currentNum=${currentNum}&currentPage=${currentPage}`;
-  if (query) {
-    url += `&query=${query}`;
-  }
-  if (filterParam) {
-    url += `&filterParam=${filterParam}`;
-  }
-  if (sortParam) {
-    url += `&sortParam=${sortParam}`;
-  }
-  return request(url, { method: 'GET' });
+  return request(`${G.API_URL}/space/personList?token=${
+    store.getState().user.user.token}&${filterUrl(payload)}`, { method: 'GET' });
 }
 
 // 添加人员
@@ -109,8 +98,10 @@ export async function updatePerson(payload) {
 // 获取设备列表
 export async function getResourceList(payload) {
   console.log('******* payload ******* ', payload);
-  return request(`${G.API_URL}/space/resourceList?token=${store.getState().user.user.token}`, {
+
+  return request(`${G.API_URL}/space/resourceList`, {
     method: 'POST',
+    body: { ...payload, token: store.getState().user.user.token },
   });
   // return request('/space/resourceList', {
   //   method: 'POST',
@@ -147,7 +138,7 @@ export async function getNoticeList(payload) {
   const { currentNum, currentPage, query } = payload;
   let url = `${G.API_URL}/space/notificationList?token=${
     store.getState().user.user.token
-  }&currentNum=${currentNum}&currentPage=${currentPage}`;
+    }&currentNum=${currentNum}&currentPage=${currentPage}`;
   if (query) {
     url += `&query=${query}`;
   }

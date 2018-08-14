@@ -41,6 +41,7 @@ export default {
       payload.callback(response);
       if (response && response.status === 'success') {
         message.success(payload.isDel ? '删除成功' : '修改成功');
+
       } else {
         const { errors } = response.message;
         if (!errors[0]) {
