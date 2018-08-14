@@ -17,11 +17,11 @@ class EquipModal extends Component {
       this.editValue = editValue;
       if (visible && !G._.isEmpty(editValue)) {
         nextProps.form.setFieldsValue({
-          mark: editValue.mark,
+          remark: editValue.remark,
         });
       } else {
         nextProps.form.setFieldsValue({
-          mark: '',
+          remark: '',
         });
       }
     }
@@ -33,7 +33,10 @@ class EquipModal extends Component {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
-      handleOk(fieldsValue);
+      handleOk(
+        { ...fieldsValue, remark: fieldsValue.remark || '' },
+        this.props.editValue.id
+      );
     });
   };
 
@@ -60,8 +63,12 @@ class EquipModal extends Component {
         ]}
       >
         <FormItem {...formItemLayout} label="备注">
-          {getFieldDecorator('mark', {
+          {getFieldDecorator('remark', {
             rules: [
+              {
+                required: true,
+                message: '备注不能为空',
+              },
               {
                 max: 100,
                 message: '最大长度100',

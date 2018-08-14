@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { getResourceList } from '../services/api';
+import { getResourceList, addRemark } from '../services/api';
 
 export default {
   namespace: 'manaEquip',
@@ -21,6 +21,19 @@ export default {
         });
       } else {
         message.error(response.message);
+      }
+    },
+    *addRemark({ payload }, { call }) {
+      const response = yield call(addRemark, payload);
+      payload.callback(response);
+      if (response && response.status === 'success') {
+        message.success(response.data);
+      } else {
+        const { errors } = response.message;
+        if (!errors[0]) {
+          return message.error('添加失败');
+        }
+        message.error(`${errors[0].field} ${errors[0].message}`);
       }
     },
   },

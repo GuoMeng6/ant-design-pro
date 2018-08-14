@@ -103,34 +103,14 @@ export async function getResourceList(payload) {
   const body = filterBody({ ...payload, token: store.getState().user.user.token });
   console.log('******* getResourceList ******* ', body);
   return request(`${G.API_URL}/space/resourceList`, { method: 'POST', body });
-  // return request('/space/resourceList', {
-  //   method: 'POST',
-  //   body: payload,
-  // });
-  const userData = [];
-  for (let i = 0; i < payload.currentNum; i += 1) {
-    const random1 = parseInt((Math.random() * 1000) % 2);
-    const random2 = parseInt((Math.random() * 1000) % 3);
-    const random3 = parseInt((Math.random() * 1000) % 3);
-    userData.push({
-      id: (payload.currentPage - 1) * 10 + i + 1,
-      daskId: `deskId${(payload.currentPage - 1) * 10 + i + 1}`,
-      status: random1 === 0 ? '使用中' : '空闲',
-      user: `lilei 第${payload.currentPage}页 ${(payload.currentPage - 1) * 10 + i + 1}`,
-      mark: random2 === 0 ? '备注非法' : random2 === 1 ? '备注合格' : '未备注',
-      lastTime: random3 === 0 ? '20180501' : random3 === 1 ? '20180604' : '20180101',
-    });
-  }
-  return {
-    status: 'ok',
-    data: {
-      currentPage: payload.currentPage,
-      totalPage: payload.quire ? 10 : 20,
-      totalNum: payload.quire ? 150 : 300,
-      currentNum: payload.currentNum,
-      dataList: userData,
-    },
-  };
+}
+// 设备列表添加备注
+export async function addRemark(payload) {
+  const url = `${G.API_URL}/space/resourceRemark`;
+  return request(url, {
+    method: 'POST',
+    body: { ...payload, token: store.getState().user.user.token },
+  });
 }
 
 // 获去通知列表
@@ -138,7 +118,7 @@ export async function getNoticeList(payload) {
   const { currentNum, currentPage, query } = payload;
   let url = `${G.API_URL}/space/notificationList?token=${
     store.getState().user.user.token
-  }&currentNum=${currentNum}&currentPage=${currentPage}`;
+    }&currentNum=${currentNum}&currentPage=${currentPage}`;
   if (query) {
     url += `&query=${query}`;
   }

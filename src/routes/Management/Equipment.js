@@ -49,9 +49,9 @@ export default class Wework extends Component {
     this.setState({ query: '' });
   };
 
-  untied(text, record, index) {}
+  untied(text, record, index) { }
 
-  untiedConfirm() {}
+  untiedConfirm() { }
 
   // 解除弹窗
   showModal = () => {
@@ -61,19 +61,41 @@ export default class Wework extends Component {
   };
 
   // 备注
-  handleOk = () => {
-    // console.log('******* handleOK ******* ', fieldsValue);
+  handleOk = (fieldsValue, id) => {
+    console.log('******* handleOK ******* ', id);
     this.setState({ modalLoading: true });
-    setTimeout(() => {
-      this.setState({ modalLoading: false, visible: false });
-    }, 3000);
+    // delete fieldsValue.upload;
+    if (G._.isEmpty(this.state.editValue)) {
+      return;
+    }
+    fieldsValue.id = id;
+    this.addRemark({ ...fieldsValue, callback: this.upload.bind(this) });
   };
+
+  upload = res => {
+    console.log(res);
+
+    if (res.status === 'success') {
+      this.setState({ modalLoading: false, visible: false });
+      this.fetchDataList();
+    } else {
+      this.setState({ modalLoading: false });
+    }
+  };
+  //调用备注的接口
+  addRemark(data) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'manaEquip/addRemark',
+      payload: data,
+    });
+  }
 
   handleCancel = () => {
     this.setState({ visible: false, editValue: {} });
   };
 
-  onMack(text, record, index) {
+  onMark(text, record, index) {
     this.setState({
       visible: true,
       editValue: text,
@@ -136,7 +158,7 @@ export default class Wework extends Component {
             <Divider type="vertical" />
             <a
               onClick={() => {
-                this.onMack(text, record, index);
+                this.onMark(text, record, index);
               }}
             >
               备注
