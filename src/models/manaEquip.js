@@ -1,5 +1,5 @@
-import { getResourceList } from '../services/api';
 import { message } from 'antd';
+import { getResourceList } from '../services/api';
 
 export default {
   namespace: 'manaEquip',
@@ -12,7 +12,7 @@ export default {
   },
 
   effects: {
-    *resourceList({ payload }, { call, put }) {
+    *fetch({ payload }, { call, put }) {
       const response = yield call(getResourceList, payload);
       if (response && response.status === 'success') {
         yield put({

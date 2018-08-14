@@ -19,30 +19,25 @@ import EquipModal from './components/EquipModal.js';
 
 @connect(({ manaEquip, loading }) => ({
   manaEquip,
-  loading: loading.effects['manaEquip/resourceList'],
+  loading: loading.effects['manaEquip/fetch'],
 }))
 export default class Wework extends Component {
   // 表单以及分页
   state = {
     query: '',
-    filterParam: '',
-    sortParam: '',
-    loading: false,
+    filterParam: {},
+    sortParam: {},
+    modalLoading: false,
     visible: false,
     editValue: {},
   };
 
   componentDidMount() {
-    const { manaEquip } = this.props;
-    const { currentPage, currentNum } = manaEquip.data;
-    this.fetchDataList(currentPage, currentNum);
+    this.fetchDataList();
   }
 
   onSearch() {
-    const { manaEquip } = this.props;
-    const { currentNum } = manaEquip.data;
-    const { query } = this.state;
-    this.fetchDataList(1, currentNum);
+    this.fetchDataList({ currentPage: 1 });
   }
 
   onChangeSearchInfo = e => {
@@ -68,9 +63,9 @@ export default class Wework extends Component {
   // 备注
   handleOk = () => {
     // console.log('******* handleOK ******* ', fieldsValue);
-    this.setState({ loading: true });
+    this.setState({ modalLoading: true });
     setTimeout(() => {
-      this.setState({ loading: false, visible: false });
+      this.setState({ modalLoading: false, visible: false });
     }, 3000);
   };
 
@@ -85,7 +80,7 @@ export default class Wework extends Component {
     });
   }
 
-  getColumns(filteredInfo) {
+  getColumns() {
     const columns = [
       {
         title: '序号',
@@ -103,10 +98,10 @@ export default class Wework extends Component {
         dataIndex: 'status',
         key: 'status',
         filters: [
-          { text: '全部', value: '1' },
-          { text: '使用中', value: '2' },
-          { text: '空闲', value: '3' },
-          { text: '离线', value: '4' },
+          { text: '全部', value: 1 },
+          { text: '使用中', value: 2 },
+          { text: '空闲', value: 3 },
+          { text: '离线', value: 4 },
         ],
       },
       {
@@ -155,44 +150,44 @@ export default class Wework extends Component {
 
   // 排序筛选
   handleChange = (pagination, filters, sorter) => {
-    const { manaEquip } = this.props;
-    let filterParam = '';
-    let sortParam = '';
-    if (!G._.isEmpty(filters)) {
-      console.log(filters.status);
-      filterParam = JSON.stringify({ stauts: filters.status });
+    let filterParam = {};
+    let sortParam = {};
+    if (!G._.isEmpty(filters && filters.status)) {
+      filterParam = { status: filters.status };
     }
     if (!G._.isEmpty(sorter)) {
-      sortParam = JSON.stringify({ daskId: sorter.order === 'descend' ? 'desc' : 'asc' });
+      sortParam = { number: sorter.order === 'descend' ? 'desc' : 'asc' };
     }
     this.setState({
       filterParam,
       sortParam,
     });
-    const { currentPage, currentNum } = manaEquip.data;
-    this.fetchDataList(currentPage, currentNum);
+    this.fetchDataList({ filterParam, sortParam });
   };
 
   pageChange = pageNumber => {
-    const { manaEquip } = this.props;
-    const { currentNum } = manaEquip.data;
-    this.fetchDataList(pageNumber, currentNum);
+    this.fetchDataList({ currentPage: pageNumber });
   };
 
-  fetchDataList(currentPage, currentNum) {
-    console.log('******** fetchDataList ********', { currentPage, currentNum, query });
+  fetchDataList(value) {
+    const { dispatch, manaEquip } = this.props;
+    const equipData = manaEquip.data;
     const { query, filterParam, sortParam } = this.state;
-    const { dispatch } = this.props;
-
     dispatch({
-      type: 'manaEquip/resourceList',
-      payload: { currentPage, currentNum, query, filterParam, sortParam },
+      type: 'manaEquip/fetch',
+      payload: {
+        currentPage: (value && value.currentPage) || equipData.currentPage,
+        currentNum: (value && value.currentNum) || equipData.currentNum,
+        query: (value && value.query) || query,
+        filterParam: (value && value.filterParam) || filterParam,
+        sortParam: (value && value.sortParam) || sortParam,
+      },
     });
   }
 
   render() {
-    const { manaEquip } = this.props;
-    const { filteredInfo, visible, loading, editValue, query } = this.state;
+    const { manaEquip, loading } = this.props;
+    const { filteredInfo, visible, modalLoading, editValue, query } = this.state;
     const columns = this.getColumns(filteredInfo);
     const { currentNum, currentPage, totalNum } = manaEquip.data;
     const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
@@ -228,6 +223,7 @@ export default class Wework extends Component {
           <Col span={24}>
             <Table
               rowKey="id"
+              loading={loading}
               dataSource={manaEquip.data.rows}
               columns={columns}
               onChange={this.handleChange.bind(this)}
@@ -246,7 +242,7 @@ export default class Wework extends Component {
         {/* 弹窗 */}
         <EquipModal
           visible={visible}
-          loading={loading}
+          loading={modalLoading}
           editValue={editValue}
           handleOk={this.handleOk.bind(this)}
           handleCancel={this.handleCancel.bind(this)}

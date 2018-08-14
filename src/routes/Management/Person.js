@@ -83,9 +83,9 @@ export default class Wework extends Component {
         key: 'status',
         sorter: true,
         filters: [
-          { text: '全部', value: '全部' },
-          { text: '连接中', value: '连接中' },
-          { text: '未连接', value: '未连接' },
+          { text: '全部', value: 1 },
+          { text: '连接中', value: 2 },
+          { text: '未连接', value: 3 },
         ],
       },
       {
@@ -223,7 +223,6 @@ export default class Wework extends Component {
         <h3>人员管理</h3>
         <br />
         <Row className={styles.lageBox}>
-          {/* 查询 */}
           <Col span={12}>
             <Button icon="plus" type="primary" onClick={this.showModal}>
               添加

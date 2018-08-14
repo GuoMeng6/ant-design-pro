@@ -100,12 +100,9 @@ export async function updatePerson(payload) {
 
 // 获取设备列表
 export async function getResourceList(payload) {
-  console.log('******* payload ******* ', payload);
-
-  return request(`${G.API_URL}/space/resourceList`, {
-    method: 'POST',
-    body: { ...payload, token: store.getState().user.user.token },
-  });
+  const body = filterBody({ ...payload, token: store.getState().user.user.token });
+  console.log('******* getResourceList ******* ', body);
+  return request(`${G.API_URL}/space/resourceList`, { method: 'POST', body });
   // return request('/space/resourceList', {
   //   method: 'POST',
   //   body: payload,

@@ -53,13 +53,13 @@ export default function request(url, options) {
     'Content-Type': 'application/json; charset=utf-8',
     ...newOptions.headers,
   };
-  console.log('******* fetch ******* ', url, newOptions);
   newOptions.body = JSON.stringify(newOptions.body);
+  console.log('******* fetch ****** ', { url, newOptions });
+
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => response.json())
     .catch(err => {
-      console.log('****** err ******* ', err);
       const { dispatch } = store;
       const status = err.name;
       if (status <= 504 && status >= 500) {
