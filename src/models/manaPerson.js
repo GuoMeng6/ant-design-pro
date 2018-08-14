@@ -20,12 +20,11 @@ export default {
           payload: response.data,
         });
       } else {
-        message.error(response.message);
+        message.error('请求失败');
       }
     },
     *addPerson({ payload }, { call }) {
       const response = yield call(addPerson, payload);
-      console.log('****** addPerson ****** ', response);
       payload.callback(response);
       if (response && response.status === 'success') {
         message.success(response.data.data.msg);
@@ -39,7 +38,6 @@ export default {
     },
     *updatePerson({ payload }, { call }) {
       const response = yield call(updatePerson, payload);
-      console.log('****** updatePerson ****** ', response);
       payload.callback(response);
       if (response && response.status === 'success') {
         message.success(payload.isDel ? '删除成功' : '修改成功');

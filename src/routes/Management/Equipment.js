@@ -1,6 +1,17 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider, Popconfirm, message, Pagination, Icon } from 'antd';
+import {
+  Row,
+  Col,
+  Table,
+  Button,
+  Input,
+  Divider,
+  Popconfirm,
+  message,
+  Pagination,
+  Icon,
+} from 'antd';
 
 import G from '../../gobal';
 import styles from './Person.less';
@@ -41,7 +52,7 @@ export default class Wework extends Component {
   emitEmpty = () => {
     this.userNameInput.focus();
     this.setState({ query: '' });
-  }
+  };
 
   untied(text, record, index) { }
 
@@ -53,7 +64,8 @@ export default class Wework extends Component {
       visible: true,
     });
   };
-  //备注
+
+  // 备注
   handleOk = () => {
     // console.log('******* handleOK ******* ', fieldsValue);
     this.setState({ loading: true });
@@ -91,6 +103,7 @@ export default class Wework extends Component {
         dataIndex: 'status',
         key: 'status',
         filters: [{ text: '全部', value: '1' }, { text: '使用中', value: '2' }, { text: '空闲', value: '3' }, { text: '离线', value: '4' }],
+
       },
       {
         title: '用户',
@@ -135,7 +148,8 @@ export default class Wework extends Component {
     ];
     return columns;
   }
-  //排序筛选
+
+  // 排序筛选
   handleChange = (pagination, filters, sorter) => {
     const { manaEquip } = this.props;
     let filterParam = '';
@@ -149,8 +163,13 @@ export default class Wework extends Component {
       console.log(sortParam);
     }
     this.setState({
+<<<<<<< HEAD
       filterParam,
       sortParam,
+=======
+      filteredInfo: filters,
+      sorter,
+>>>>>>> 8084f6a7d8fd079f0680eb7cbeca730c65661a71
     });
     const { currentPage, currentNum } = manaEquip.data;
     this.fetchDataList(currentPage, currentNum);
@@ -200,7 +219,7 @@ export default class Wework extends Component {
               className={styles.widthInput}
               placeholder="设备编号 / 使用者 / 备注"
               suffix={suffix}
-              ref={node => this.userNameInput = node}
+              ref={node => (this.userNameInput = node)}
               onChange={this.onChangeSearchInfo.bind(this)}
             />
           </Col>
