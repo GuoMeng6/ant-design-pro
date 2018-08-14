@@ -189,7 +189,7 @@ export default class Wework extends Component {
       type: 'manaPerson/fetch',
       payload: {
         currentPage: (value && value.currentPage) || personData.currentPage,
-        currentNum: (value && value.currentNum) || personData.personData,
+        currentNum: (value && value.currentNum) || personData.currentNum,
         query,
         filterParam,
         sortParam,
