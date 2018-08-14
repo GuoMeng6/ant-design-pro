@@ -5,6 +5,7 @@ import { Row, Col, Table, Button, Input, Divider, Pagination, Icon } from 'antd'
 import G from '../../gobal';
 import styles from './Person.less';
 import PersonModal from './components/PersonModal';
+import { filterBody } from '../../utils/utils';
 
 @connect(({ manaPerson, user, loading }) => ({
   manaPerson,
@@ -24,6 +25,15 @@ export default class Wework extends Component {
 
   componentDidMount() {
     this.fetchDataList();
+    filterBody({
+      a: 'weqwe',
+      b: '',
+      c: { a: 'qwe' },
+      d: {},
+      e: [],
+      f: ['qwe', 'qwe'],
+      g: [{}],
+    });
   }
 
   onSearch() {

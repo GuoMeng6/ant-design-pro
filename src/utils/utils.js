@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { parse, stringify } from 'qs';
+import G from '../gobal';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -180,27 +181,32 @@ const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(
 export function isUrl(path) {
   return reg.test(path);
 }
-//过滤url
+// 过滤url
 export function filterUrl(url) {
   let newUrl = '';
   let count = 0;
-  for (var p in url) {
+  for (const p in url) {
     if (url[p] && url[p] !== '' && url[p] !== undefined && url[p] !== NaN) {
       if (count === 0) {
-        newUrl = newUrl + p + '=' + url[p];
+        newUrl = `${newUrl + p}=${url[p]}`;
       } else {
-        newUrl = newUrl + '&' + p + '=' + url[p];
+        newUrl = `${newUrl}&${p}=${url[p]}`;
       }
       count++;
     }
-  };
+  }
   return newUrl;
-
 }
-//过滤body
+
+// 过滤body
 export function filterBody(body) {
-  G._.groupBy(body, (o) => {
-
+  console.log('***** filterBefore ****** ', body);
+  const filter = G._.mapKeys(body, (value, key) => {
+    if (!G._.isEmpty(value)) {
+      console.log('***** filter ****** ', { value, key });
+      return key;
+    }
   });
-
+  console.log('***** filterAfter ****** ', filter);
+  return filter;
 }
