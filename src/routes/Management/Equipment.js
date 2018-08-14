@@ -1,6 +1,17 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider, Popconfirm, message, Pagination, Icon } from 'antd';
+import {
+  Row,
+  Col,
+  Table,
+  Button,
+  Input,
+  Divider,
+  Popconfirm,
+  message,
+  Pagination,
+  Icon,
+} from 'antd';
 
 import styles from './Person.less';
 import EquipModal from './components/EquipModal.js';
@@ -40,11 +51,11 @@ export default class Wework extends Component {
   emitEmpty = () => {
     this.userNameInput.focus();
     this.setState({ query: '' });
-  }
+  };
 
-  untied(text, record, index) { }
+  untied(text, record, index) {}
 
-  untiedConfirm() { }
+  untiedConfirm() {}
 
   // 解除弹窗
   showModal = () => {
@@ -52,7 +63,8 @@ export default class Wework extends Component {
       visible: true,
     });
   };
-  //备注
+
+  // 备注
   handleOk = () => {
     // console.log('******* handleOK ******* ', fieldsValue);
     this.setState({ loading: true });
@@ -89,7 +101,12 @@ export default class Wework extends Component {
         title: '状态',
         dataIndex: 'status',
         key: 'status',
-        filters: [{ text: '全部', value: '1' }, { text: '使用中', value: '2' }, { text: '空闲', value: '3' }, { text: '离线', value: '4' }],
+        filters: [
+          { text: '全部', value: '1' },
+          { text: '使用中', value: '2' },
+          { text: '空闲', value: '3' },
+          { text: '离线', value: '4' },
+        ],
         filteredValue: filteredInfo.mark || null,
         onFilter: (value, record) => record.mark.includes(value),
       },
@@ -136,13 +153,14 @@ export default class Wework extends Component {
     ];
     return columns;
   }
-  //排序筛选
+
+  // 排序筛选
   handleChange = (pagination, filters, sorter) => {
     console.log('********** 排序 ************ ', sorter.order);
     console.log('********** 排序 ************ ', filters.status);
     this.setState({
       filteredInfo: filters,
-      sorter: sorter
+      sorter,
     });
   };
 
@@ -190,7 +208,7 @@ export default class Wework extends Component {
               className={styles.widthInput}
               placeholder="设备编号 / 使用者 / 备注"
               suffix={suffix}
-              ref={node => this.userNameInput = node}
+              ref={node => (this.userNameInput = node)}
               onChange={this.onChangeSearchInfo.bind(this)}
             />
           </Col>

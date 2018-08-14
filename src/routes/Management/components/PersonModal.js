@@ -45,26 +45,10 @@ class PersonModal extends Component {
     }
   }
 
-  normFile = e => {
-    if (!e || !e.fileList) {
-      return e;
-    }
-    const { fileList } = e;
-    return fileList;
-  };
-
-  checkPhone = (rule, value, callback) => {
-    if (!value) {
-      callback(' ');
-      return;
-    }
-    const re = /^1[3|4|5|8][0-9]\d{4,8}$/;
-    if (value.length === 11 && re.test(value)) {
-      callback();
-    } else {
-      callback('手机号格式有误');
-    }
-  };
+  onCancel(handleCancel) {
+    this.setState({ imageUrl: '' });
+    handleCancel();
+  }
 
   okHandle = () => {
     const { form, handleOk } = this.props;
@@ -80,10 +64,26 @@ class PersonModal extends Component {
     });
   };
 
-  onCancel(handleCancel) {
-    this.setState({ imageUrl: '' });
-    handleCancel();
-  }
+  checkPhone = (rule, value, callback) => {
+    if (!value) {
+      callback(' ');
+      return;
+    }
+    const re = /^1[3|4|5|8][0-9]\d{4,8}$/;
+    if (value.length === 11 && re.test(value)) {
+      callback();
+    } else {
+      callback('手机号格式有误');
+    }
+  };
+
+  normFile = e => {
+    if (!e || !e.fileList) {
+      return e;
+    }
+    const { fileList } = e;
+    return fileList;
+  };
 
   handleChange = info => {
     if (info.file.status === 'uploading') {
@@ -114,10 +114,10 @@ class PersonModal extends Component {
   }
 
   beforeUpload(file) {
-    const { user } = this.props.user;
+    const { editValue } = this.props;
     const config = { useCdnDomain: true };
     const putExtra = { mimeType: ['image/png', 'image/jpeg', 'image/gif'] };
-    const avatarUrl = `${user.uid}-${G.moment().unix()}.png`;
+    const avatarUrl = `${editValue.uid}-${G.moment().unix()}.png`;
     const bucket = `dshow:${avatarUrl}`;
     const mac = new qiniuNode.auth.digest.Mac(ACCESSKEY, SECRETKEY);
     const options = { scope: bucket };

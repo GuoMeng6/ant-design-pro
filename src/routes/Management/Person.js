@@ -23,16 +23,11 @@ export default class Wework extends Component {
   };
 
   componentDidMount() {
-    const { manaPerson } = this.props;
-    const { currentPage, currentNum } = manaPerson.data;
-    this.fetchDataList(currentPage, currentNum);
+    this.fetchDataList();
   }
 
   onSearch() {
-    const { manaPerson } = this.props;
-    const { currentNum } = manaPerson.data;
-    const { query, filterParam, sortParam } = this.state;
-    this.fetchDataList(1, currentNum, query, filterParam, sortParam);
+    this.fetchDataList({ currentNum: 1 });
   }
 
   onChangeSearchInfo = e => {
@@ -56,7 +51,7 @@ export default class Wework extends Component {
     this.updatePerson({ uid: text.uid, isDel: true, callback: this.update.bind(this) });
   }
 
-  getColumns(filteredInfo) {
+  getColumns() {
     const columns = [
       {
         title: '序号',
@@ -92,8 +87,6 @@ export default class Wework extends Component {
           { text: '连接中', value: '连接中' },
           { text: '未连接', value: '未连接' },
         ],
-        // filteredValue: filteredInfo.mark || null,
-        // onFilter: (value, record) => record.mark.includes(value),
       },
       {
         title: '备注',
@@ -149,23 +142,16 @@ export default class Wework extends Component {
   upload = res => {
     if (res.status === 'success') {
       this.setState({ modalLoading: false, visible: false });
-      const { manaPerson } = this.props;
-      const { currentPage, currentNum } = manaPerson.data;
-      const { query, filterParam, sortParam } = this.state;
-      this.fetchDataList(currentPage, currentNum, query, filterParam, sortParam);
+      this.fetchDataList();
     } else {
       this.setState({ modalLoading: false });
     }
   };
 
   update = res => {
-    console.log('******** update ******* ', res);
     if (res.status === 'success') {
       this.setState({ modalLoading: false, visible: false, editValue: {} });
-      const { manaPerson } = this.props;
-      const { currentPage, currentNum } = manaPerson.data;
-      const { query, filterParam, sortParam } = this.state;
-      this.fetchDataList(currentPage, currentNum, query, filterParam, sortParam);
+      this.fetchDataList();
     } else {
       this.setState({ modalLoading: false });
     }
@@ -176,10 +162,9 @@ export default class Wework extends Component {
   };
 
   handleChange = (pagination, filters, sorter) => {
-    console.log('******* handleChange ******* ', { filters, sorter });
     let filterParam = '';
     let sortParam = '';
-    if (!G._.isEmpty(filters)) {
+    if (!G._.isEmpty(filters && filters.status)) {
       filterParam = JSON.stringify({ userStatus: filters.status });
     }
     if (!G._.isEmpty(sorter)) {
@@ -189,24 +174,26 @@ export default class Wework extends Component {
       filterParam,
       sortParam,
     });
-    const { manaPerson } = this.props;
-    const { currentPage, currentNum } = manaPerson.data;
-    const { query } = this.state;
-    this.fetchDataList(currentPage, currentNum, query, filterParam, sortParam);
+    this.fetchDataList();
   };
 
   pageChange = pageNumber => {
-    const { manaPerson } = this.props;
-    const { currentNum } = manaPerson.data;
-    const { query, filterParam, sortParam } = this.state;
-    this.fetchDataList(pageNumber, currentNum, query, filterParam, sortParam);
+    this.fetchDataList({ currentNum: pageNumber });
   };
 
-  fetchDataList(currentPage, currentNum, query, filterParam, sortParam) {
-    const { dispatch } = this.props;
+  fetchDataList(value) {
+    const { dispatch, manaPerson } = this.props;
+    const personData = manaPerson.data;
+    const { query, filterParam, sortParam } = this.state;
     dispatch({
       type: 'manaPerson/fetch',
-      payload: { currentPage, currentNum, query, filterParam, sortParam },
+      payload: {
+        currentPage: (value && value.currentPage) || personData.currentPage,
+        currentNum: (value && value.currentNum) || personData.personData,
+        query,
+        filterParam,
+        sortParam,
+      },
     });
   }
 
@@ -228,8 +215,8 @@ export default class Wework extends Component {
 
   render() {
     const { manaPerson, user, loading } = this.props;
-    const { filteredInfo, modalLoading, visible, editValue, query } = this.state;
-    const columns = this.getColumns(filteredInfo);
+    const { modalLoading, visible, editValue, query } = this.state;
+    const columns = this.getColumns();
     const { currentNum, currentPage, totalNum } = manaPerson.data;
     const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     return (
@@ -257,7 +244,9 @@ export default class Wework extends Component {
               className={styles.widthInput}
               placeholder="姓名 / 手机 / 备注"
               suffix={suffix}
-              ref={node => (this.userNameInput = node)}
+              ref={node => {
+                this.userNameInput = node;
+              }}
               onChange={this.onChangeSearchInfo.bind(this)}
             />
           </Col>

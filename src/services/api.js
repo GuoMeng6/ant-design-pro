@@ -1,5 +1,4 @@
 import G from '../gobal';
-// import { stringify } from 'qs';
 import store from '../index';
 import request from '../utils/request';
 
