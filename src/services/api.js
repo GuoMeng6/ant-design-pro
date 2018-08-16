@@ -21,6 +21,13 @@ export async function logout() {
   });
 }
 
+// 设备数
+export async function getResourceNum() {
+  return request(`${API_URL}/space/resourceNum?token=${store.getState().user.user.token}`, {
+    method: 'GET',
+  });
+}
+
 // 首页获取站立时间趋势数据
 export async function getStandingData() {
   const salesData = [];
@@ -124,7 +131,7 @@ export async function getNoticeList(payload) {
   const { currentNum, currentPage, query } = payload;
   let url = `${G.API_URL}/space/notificationList?token=${
     store.getState().user.user.token
-    }&currentNum=${currentNum}&currentPage=${currentPage}`;
+  }&currentNum=${currentNum}&currentPage=${currentPage}`;
   if (query) {
     url += `&query=${query}`;
   }
@@ -139,4 +146,3 @@ export async function sendNotice(payload) {
     body: { ...payload, token: store.getState().user.user.token },
   });
 }
-

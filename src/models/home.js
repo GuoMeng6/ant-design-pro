@@ -1,4 +1,4 @@
-import { getStandingData, getTimeRanking, getHomeData } from '../services/api';
+import { getStandingData, getTimeRanking, getHomeData, getResourceNum } from '../services/api';
 
 export default {
   namespace: 'home',
@@ -11,6 +11,12 @@ export default {
   },
 
   effects: {
+    *getResourceNum(_, { call, put }) {
+      const response = yield call(getResourceNum);
+      console.log('****** getResourceNum ****** ', response);
+
+      // yield put({ type: 'getResourceNum' });
+    },
     *homeData(_, { call, put }) {
       const response = yield call(getHomeData);
       return;

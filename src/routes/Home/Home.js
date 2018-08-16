@@ -31,6 +31,9 @@ export default class Home extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     const { rangePickerValue } = this.state;
+    dispatch({
+      type: 'home/getResourceNum',
+    });
     // dispatch({
     //   type: 'home/homeData',
     //   payload: rangePickerValue,
