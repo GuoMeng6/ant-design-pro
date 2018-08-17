@@ -21,6 +21,51 @@ export async function logout() {
   });
 }
 
+// 设备数
+export async function getResourceNum() {
+  return request(`${API_URL}/space/resourceNum?token=${store.getState().user.user.token}`, {
+    method: 'GET',
+  });
+}
+
+// 用户数
+export async function getUserNum() {
+  return request(`${API_URL}/space/userNum?token=${store.getState().user.user.token}`, {
+    method: 'GET',
+  });
+}
+
+// 通知数
+export async function getNotificationNum() {
+  return request(`${API_URL}/space/notificationNum?token=${store.getState().user.user.token}`, {
+    method: 'GET',
+  });
+}
+
+// 通知数
+export async function getStandNum() {
+  return request(`${API_URL}/space/standNum?token=${store.getState().user.user.token}`, {
+    method: 'GET',
+  });
+}
+
+// 站立时间
+export async function getHomeStand(payload) {
+  const url = filterUrl({ ...payload, token: store.getState().user.user.token });
+  return request(`${API_URL}/space/homeStand?${url}`, {
+    method: 'GET',
+  });
+}
+
+// 站立排行榜
+export async function getHomeRank(payload) {
+  console.log('****** payload ***** ', payload);
+  const url = filterUrl({ ...payload, token: store.getState().user.user.token });
+  return request(`${API_URL}/space/homeRank?${url}`, {
+    method: 'GET',
+  });
+}
+
 // 首页获取站立时间趋势数据
 export async function getStandingData() {
   const salesData = [];
@@ -31,7 +76,7 @@ export async function getStandingData() {
     });
   }
   return {
-    status: 'ok',
+    status: 'success',
     data: salesData,
   };
 }
@@ -124,7 +169,7 @@ export async function getNoticeList(payload) {
   const { currentNum, currentPage, query } = payload;
   let url = `${G.API_URL}/space/notificationList?token=${
     store.getState().user.user.token
-    }&currentNum=${currentNum}&currentPage=${currentPage}`;
+  }&currentNum=${currentNum}&currentPage=${currentPage}`;
   if (query) {
     url += `&query=${query}`;
   }
@@ -139,4 +184,3 @@ export async function sendNotice(payload) {
     body: { ...payload, token: store.getState().user.user.token },
   });
 }
-
