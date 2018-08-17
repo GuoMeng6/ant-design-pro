@@ -27,14 +27,7 @@ export default {
     },
     *sendNotice({ payload }, { call, put }) {
       const response = yield call(sendNotice, payload);
-      console.log('******** sendNotice ******* ', response);
-      return;
-      if (response.status === 'ok') {
-        yield put({
-          type: 'add',
-          payload,
-        });
-      }
+      payload.callback(response);
     },
   },
 

@@ -138,7 +138,7 @@ export default class Home extends Component {
             <ChartCard
               bordered={false}
               title="设备数"
-              loading={loading}
+              // loading={loading}
               action={
                 <Tooltip title="指标说明">
                   <Icon type="info-circle-o" />
@@ -160,7 +160,7 @@ export default class Home extends Component {
             <ChartCard
               bordered={false}
               title="用户数"
-              loading={loading}
+              // loading={loading}
               action={
                 <Tooltip title="指标说明">
                   <Icon type="info-circle-o" />
@@ -180,7 +180,7 @@ export default class Home extends Component {
             <ChartCard
               bordered={false}
               title="通知数"
-              loading={loading}
+              // loading={loading}
               action={
                 <Tooltip title="指标说明">
                   <Icon type="info-circle-o" />
@@ -205,7 +205,7 @@ export default class Home extends Component {
             <ChartCard
               bordered={false}
               title="站立时长"
-              loading={loading}
+              // loading={loading}
               action={
                 <Tooltip title="指标说明">
                   <Icon type="info-circle-o" />
@@ -223,7 +223,7 @@ export default class Home extends Component {
           </Col>
         </Row>
 
-        <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
+        <Card bordered={false} bodyStyle={{ padding: 0 }}>
           <div className={styles.salesCard}>
             <Tabs tabBarExtraContent={salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
               <TabPane tab="站立时间趋势" key="views">
@@ -242,30 +242,36 @@ export default class Home extends Component {
                   <Col xl={8} lg={12} md={12} sm={24} xs={24}>
                     <div className={styles.salesRank}>
                       <h4 className={styles.rankingTitle}>人员站立时间排行</h4>
-                      <ul className={styles.rankingList}>
-                        {homeRank.map((item, i) => {
-                          const { duration, username } = item;
-                          const days = G.moment.duration(duration, 's').days();
-                          const hours = G.moment.duration(duration, 's').hours();
-                          const minutes = G.moment.duration(duration, 's').minutes();
-                          return (
-                            <li key={`${username}${i}`}>
-                              <div>
-                                <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
-                                <span>{username}</span>
-                                <span>
-                                  {days || null}
-                                  {days ? <i>天</i> : null}
-                                  {hours || null}
-                                  {hours ? <i>小时</i> : null}
-                                  {minutes || null}
-                                  {minutes ? <i>分钟</i> : null}
-                                </span>
-                              </div>
-                            </li>
-                          );
-                        })}
-                      </ul>
+                      {homeRank.length > 0 ? (
+                        <ul className={styles.rankingList}>
+                          {homeRank.map((item, i) => {
+                            const { duration, username } = item;
+                            const days = G.moment.duration(duration, 's').days();
+                            const hours = G.moment.duration(duration, 's').hours();
+                            const minutes = G.moment.duration(duration, 's').minutes();
+                            return (
+                              <li key={`${username}${i}`}>
+                                <div>
+                                  <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
+                                  <span>{username}</span>
+                                  <span>
+                                    {days || null}
+                                    {days ? <i>天</i> : null}
+                                    {hours || null}
+                                    {hours ? <i>小时</i> : null}
+                                    {minutes || null}
+                                    {minutes ? <i>分钟</i> : null}
+                                  </span>
+                                </div>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : (
+                        <div className={styles.emptyRand}>
+                          <font>暂无数据</font>
+                        </div>
+                      )}
                     </div>
                   </Col>
                 </Row>

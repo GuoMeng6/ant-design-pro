@@ -70,9 +70,8 @@ export default {
       if (response && response.status === 'success') {
         yield put({ type: 'saveHomeRank', payload: response.data.rank });
       } else {
-        message.error(
-          (response && response.message && response.message.message) || '站立排行获取失败'
-        );
+        message.error((response && response.message) || '站立排行获取失败');
+        yield put({ type: 'saveHomeRank', payload: [] });
       }
     },
   },

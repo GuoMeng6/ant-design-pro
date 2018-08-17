@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Select, Row, Col, Button } from 'antd';
+import { Form, Input, Select, Row, Col, Button, message } from 'antd';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
@@ -11,13 +11,13 @@ const SelectOption = Select.Option;
 
 const FormItem = Form.Item;
 
-const children = [];
-const valueOfAll = [];
-for (let i = 10; i < 36; i += 1) {
-  children.push(<SelectOption key={`id${i}`}>{i.toString(36) + i}</SelectOption>);
-  valueOfAll.push(`id${i}`);
-}
-children.unshift(<SelectOption key="all">全部</SelectOption>);
+// const children = [];
+// const valueOfAll = [];
+// for (let i = 10; i < 36; i += 1) {
+//   children.push(<SelectOption key={`id${i}`}>{i.toString(36) + i}</SelectOption>);
+//   valueOfAll.push(`id${i}`);
+// }
+// children.unshift(<SelectOption key="all">全部</SelectOption>);
 
 class NewNoticeForm extends Component {
   state = {
@@ -26,8 +26,13 @@ class NewNoticeForm extends Component {
     value: [],
   };
 
+  componentWillMount() {
+    this.configSelectOption(this.props.user);
+  }
+
   componentDidMount() {
     const { copyValue, form } = this.props;
+
     if (copyValue) {
       form.setFieldsValue({
         person: copyValue.receiver,
@@ -49,10 +54,22 @@ class NewNoticeForm extends Component {
     });
   }
 
+  configSelectOption(user) {
+    this.children = [];
+    this.valueOfAll = [];
+    console.log('****** user ****** ', user);
+
+    for (let i = 0; i < user.length; i += 1) {
+      this.children.push(<SelectOption key={user[i].uid}>{user[i].name}</SelectOption>);
+      this.valueOfAll.push(user[i].uid);
+    }
+    this.children.unshift(<SelectOption key="all">全部</SelectOption>);
+  }
+
   selectAll() {
     const { form } = this.props;
     form.setFieldsValue({
-      person: valueOfAll,
+      person: this.valueOfAll,
     });
   }
 
@@ -61,7 +78,7 @@ class NewNoticeForm extends Component {
       return o === 'all';
     });
     this.setState({
-      value: isContainerAll ? valueOfAll : values,
+      value: isContainerAll ? this.valueOfAll : values,
     });
     if (isContainerAll) {
       setTimeout(() => {
@@ -81,7 +98,7 @@ class NewNoticeForm extends Component {
         type: 'manaNotice/sendNotice',
         payload: {
           title: values.title,
-          receiver: values.person,
+          receivers: values.person,
           content: editorState,
           callback: this.sendResponse.bind(this),
         },
@@ -90,8 +107,12 @@ class NewNoticeForm extends Component {
   }
 
   sendResponse(res) {
-    console.log('****** res ******* ', res);
-    // history.back(-1);
+    if (res.status === 'success') {
+      message.success('发送成功');
+      history.back(-1);
+    } else {
+      message.error('发送失败');
+    }
   }
 
   checkEditor(rule, value, callback) {
@@ -132,7 +153,7 @@ class NewNoticeForm extends Component {
               onChange={this.handleChange.bind(this)}
               style={{ width: '100%' }}
             >
-              {children}
+              {this.children}
             </Select>
           )}
         </FormItem>

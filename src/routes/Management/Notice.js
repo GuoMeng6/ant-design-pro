@@ -36,6 +36,13 @@ export default class Notice extends Component {
       type: 'manaNotice/setCopyValue',
       payload: '',
     });
+    dispatch({
+      type: 'manaPerson/fetch',
+      payload: {
+        currentPage: 1,
+        currentNum: 15,
+      },
+    });
   }
 
   onSearch() {

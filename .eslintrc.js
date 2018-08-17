@@ -15,7 +15,7 @@ module.exports = {
     'consistent-return': [0],
     'class-methods-use-this': [
       'error',
-      { exceptMethods: ['getColumns', 'onEdit', 'onDelete', 'beforeUpload'] },
+      { exceptMethods: ['getColumns', 'onEdit', 'onDelete', 'beforeUpload', 'sendResponse'] },
     ],
     'react/forbid-prop-types': [0],
     'react/jsx-filename-extension': [1, { extensions: ['.js'] }],

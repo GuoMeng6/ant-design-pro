@@ -26,13 +26,14 @@ export default {
   proxy: {
     '/space': {
       // target: 'http://39.108.86.241:9201', //prot
-      target: 'http://192.168.1.141:7001', //胡立伟
+      // target: 'http://192.168.1.141:7001', //胡立伟
+      target: 'http://192.168.1.227:7001', //一行
       changeOrigin: true,
       pathRewrite: { '^/space': '' },
     },
   },
   disableDynamicImport: false, //true 默认关掉了动态加载
-  // publicPath: '/',
+  publicPath: '/',
   // publicPath: 'http://39.108.86.241/home/',
   hash: true,
 };
