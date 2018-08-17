@@ -10,14 +10,14 @@ export function getTimeDistance(type) {
   const now = new Date();
   const oneDay = 1000 * 60 * 60 * 24;
 
-  if (type === 'today') {
+  if (type === 'DAILY') {
     now.setHours(0);
     now.setMinutes(0);
     now.setSeconds(0);
     return [moment(now), moment(now.getTime() + (oneDay - 1000))];
   }
 
-  if (type === 'week') {
+  if (type === 'WEEKLY') {
     let day = now.getDay();
     now.setHours(0);
     now.setMinutes(0);
@@ -34,7 +34,7 @@ export function getTimeDistance(type) {
     return [moment(beginTime), moment(beginTime + (7 * oneDay - 1000))];
   }
 
-  if (type === 'month') {
+  if (type === 'MONTHLY') {
     const year = now.getFullYear();
     const month = now.getMonth();
     const nextDate = moment(now).add(1, 'months');
@@ -47,7 +47,7 @@ export function getTimeDistance(type) {
     ];
   }
 
-  if (type === 'year') {
+  if (type === 'YEARLY') {
     const year = now.getFullYear();
 
     return [moment(`${year}-01-01 00:00:00`), moment(`${year}-12-31 23:59:59`)];
@@ -216,4 +216,17 @@ export function filterBody(body) {
   });
   delete filter.undefined;
   return filter;
+}
+
+// 根据时间类型返回对应时间和单位
+export function getTimeByType(date, type) {
+  if (type === 'DAILY' || type === 'WEEKLY') {
+    return G.moment(date).format('D号');
+  }
+  if (type === 'MONTHLY') {
+    return G.moment(date).format('M月');
+  }
+  if (type === 'HOURLY') {
+    return G.moment(date).format('H时');
+  }
 }
