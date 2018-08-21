@@ -279,10 +279,10 @@ class BasicLayout extends React.PureComponent {
                   title: (
                     <span>
                       <img
-                        src={require('./../assets/favicon.png')}
+                        src={require('../assets/favicons.png')}
                         alt="pic"
                         align="absmiddle"
-                        style={{ width: '14px', height: '14px' }}
+                        style={{ width: '20px', height: '20px' }}
                       />{' '}
                       9AM
                     </span>
@@ -298,7 +298,7 @@ class BasicLayout extends React.PureComponent {
                         src={require('./../assets/officewell.png')}
                         alt="pic"
                         align="absmiddle"
-                        style={{ width: '15px', height: '15px' }}
+                        style={{ width: '20px', height: '20px' }}
                       />{' '}
                       OfficeWell
                     </span>

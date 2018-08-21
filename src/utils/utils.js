@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { parse, stringify } from 'qs';
 import G from '../gobal';
+import store from '../index';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -109,7 +110,7 @@ export function digitUppercase(n) {
 
 function getRelation(str1, str2) {
   if (str1 === str2) {
-    console.warn('Two path are equal!'); // eslint-disable-line
+    // console.warn('Two path are equal!'); // eslint-disable-line
   }
   const arr1 = str1.split('/');
   const arr2 = str2.split('/');
@@ -229,4 +230,9 @@ export function getTimeByType(date, type) {
   if (type === 'HOURLY') {
     return G.moment(date).format('H时');
   }
+}
+
+export function getRoutePath() {
+  console.log('****** getRoutePath ****** ', store);
+
 }

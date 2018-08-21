@@ -2,8 +2,8 @@ import React from 'react';
 import { Link, Redirect, Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
 import styles from './UserLayout.less';
-import logo from '../assets/logoGreen.png';
-import bgimg from './../assets/backchart.png';
+import logo from '../assets/logoBlue.png';
+import bgimg from './../assets/backcharts.png';
 import { getRoutes, getPageQuery, getQueryPath } from '../utils/utils';
 
 function getLoginPathWithRedirectPath() {
@@ -32,7 +32,7 @@ class UserLayout extends React.PureComponent {
     const { routerData, match } = this.props;
     return (
       <DocumentTitle title={this.getPageTitle()}>
-        <div className={styles.container}>
+        <div className={styles.admin_container}>
           <div className={styles.containers}>
             <div className={styles.contents}><img src={bgimg} /></div>
             <div className={styles.content}>

@@ -12,6 +12,11 @@ const menuData = [
     path: 'management',
     children: [
       {
+        name: '客户管理',
+        path: 'customer',
+        authority: 'admin',
+      },
+      {
         name: '人员管理',
         path: 'person',
       },

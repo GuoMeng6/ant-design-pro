@@ -59,7 +59,7 @@ export async function getHomeStand(payload) {
 
 // 站立排行榜
 export async function getHomeRank(payload) {
-  console.log('****** payload ***** ', payload);
+  // console.log('****** payload ***** ', payload);
   const url = filterUrl({ ...payload, token: store.getState().user.user.token });
   return request(`${API_URL}/space/homeRank?${url}`, {
     method: 'GET',
@@ -166,15 +166,10 @@ export async function releaseDevice(payload) {
 
 // 获去通知列表
 export async function getNoticeList(payload) {
-  const { currentNum, currentPage, query } = payload;
-  let url = `${G.API_URL}/space/notificationList?token=${
-    store.getState().user.user.token
-  }&currentNum=${currentNum}&currentPage=${currentPage}`;
-  if (query) {
-    url += `&query=${query}`;
-  }
-  return request(url, { method: 'GET' });
+  const body = filterBody({ ...payload, token: store.getState().user.user.token });
+  return request(`${G.API_URL}/space/notificationList`, { method: 'POST', body });
 }
+
 
 // 发送通知
 export async function sendNotice(payload) {
@@ -183,4 +178,10 @@ export async function sendNotice(payload) {
     method: 'PUT',
     body: { ...payload, token: store.getState().user.user.token },
   });
+}
+
+// 置顶通知
+export async function topNotice(payload) {
+  const body = filterBody({ ...payload, token: store.getState().user.user.token });
+  return request(`${G.API_URL}/space/notificationPinToTop`, { method: 'POST', body });
 }

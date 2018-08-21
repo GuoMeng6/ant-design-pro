@@ -89,14 +89,14 @@ export default class Home extends Component {
     const { rangePickerValue } = this.state;
     const { home, loading } = this.props;
     const { resourceNum, userNum, notificationNum, standNum, homeStand, homeRank } = home;
-    console.log('***** Home ****** ', {
-      resourceNum,
-      userNum,
-      notificationNum,
-      standNum,
-      homeStand,
-      homeRank,
-    });
+    // console.log('***** Home ****** ', {
+    //   resourceNum,
+    //   userNum,
+    //   notificationNum,
+    //   standNum,
+    //   homeStand,
+    //   homeRank,
+    // });
     // return null;
     const salesExtra = (
       <div className={styles.salesExtraWrap}>
@@ -233,10 +233,10 @@ export default class Home extends Component {
                       {homeStand.length > 0 ? (
                         <Bar height={400} title="" data={homeStand} color="#A6D6D0" />
                       ) : (
-                        <div className={styles.emptyBar}>
-                          <font className={styles.emptyText}>暂无数据</font>
-                        </div>
-                      )}
+                          <div className={styles.emptyBar}>
+                            <font className={styles.emptyText}>暂无数据</font>
+                          </div>
+                        )}
                     </div>
                   </Col>
                   <Col xl={8} lg={12} md={12} sm={24} xs={24}>
@@ -268,10 +268,10 @@ export default class Home extends Component {
                           })}
                         </ul>
                       ) : (
-                        <div className={styles.emptyRand}>
-                          <font>暂无数据</font>
-                        </div>
-                      )}
+                          <div className={styles.emptyRand}>
+                            <font>暂无数据</font>
+                          </div>
+                        )}
                     </div>
                   </Col>
                 </Row>

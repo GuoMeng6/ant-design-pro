@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider, Drawer, Icon, Pagination } from 'antd';
+import { Row, Col, Table, Button, Input, Divider, Drawer, Icon, Pagination, Popconfirm } from 'antd';
 
 import G from '../../gobal';
 import styles from './Person.less';
@@ -30,26 +30,22 @@ export default class Notice extends Component {
 
   componentDidMount() {
     const { dispatch, manaNotice } = this.props;
-    const { currentPage, currentNum } = manaNotice.data;
-    this.fetchDataList(currentPage, currentNum);
+    const { currentPage } = manaNotice.data;
+    this.fetchDataList(currentPage);
     dispatch({
       type: 'manaNotice/setCopyValue',
       payload: '',
-    });
-    dispatch({
-      type: 'manaPerson/fetch',
-      payload: {
-        currentPage: 1,
-        currentNum: 15,
-      },
     });
   }
 
   onSearch() {
     // console.log('******** 搜索 ******** ', this.state);
+    this.fetchDataList(1);
   }
 
   onChangeSearchInfo = e => {
+    console.log('***** e.target.value  *****', e.target.value);
+
     this.setState({ query: e.target.value });
   };
 
@@ -58,13 +54,33 @@ export default class Notice extends Component {
     this.setState({ query: '' });
   };
 
+  //置顶
+  untiedConfirm(value) {
+    console.log("***** value *****", value);
+
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'manaNotice/topNotice',
+      payload: {
+        status: true,
+        noticeId: value.noticeId,
+        callback: this.release.bind(this),
+      },
+    });
+  }
+
+  release(response) {
+    this.fetchDataList(pageNumber);
+  }
+
+  //详情
   onDetail(text, record, index) {
     this.setState({
       detail: {
         title: text.title,
-        lookNum: 20,
+        lookNum: text.viewCount,
         lastTime: text.createdAt,
-        content: text.editor,
+        content: text.content,
       },
     });
     this.showDrawer();
@@ -80,12 +96,16 @@ export default class Notice extends Component {
       {
         title: '标题',
         dataIndex: 'title',
+        width: '200px',
         key: 'title',
+        render: (text) => {
+          return <span className={styles.colSql}>{text}</span>
+        },
       },
       {
-        title: '接收人',
-        render: text => <font>{text.receiver.length}</font>,
-        key: 'receiver',
+        title: '未读人数',
+        dataIndex: 'unreadCount',
+        key: 'unreadCount',
       },
       {
         title: '发布时间',
@@ -97,7 +117,15 @@ export default class Notice extends Component {
         key: 'setting',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={() => {}}>置顶</a>
+            <Popconfirm
+              placement="left"
+              title="确定要置顶此条通知吗？"
+              onConfirm={this.untiedConfirm.bind(this, text)}
+              okText="确定"
+              cancelText="取消"
+            >
+              <a>置顶</a>
+            </Popconfirm>
             <Divider type="vertical" />
             <a onClick={this.copyPush.bind(this, text)}>复制</a>
             <Divider type="vertical" />
@@ -135,14 +163,13 @@ export default class Notice extends Component {
   };
 
   pageChange = pageNumber => {
-    const { manaPerson } = this.props;
-    const { currentNum } = manaPerson.data;
-    const { query } = this.state;
-    this.fetchDataList(pageNumber, currentNum, query);
+    this.fetchDataList(pageNumber);
   };
 
-  fetchDataList(currentPage, currentNum, query) {
-    const { dispatch } = this.props;
+  fetchDataList(currentPage) {
+    const { manaNotice, dispatch } = this.props;
+    const { currentNum } = manaNotice.data;
+    const { query } = this.state;
     dispatch({
       type: 'manaNotice/fetch',
       payload: { currentPage, currentNum, query },
@@ -200,7 +227,7 @@ export default class Notice extends Component {
             <Table
               rowKey="id"
               loading={loading}
-              dataSource={manaNotice.noticeList}
+              dataSource={manaNotice.data.row}
               columns={columns}
               onChange={this.handleChange.bind(this)}
               pagination={false}
@@ -228,7 +255,7 @@ export default class Notice extends Component {
             {this.state.detail.lookNum}
             <Icon type="clock-circle-o" style={{ marginLeft: '10px', marginRight: '6px' }} />
             {this.state.detail.lastTime}
-          </p>
+          </p><br /><br />
           <div dangerouslySetInnerHTML={{ __html: this.state.detail.content }} />
         </Drawer>
       </div>

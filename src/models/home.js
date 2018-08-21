@@ -25,10 +25,12 @@ export default {
   effects: {
     *getResourceNum(_, { call, put }) {
       const response = yield call(getResourceNum);
+      console.log('***** response ***** ', response);
+
       if (response && response.status === 'success') {
         yield put({ type: 'saveResourceNum', payload: response.data });
       } else {
-        message.error((response && response.message) || '设备数获取失败');
+        message.error('设备数获取失败');
       }
     },
     *getUserNum(_, { call, put }) {
@@ -36,7 +38,7 @@ export default {
       if (response && response.status === 'success') {
         yield put({ type: 'saveUserNum', payload: response.data });
       } else {
-        message.error((response && response.message) || '用户数获取失败');
+        message.error('用户数获取失败');
       }
     },
     *getNotificationNum(_, { call, put }) {
@@ -44,7 +46,7 @@ export default {
       if (response && response.status === 'success') {
         // console.log('***** getNotificationNum ****', response);
       } else {
-        message.error((response && response.message) || '通知数获取失败');
+        message.error('通知数获取失败');
       }
     },
     *getStandNum(_, { call, put }) {
@@ -52,7 +54,7 @@ export default {
       if (response && response.status === 'success') {
         yield put({ type: 'saveStandNum', payload: response.data });
       } else {
-        message.error((response && response.message) || '站立时长获取失败');
+        message.error('站立时长获取失败');
       }
     },
     *getHomeStand({ payload }, { call, put }) {
@@ -60,9 +62,7 @@ export default {
       if (response && response.status === 'success') {
         yield put({ type: 'saveHomeStand', payload: response.data });
       } else {
-        message.error(
-          (response && response.message && response.message.message) || '站立时长获取失败'
-        );
+        message.error('站立时长获取失败');
       }
     },
     *getHomeRank({ payload }, { call, put }) {
@@ -70,7 +70,7 @@ export default {
       if (response && response.status === 'success') {
         yield put({ type: 'saveHomeRank', payload: response.data.rank });
       } else {
-        message.error((response && response.message) || '站立排行获取失败');
+        message.error('站立排行获取失败');
         yield put({ type: 'saveHomeRank', payload: [] });
       }
     },
