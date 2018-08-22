@@ -16,7 +16,6 @@ import { getRoutes } from '../utils/utils';
 import Authorized from '../utils/Authorized';
 import { getUserInfo } from '../utils/storage';
 import { getMenuData } from '../common/menu';
-import logo from '../assets/logoGreen.png';
 
 const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute, check } = Authorized;
@@ -226,7 +225,7 @@ class BasicLayout extends React.PureComponent {
     const layout = (
       <Layout>
         <SiderMenu
-          logo={logo}
+          logo='http://pdum0jw3j.bkt.clouddn.com/logoGreen.png'
           // 不带Authorized参数的情况下如果没有权限,会强制跳到403界面
           // If you do not have the Authorized parameter
           // you will be forced to jump to the 403 interface without permission
@@ -279,7 +278,7 @@ class BasicLayout extends React.PureComponent {
                   title: (
                     <span>
                       <img
-                        src={require('../assets/favicons.png')}
+                        src='http://pdum0jw3j.bkt.clouddn.com/favicons.png'
                         alt="pic"
                         align="absmiddle"
                         style={{ width: '20px', height: '20px' }}
@@ -295,7 +294,7 @@ class BasicLayout extends React.PureComponent {
                   title: (
                     <span>
                       <img
-                        src={require('./../assets/officewell.png')}
+                        src='http://pdum0jw3j.bkt.clouddn.com/officewell.png'
                         alt="pic"
                         align="absmiddle"
                         style={{ width: '20px', height: '20px' }}
