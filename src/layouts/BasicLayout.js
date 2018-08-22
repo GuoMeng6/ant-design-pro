@@ -112,7 +112,7 @@ class BasicLayout extends React.PureComponent {
     if (userInfo) {
       dispatch({
         type: 'user/saveUser',
-        payload: JSON.parse(userInfo),
+        payload: userInfo,
       });
     } else {
       dispatch({
@@ -239,7 +239,7 @@ class BasicLayout extends React.PureComponent {
         <Layout>
           <Header style={{ padding: 0 }}>
             <GlobalHeader
-              logo={logo}
+              logo='http://pdum0jw3j.bkt.clouddn.com/logoGreen.png'
               currentUser={currentUser}
               fetchingNotices={fetchingNotices}
               notices={notices}

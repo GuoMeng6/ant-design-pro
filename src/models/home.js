@@ -2,7 +2,7 @@ import { message } from 'antd';
 import {
   getResourceNum,
   getUserNum,
-  getNotificationNum,
+  getNotificationCount,
   getStandNum,
   getHomeStand,
   getHomeRank,
@@ -25,7 +25,7 @@ export default {
   effects: {
     *getResourceNum(_, { call, put }) {
       const response = yield call(getResourceNum);
-      console.log('***** response ***** ', response);
+      console.log('***** getResourceNum response ***** ', response);
 
       if (response && response.status === 'success') {
         yield put({ type: 'saveResourceNum', payload: response.data });
@@ -41,8 +41,8 @@ export default {
         message.error('用户数获取失败');
       }
     },
-    *getNotificationNum(_, { call, put }) {
-      const response = yield call(getNotificationNum);
+    *getNotificationCount(_, { call, put }) {
+      const response = yield call(getNotificationCount);
       if (response && response.status === 'success') {
         // console.log('***** getNotificationNum ****', response);
       } else {

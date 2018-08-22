@@ -91,6 +91,9 @@ export const getRouterData = app => {
     '/management/newNotice': {
       component: dynamicWrapper(app, [], () => import('../routes/Management/NewNotice')),
     },
+    // '/management/customer': {
+    //   component: dynamicWrapper(app, ['manaCustomer','custom'], () => import('../routes/Management/Customer')),
+    // },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
     },

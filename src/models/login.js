@@ -28,7 +28,8 @@ export default {
         reloadAuthorized();
         yield put(routerRedux.replace('/home'));
       } else {
-        message.error(response.message);
+        // message.error(response.message);
+        message.error('response.message');
       }
       // return;
     },

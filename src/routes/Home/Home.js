@@ -25,7 +25,7 @@ export default class Home extends Component {
     const { dispatch } = this.props;
     dispatch({ type: 'home/getResourceNum' });
     dispatch({ type: 'home/getUserNum' });
-    dispatch({ type: 'home/getNotificationNum' });
+    dispatch({ type: 'home/getNotificationCount' });
     dispatch({ type: 'home/getStandNum' });
     this.getHomeStand({});
   }

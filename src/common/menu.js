@@ -14,7 +14,7 @@ const menuData = [
       {
         name: '客户管理',
         path: 'customer',
-        authority: 'admin',
+        // authority: 'admin',
       },
       {
         name: '人员管理',

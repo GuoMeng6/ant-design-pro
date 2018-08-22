@@ -23,6 +23,8 @@ export async function logout() {
 
 // 设备数
 export async function getResourceNum() {
+  console.log('******** getResourceNum ******* ',store.getState());
+  
   return request(`${API_URL}/space/resourceNum?token=${store.getState().user.user.token}`, {
     method: 'GET',
   });
@@ -36,8 +38,8 @@ export async function getUserNum() {
 }
 
 // 通知数
-export async function getNotificationNum() {
-  return request(`${API_URL}/space/notificationNum?token=${store.getState().user.user.token}`, {
+export async function getNotificationCount() {
+  return request(`${API_URL}/space/notificationCount?token=${store.getState().user.user.token}`, {
     method: 'GET',
   });
 }
@@ -184,4 +186,38 @@ export async function sendNotice(payload) {
 export async function topNotice(payload) {
   const body = filterBody({ ...payload, token: store.getState().user.user.token });
   return request(`${G.API_URL}/space/notificationPinToTop`, { method: 'POST', body });
+}
+
+// 获取客户数组
+export async function getCustomerList(payload) {
+  const body = filterBody({ ...payload, token: store.getState().user.user.token });
+  return request(`${G.API_URL}/space/customerList`, {
+    method: 'POST',
+    body,
+  });
+}
+
+// 添加客户
+export async function addCustomer(payload) {
+  const url = `${G.API_URL}/space/customer_add`;
+  return request(url, {
+    method: 'PUT',
+    body: { ...payload, token: store.getState().user.user.token },
+  });
+}
+// 编辑客户
+export async function editCustomer(payload) {
+  const url = `${G.API_URL}/space/customer_edit`;
+  return request(url, {
+    method: 'PUT',
+    body: { ...payload, token: store.getState().user.user.token },
+  });
+}
+// 重置密码
+export async function resetPassword(payload) {
+  const body = filterBody({ ...payload, token: store.getState().user.user.token });
+  return request(`${G.API_URL}/space/resetPassword`, {
+    method: 'POST',
+    body,
+  });
 }

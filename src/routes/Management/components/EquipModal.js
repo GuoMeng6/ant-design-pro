@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, Input, Form, Icon, Upload } from 'antd';
+import { Modal, Button, Input, Form } from 'antd';
 import G from '../../../gobal';
 
 const FormItem = Form.Item;
