@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Select, Row, Col, Button, message, DatePicker } from 'antd';
 import { connect } from 'dva';
+import moment from 'moment';
 
 
 const FormItem = Form.Item;
@@ -18,27 +19,83 @@ class NewCustomer extends Component {
     const { editValue } = this.props.manaCustomer;
     const { form } = this.props;
     if (editValue !== '') {
-      form.setFieldsValue(editValue);
+      console.log("***** editValue *****", moment(editValue.contractDate).format());
+      form.setFieldsValue({
+        account: '11111111',
+        password: '...',
+        email: editValue.email,
+        companyName: editValue.companyName,
+        contacts: editValue.contacts,
+        telephone: editValue.telephone,
+        address: editValue.address,
+        website: editValue.website,
+        industry: editValue.industry,
+        contractNo: editValue.contractNo,
+        contractDate: moment(editValue.contractDate),
+        remark: editValue.remark,
+      });
     }
   }
-
+  // 2018-08-23T00:00:00+08:00
 
   //添加 
   handleCommit(ev) {
-    console.log(ev);
+    const { form, dispatch } = this.props;
+    const { editValue } = this.props.manaCustomer;
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      if (editValue !== '') {
+        // 编辑
+        dispatch({
+          type: 'manaCustomer/editCustomer',
+          payload: { companyId: editValue.companyId + '', ...form.getFieldsValue(), contractDate: moment(form.getFieldsValue().contractDate).format('YYYY-MM-DD'), callback: this.release.bind(this) },
+        });
+      } else {
+        // 添加
+        dispatch({
+          type: 'manaCustomer/addCustomer',
+          payload: { ...form.getFieldsValue(), contractDate: moment(form.getFieldsValue().contractDate).format('YYYY-MM-DD'), callback: this.release.bind(this) },
+        });
+      }
+    })
 
   }
+
+  // 上传成功或者失败的回调
+  release(res) {
+    console.log("回调函数的数据" + JSON.stringify(res));
+    if (res.status === 'success') {
+      message.success('添加成功！');
+      setTimeout(() => {
+        this.goBack();
+      }, 2000)
+    } else {
+      message.error(res.message.err);
+      return;
+    }
+  }
+
   // 时间选择器
   onChange(date, dateString) {
-    console.log(date, dateString);
+    console.log(date);
+    console.log(dateString);
+  }
+
+  //返回上一页
+  goBack() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'manaCustomer/setEditValue',
+      payload: "",
+    });
+    history.back(-1);
   }
 
 
   render() {
-    const { form } = this.props;
-    console.log("***** form *****" + JSON.stringify(form.getFieldsValue()));
-
+    const { form, manaCustomer } = this.props;
     const { getFieldDecorator } = form;
+    const { editValue } = manaCustomer;
     return (
       <Form style={{ backgroundColor: '#fff', padding: '20px' }}>
         <Row>
@@ -51,6 +108,10 @@ class NewCustomer extends Component {
                 rules: [
                   { required: true, message: '请输入账号' },
                   {
+                    min: 8,
+                    message: '最小长度8',
+                  },
+                  {
                     max: 20,
                     message: '最大长度20',
                   },
@@ -59,7 +120,7 @@ class NewCustomer extends Component {
                     message: '仅支持半角英文数字和下划线'
                   }
                 ],
-              })(<Input placeholder="请输入账号" size="large" />)}
+              })(<Input placeholder="请输入账号" size="large" disabled={editValue !== ''} />)}
             </FormItem>
           </Col>
           <Col span={12}>
@@ -79,7 +140,7 @@ class NewCustomer extends Component {
                     message: '仅支持半角英文数字和下划线'
                   }
                 ],
-              })(<Input placeholder="请输入密码" size="large" />)}
+              })(<Input placeholder="请输入密码" size="large" disabled={editValue !== ''} />)}
             </FormItem>
           </Col>
           <Col span={12}>
@@ -90,6 +151,10 @@ class NewCustomer extends Component {
               {getFieldDecorator('email', {
                 rules: [
                   { required: true, message: '请输入邮箱' },
+                  {
+                    min: 10,
+                    message: '最小长度10',
+                  },
                   {
                     max: 50,
                     message: '最大长度50',
@@ -111,7 +176,7 @@ class NewCustomer extends Component {
                     message: '最大长度50',
                   }
                 ],
-              })(<Input placeholder="请输入公司全称" size="large" />)}
+              })(<Input placeholder="请输入公司全称" size="large" disabled={editValue !== ''} />)}
             </FormItem>
           </Col>
           <Col span={12}>
@@ -252,9 +317,7 @@ class NewCustomer extends Component {
             </Button>
             <Button
               style={{ marginLeft: 8 }}
-              onClick={() => {
-                history.back(-1);
-              }}
+              onClick={this.goBack.bind(this)}
             >
               取消
             </Button>

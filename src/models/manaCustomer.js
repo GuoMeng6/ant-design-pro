@@ -27,28 +27,10 @@ export default {
     *addCustomer({ payload }, { call }) {
       const response = yield call(addCustomer, payload);
       payload.callback(response);
-      if (response && response.status === 'success') {
-        message.success(response.data.data.msg);
-      } else {
-        const { errors } = response.message;
-        if (!errors[0]) {
-          return message.error('添加失败');
-        }
-        message.error(`${errors[0].field} ${errors[0].message}`);
-      }
     },
     *editCustomer({ payload }, { call }) {
       const response = yield call(editCustomer, payload);
       payload.callback(response);
-      if (response && response.status === 'success') {
-        message.success(response.data.data.msg);
-      } else {
-        const { errors } = response.message;
-        if (!errors[0]) {
-          return message.error('编辑失败');
-        }
-        message.error(`${errors[0].field} ${errors[0].message}`);
-      }
     },
     *resetPassword({ payload }, { call }) {
       const response = yield call(resetPassword, payload);
@@ -77,5 +59,11 @@ export default {
         },
       };
     },
+    setEditValue(state, action) {
+      return {
+        ...state,
+        editValue: action.payload,
+      };
+    }
   },
 };

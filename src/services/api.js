@@ -23,8 +23,8 @@ export async function logout() {
 
 // 设备数
 export async function getResourceNum() {
-  console.log('******** getResourceNum ******* ',store.getState());
-  
+  console.log('******** getResourceNum ******* ', store.getState());
+
   return request(`${API_URL}/space/resourceNum?token=${store.getState().user.user.token}`, {
     method: 'GET',
   });
@@ -199,7 +199,9 @@ export async function getCustomerList(payload) {
 
 // 添加客户
 export async function addCustomer(payload) {
-  const url = `${G.API_URL}/space/customer_add`;
+  const url = `${G.API_URL}/space/customerAdd`;
+  console.log("***** 调用接口 *****", payload);
+
   return request(url, {
     method: 'PUT',
     body: { ...payload, token: store.getState().user.user.token },
@@ -207,7 +209,7 @@ export async function addCustomer(payload) {
 }
 // 编辑客户
 export async function editCustomer(payload) {
-  const url = `${G.API_URL}/space/customer_edit`;
+  const url = `${G.API_URL}/space/customerEdit`;
   return request(url, {
     method: 'PUT',
     body: { ...payload, token: store.getState().user.user.token },

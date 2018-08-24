@@ -8,14 +8,12 @@ import {
   Input,
   Divider,
   Popconfirm,
-  message,
   Pagination,
   Icon,
 } from 'antd';
 
 import G from '../../gobal';
 import styles from './Person.less';
-// import manaCustomer from './components/manaCustomer.js';
 
 @connect(({ manaCustomer, loading }) => ({
   manaCustomer,
@@ -26,9 +24,7 @@ export default class Wework extends Component {
   state = {
     query: '',
     filterParam: {},
-    modalLoading: false,
-    visible: false,
-    editValue: {},
+    modalLoading: false
   };
 
   componentDidMount() {
@@ -53,60 +49,20 @@ export default class Wework extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'manaCustomer/resetPassword',
-      payload: { id: value.id, callback: this.release.bind(this) },
+      payload: { companyId: value.companyId, callback: this.fetchDataList.bind(this) },
     });
   }
 
-  release(response) {
-    this.fetchDataList();
-  }
-
-  // 解除弹窗
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  // 备注
-  handleOk = (fieldsValue, id) => {
-    this.setState({ modalLoading: true });
-    // delete fieldsValue.upload;
-    if (G._.isEmpty(this.state.editValue)) {
-      return;
-    }
-    fieldsValue.id = id;
-    this.addRemark({ ...fieldsValue, callback: this.upload.bind(this) });
-  };
-
-  upload = res => {
-    console.log(res);
-
-    if (res.status === 'success') {
-      this.setState({ modalLoading: false, visible: false });
-      this.fetchDataList();
-    } else {
-      this.setState({ modalLoading: false });
-    }
-  };
   //编辑
-  addRemark(data) {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'manaCustomer/editCustomer',
-      payload: data,
-    });
-  }
-
-  handleCancel = () => {
-    this.setState({ visible: false, editValue: {} });
-  };
-
   onMark(text, record, index) {
-    this.setState({
-      visible: true,
-      editValue: text,
+    const { dispatch, manaCustomer } = this.props;
+    const { editValue } = manaCustomer;
+    dispatch({
+      type: 'manaCustomer/setEditValue',
+      payload: text,
     });
+    console.log(editValue);
+    this.newCustomer();
   }
   //添加客户
   newCustomer() {
@@ -126,18 +82,18 @@ export default class Wework extends Component {
       },
       {
         title: '客户名称',
-        dataIndex: 'number',
-        key: 'number',
+        dataIndex: 'companyName',
+        key: 'companyName',
       },
       {
         title: '账号',
         dataIndex: 'number',
-        key: 'number',
+        key: 'numbers',
       },
       {
         title: '设备数',
         dataIndex: 'number',
-        key: 'number',
+        key: 'numbesr',
       },
       {
         title: '离线设备数',
@@ -216,7 +172,7 @@ export default class Wework extends Component {
 
   render() {
     const { manaCustomer, loading } = this.props;
-    const { filteredInfo, visible, modalLoading, editValue, query } = this.state;
+    const { filteredInfo, query } = this.state;
     const columns = this.getColumns(filteredInfo);
     const { currentNum, currentPage, totalNum } = manaCustomer.data;
     const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
@@ -273,14 +229,6 @@ export default class Wework extends Component {
             />
           </Col>
         </Row>
-        {/* 弹窗 */}
-        <manaCustomer
-          visible={visible}
-          loading={modalLoading}
-          editValue={editValue}
-          handleOk={this.handleOk.bind(this)}
-          handleCancel={this.handleCancel.bind(this)}
-        />
       </div>
     );
   }
