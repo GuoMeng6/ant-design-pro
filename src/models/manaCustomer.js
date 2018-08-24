@@ -9,6 +9,7 @@ export default {
       currentPage: 1,
       currentNum: 15,
     },
+    editValue: ''
   },
 
   effects: {

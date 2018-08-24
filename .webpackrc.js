@@ -25,8 +25,8 @@ export default {
     },
     proxy: {
         '/space': {
-            target: 'http://39.108.86.241:9201', //prot
-            // target: 'http://192.168.1.141:7001', //胡立伟
+            // target: 'http://39.108.86.241:9201', //prot
+            target: 'http://192.168.1.141:9201', //胡立伟
             // target: 'http://192.168.1.227:7001', //一行
             changeOrigin: true,
             pathRewrite: { '^/space': '' },

@@ -146,7 +146,7 @@ export default class Home extends Component {
               }
               total={() => <h4>{numeral(resourceNum.totalCount).format('0,0')}</h4>}
               footer={
-                <Field label="使用率" value={resourceNum.liveCount / resourceNum.totalCount} />
+                <Field label="使用率" value={Number(resourceNum.liveCount / resourceNum.totalCount*100).toFixed(2)+'%'} />
               }
               contentHeight={46}
             >
@@ -167,7 +167,7 @@ export default class Home extends Component {
                 </Tooltip>
               }
               total={numeral(userNum.totalCount).format('0,0')}
-              footer={<Field label="当前使用率" value={userNum.liveCount / userNum.totalCount} />}
+              footer={<Field label="当前使用率" value={Number(userNum.liveCount / userNum.totalCount*100).toFixed(2)+'%'} />}
               contentHeight={46}
             >
               <font style={{ marginRight: 16 }}>
@@ -190,7 +190,7 @@ export default class Home extends Component {
               footer={
                 <Field
                   label="阅读率"
-                  value={notificationNum.liveCount / notificationNum.totalCount || 0}
+                  value={Number(notificationNum.liveCount / notificationNum.totalCount*100).toFixed(2)+'%' || 0}
                 />
               }
               contentHeight={46}

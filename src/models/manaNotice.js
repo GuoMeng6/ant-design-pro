@@ -34,13 +34,12 @@ export default {
     //置顶消息通知
     *topNotice({ payload }, { call }) {
       const response = yield call(topNotice, payload);
-      console.log("***** response *****", response);
-      payload.callback(response);
       if (response && response.status === 'success') {
         message.success('操作成功');
       } else {
-        message.error('操作失败');
+        message.error(response.err.message);
       }
+      payload.callback(response);
     },
   },
 

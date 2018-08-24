@@ -77,23 +77,32 @@ export const getRouterData = app => {
     '/home': {
       component: dynamicWrapper(app, ['home'], () => import('../routes/Home/Home')),
     },
+    // 人员管理
     '/management/person': {
       component: dynamicWrapper(app, ['manaPerson', 'user'], () =>
         import('../routes/Management/Person')
       ),
     },
+    // 设备管理
     '/management/equipment': {
       component: dynamicWrapper(app, ['manaEquip'], () => import('../routes/Management/Equipment')),
     },
+    // 通知管理
     '/management/notice': {
       component: dynamicWrapper(app, ['manaNotice'], () => import('../routes/Management/Notice')),
     },
+    // 新建通知
     '/management/newNotice': {
       component: dynamicWrapper(app, [], () => import('../routes/Management/NewNotice')),
     },
-    // '/management/customer': {
-    //   component: dynamicWrapper(app, ['manaCustomer','custom'], () => import('../routes/Management/Customer')),
-    // },
+    // 客户管理
+    '/management/customer': {
+      component: dynamicWrapper(app, ['manaCustomer'], () => import('../routes/Management/Customer')),
+    },
+    // 新建客户
+    '/management/newCustomer': {
+      component: dynamicWrapper(app, ['manaCustomer'], () => import('../routes/Management/newCustomer')),
+    },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
     },

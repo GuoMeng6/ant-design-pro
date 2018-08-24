@@ -109,10 +109,12 @@ class BasicLayout extends React.PureComponent {
   componentWillMount() {
     const userInfo = getUserInfo();
     const { dispatch } = this.props;
-    if (userInfo) {
+    console.log('****** BasicLayout ********',userInfo);
+    const user = JSON.parse(userInfo);
+    if (user) {
       dispatch({
         type: 'user/saveUser',
-        payload: userInfo,
+        payload: user,
       });
     } else {
       dispatch({

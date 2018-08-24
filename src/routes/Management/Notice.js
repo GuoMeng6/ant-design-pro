@@ -56,8 +56,6 @@ export default class Notice extends Component {
 
   //置顶
   untiedConfirm(value) {
-    console.log("***** value *****", value);
-
     const { dispatch } = this.props;
     dispatch({
       type: 'manaNotice/topNotice',
@@ -70,7 +68,7 @@ export default class Notice extends Component {
   }
 
   release(response) {
-    this.fetchDataList(pageNumber);
+    this.fetchDataList(1);
   }
 
   //详情
