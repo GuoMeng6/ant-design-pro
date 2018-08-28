@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Table, Button, Input, Divider, Pagination, Icon } from 'antd';
+import { Row, Col, Table, Button, Input, Divider, Pagination, Icon, Popconfirm } from 'antd';
 
 import G from '../../gobal';
 import styles from './Person.less';
@@ -23,11 +23,13 @@ export default class Wework extends Component {
   };
 
   componentDidMount() {
-    this.fetchDataList();
+    const { manaPerson } = this.props;
+    const { currentPage } = manaPerson.data;
+    this.fetchDataList({ currentPage: currentPage });
   }
 
   onSearch() {
-    this.fetchDataList({ currentNum: 1 });
+    this.fetchDataList({ currentPage: 1 });
   }
 
   onChangeSearchInfo = e => {
@@ -47,7 +49,6 @@ export default class Wework extends Component {
   }
 
   onDelete(text) {
-    // console.log('********* 删除 ******** ', text, record, index);
     this.updatePerson({ uid: text.uid, isDel: true, callback: this.update.bind(this) });
   }
 
@@ -105,13 +106,15 @@ export default class Wework extends Component {
               编辑
             </a>
             <Divider type="vertical" />
-            <a
-              onClick={() => {
-                this.onDelete(text, record, index);
-              }}
+            <Popconfirm
+              placement="left"
+              title="确定要删除此条信息吗？"
+              onConfirm={this.onDelete.bind(this, text)}
+              okText="确定"
+              cancelText="取消"
             >
-              删除
-            </a>
+              <a>删除</a>
+            </Popconfirm>
           </Fragment>
         ),
       },
@@ -176,8 +179,8 @@ export default class Wework extends Component {
     this.fetchDataList({ filterParam, sortParam });
   };
 
-  pageChange = pageNumber => {
-    this.fetchDataList({ currentNum: pageNumber });
+  pageChange = currentPage => {
+    this.fetchDataList({ currentPage: currentPage });
   };
 
   fetchDataList(value) {
@@ -187,8 +190,8 @@ export default class Wework extends Component {
     dispatch({
       type: 'manaPerson/fetch',
       payload: {
+        pageSize: (value && value.pageSize) || personData.pageSize,
         currentPage: (value && value.currentPage) || personData.currentPage,
-        currentNum: (value && value.currentNum) || personData.currentNum,
         query: (value && value.query) || query,
         filterParam: (value && value.filterParam) || filterParam,
         sortParam: (value && value.sortParam) || sortParam,
@@ -216,7 +219,7 @@ export default class Wework extends Component {
     const { manaPerson, user, loading } = this.props;
     const { modalLoading, visible, editValue, query } = this.state;
     const columns = this.getColumns();
-    const { currentNum, currentPage, totalNum } = manaPerson.data;
+    const { pageSize, currentPage, totalNum } = manaPerson.data;
     const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     return (
       <div className={styles.main}>
@@ -266,7 +269,7 @@ export default class Wework extends Component {
               current={currentPage}
               showQuickJumper
               total={totalNum}
-              pageSize={currentNum}
+              pageSize={pageSize}
               onChange={this.pageChange.bind(this)}
             />
           </Col>

@@ -124,6 +124,9 @@ export const getRouterData = app => {
     '/admin_user/login': {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
     },
+    '/change/password': {
+      component: dynamicWrapper(app, ['changePass'], () => import('../routes/User/ChangePassword')),
+    },
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());

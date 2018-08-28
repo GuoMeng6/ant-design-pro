@@ -24,6 +24,7 @@ export default class Wework extends Component {
   state = {
     query: '',
     filterParam: {},
+    sortParam: {},
     modalLoading: false
   };
 
@@ -49,7 +50,7 @@ export default class Wework extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'manaCustomer/resetPassword',
-      payload: { companyId: value.companyId, callback: this.fetchDataList.bind(this) },
+      payload: { account: value.company.account, callback: this.fetchDataList.bind(this) },
     });
   }
 
@@ -61,7 +62,6 @@ export default class Wework extends Component {
       type: 'manaCustomer/setEditValue',
       payload: text,
     });
-    console.log(editValue);
     this.newCustomer();
   }
   //添加客户
@@ -77,8 +77,12 @@ export default class Wework extends Component {
     const columns = [
       {
         title: '序号',
-        dataIndex: 'id',
         key: 'id',
+        render: (text, record, index) => (
+          <Fragment>
+            <font>{index + 1}</font>
+          </Fragment>
+        ),
       },
       {
         title: '客户名称',
@@ -87,28 +91,29 @@ export default class Wework extends Component {
       },
       {
         title: '账号',
-        dataIndex: 'number',
-        key: 'numbers',
+        dataIndex: 'company.account',
+        key: 'company.account',
       },
       {
         title: '设备数',
-        dataIndex: 'number',
-        key: 'numbesr',
+        dataIndex: 'resourceTotal',
+        key: 'resourceTotal',
+        sorter: true,
       },
       {
         title: '离线设备数',
-        dataIndex: 'status',
-        key: 'status',
+        dataIndex: 'resourceOffline',
+        key: 'resourceOffline',
       },
       {
         title: '用户数',
-        dataIndex: 'user_id',
-        key: 'user_id',
+        dataIndex: 'userTotal',
+        key: 'userTotal',
       },
       {
         title: '备注',
-        dataIndex: 'remark',
-        key: 'remark',
+        dataIndex: 'company.remark',
+        key: 'company.remark',
       },
       {
         title: '操作',
@@ -141,14 +146,14 @@ export default class Wework extends Component {
 
   // 排序筛选
   handleChange = (pagination, filters, sorter) => {
-    let filterParam = {};
-    if (!G._.isEmpty(filters && filters.status)) {
-      filterParam = { status: filters.status };
+    let sortParam = {};
+    if (!G._.isEmpty(sorter)) {
+      sortParam = { resourceOffline: sorter.column.order === 'descend' ? 'desc' : 'asc' };
     }
     this.setState({
-      filterParam,
+      sortParam,
     });
-    this.fetchDataList({ filterParam });
+    this.fetchDataList({ sortParam });
   };
 
   pageChange = pageNumber => {
@@ -158,14 +163,14 @@ export default class Wework extends Component {
   fetchDataList(value) {
     const { dispatch, manaCustomer } = this.props;
     const equipData = manaCustomer.data;
-    const { query, filterParam } = this.state;
+    const { query, sortParam } = this.state;
     dispatch({
       type: 'manaCustomer/fetch',
       payload: {
         currentPage: (value && value.currentPage) || equipData.currentPage,
         currentNum: (value && value.currentNum) || equipData.currentNum,
         query: (value && value.query) || query,
-        filterParam: (value && value.filterParam) || filterParam,
+        sortParam: (value && value.sortParam) || sortParam,
       },
     });
   }
@@ -176,7 +181,6 @@ export default class Wework extends Component {
     const columns = this.getColumns(filteredInfo);
     const { currentNum, currentPage, totalNum } = manaCustomer.data;
     const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
-    // console.log('********* manaCustomer ********* ', manaCustomer.data);
     return (
       <div className={styles.main}>
         <h3>客户管理</h3>
@@ -212,7 +216,7 @@ export default class Wework extends Component {
           {/* 表格 */}
           <Col span={24}>
             <Table
-              rowKey="id"
+              rowKey="companyId"
               loading={loading}
               dataSource={manaCustomer.data.rows}
               columns={columns}

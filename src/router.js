@@ -12,8 +12,6 @@ const { AuthorizedRoute } = Authorized;
 
 function RouterConfig({ history, app }) {
   const routerData = getRouterData(app);
-  // console.log('******* routerData ******* ', routerData);
-  // console.log('******* url ******* ', window.location.href);
   const url = window.location.href;
   let userPath = '/user'
   setAuthority('user');
@@ -25,8 +23,6 @@ function RouterConfig({ history, app }) {
 
   const UserLayout = routerData['/user'].component;
   const AdminLayout = routerData['/admin_user'].component;
-  // console.log('****** UserLayout ******* ', UserLayout);
-
   const BasicLayout = routerData['/'].component;
   return (
     <LocaleProvider locale={zhCN}>

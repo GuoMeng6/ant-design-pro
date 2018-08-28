@@ -81,6 +81,9 @@ export default class GlobalHeader extends PureComponent {
           <Icon type="close-circle" />触发报错
         </Menu.Item>
         <Menu.Divider /> */}
+        <Menu.Item key="change_pass">
+          <Icon type="edit" />修改密码
+        </Menu.Item>
         <Menu.Item key="logout">
           <Icon type="logout" />退出登录
         </Menu.Item>
@@ -160,8 +163,8 @@ export default class GlobalHeader extends PureComponent {
               </span>
             </Dropdown>
           ) : (
-            <Spin size="small" style={{ marginLeft: 8 }} />
-          )}
+              <Spin size="small" style={{ marginLeft: 8 }} />
+            )}
         </div>
       </div>
     );

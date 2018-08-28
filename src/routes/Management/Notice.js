@@ -5,7 +5,8 @@ import { Row, Col, Table, Button, Input, Divider, Drawer, Icon, Pagination, Popc
 import G from '../../gobal';
 import styles from './Person.less';
 
-@connect(({ manaNotice, loading }) => ({
+@connect(({ manaNotice, loading, manaPerson }) => ({
+  manaPerson,
   manaNotice,
   loading: loading.effects['manaNotice/fetch'],
 }))
@@ -36,16 +37,21 @@ export default class Notice extends Component {
       type: 'manaNotice/setCopyValue',
       payload: '',
     });
+    // 请求全部人员
+    dispatch({
+      type: 'manaPerson/fetch',
+      payload: {
+        currentPage: 1,
+        currentNum: 10000,
+      },
+    });
   }
 
   onSearch() {
-    // console.log('******** 搜索 ******** ', this.state);
     this.fetchDataList(1);
   }
 
   onChangeSearchInfo = e => {
-    console.log('***** e.target.value  *****', e.target.value);
-
     this.setState({ query: e.target.value });
   };
 
@@ -60,7 +66,7 @@ export default class Notice extends Component {
     dispatch({
       type: 'manaNotice/topNotice',
       payload: {
-        status: true,
+        status: !value.topStatus,
         noticeId: value.noticeId,
         callback: this.release.bind(this),
       },
@@ -88,8 +94,12 @@ export default class Notice extends Component {
     const columns = [
       {
         title: '序号',
-        dataIndex: 'id',
         key: 'id',
+        render: (text, record, index) => (
+          <Fragment>
+            <font>{index + 1}</font>
+          </Fragment>
+        ),
       },
       {
         title: '标题',
@@ -117,12 +127,12 @@ export default class Notice extends Component {
           <Fragment>
             <Popconfirm
               placement="left"
-              title="确定要置顶此条通知吗？"
+              title={text.topStatus ? "确定要取消置顶此条通知吗？" : "确定要置顶此条通知吗？"}
               onConfirm={this.untiedConfirm.bind(this, text)}
               okText="确定"
               cancelText="取消"
             >
-              <a>置顶</a>
+              <a>{text.topStatus ? '取消置顶' : '置顶'}</a>
             </Popconfirm>
             <Divider type="vertical" />
             <a onClick={this.copyPush.bind(this, text)}>复制</a>
@@ -149,7 +159,6 @@ export default class Notice extends Component {
   };
 
   handleChange = (pagination, filters, sorter) => {
-    // console.log('Various parameters', pagination, filters, sorter);
   };
 
   copyPush = value => {

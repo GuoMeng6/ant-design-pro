@@ -57,8 +57,6 @@ class NewNoticeForm extends Component {
   configSelectOption(user) {
     this.children = [];
     this.valueOfAll = [];
-    // console.log('****** user ****** ', user);
-
     for (let i = 0; i < user.length; i += 1) {
       this.children.push(<SelectOption key={user[i].uid}>{user[i].name}</SelectOption>);
       this.valueOfAll.push(user[i].uid);

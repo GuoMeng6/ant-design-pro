@@ -202,7 +202,7 @@ export function filterUrl(url) {
 // 过滤body
 export function filterBody(body) {
   const filter = G._.mapKeys(body, (value, key) => {
-    if (typeof value !== 'object' && value) {
+    if (typeof value !== 'object' && (value || typeof value === 'boolean')) {
       return key;
     }
     if (!G._.isEmpty(value)) {
@@ -233,6 +233,5 @@ export function getTimeByType(date, type) {
 }
 
 export function getRoutePath() {
-  console.log('****** getRoutePath ****** ', store);
 
 }

@@ -4,10 +4,17 @@ export default {
     entry: 'src/index.js',
     extraBabelPlugins: [['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }]],
     env: {
+        // 开发环境
         development: {
             extraBabelPlugins: ['dva-hmr'],
+            publicPath: '/',
         },
+        // build 时的生产环境
+        "production": {
+            publicPath: 'http://39.108.86.241/home/',
+        }
     },
+    "outputPath": `./home/`,
     externals: {
         '@antv/data-set': 'DataSet',
         rollbar: 'rollbar',
@@ -25,15 +32,14 @@ export default {
     },
     proxy: {
         '/space': {
-            // target: 'http://39.108.86.241:9201', //prot
-            target: 'http://192.168.1.141:7001', //胡立伟
-            // target: 'http://192.168.1.227:7001', //一行
+            // target: 'http://39.108.86.241:9201', // 测试环境服务器地址
+            target: 'http://192.168.1.141:7001',
             changeOrigin: true,
             pathRewrite: { '^/space': '' },
         },
     },
-    disableDynamicImport: false, //true 默认关掉了动态加载
-    publicPath: '/',
-    // publicPath: 'http://39.108.86.241/home/',
+    // true：关闭懒加载
+    // false：懒加载每一个页面（打包时每个页面打包为一个 js 文件，进入该页面才会加载此 js 文件）
+    disableDynamicImport: false,
     hash: true,
 };

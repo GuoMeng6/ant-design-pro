@@ -80,8 +80,6 @@ export default class Wework extends Component {
   };
 
   upload = res => {
-    console.log(res);
-
     if (res.status === 'success') {
       this.setState({ modalLoading: false, visible: false });
       this.fetchDataList();
@@ -113,8 +111,12 @@ export default class Wework extends Component {
     const columns = [
       {
         title: '序号',
-        dataIndex: 'id',
         key: 'id',
+        render: (text, record, index) => (
+          <Fragment>
+            <font>{index + 1}</font>
+          </Fragment>
+        ),
       },
       {
         title: '桌子编号',
@@ -220,7 +222,6 @@ export default class Wework extends Component {
     const columns = this.getColumns(filteredInfo);
     const { currentNum, currentPage, totalNum } = manaEquip.data;
     const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
-    // console.log('********* manaEquip ********* ', manaEquip.data);
     return (
       <div className={styles.main}>
         <h3>设备管理</h3>

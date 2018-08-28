@@ -36,7 +36,7 @@ export default {
       const response = yield call(resetPassword, payload);
       payload.callback(response);
       if (response && response.status === 'success') {
-        message.success(response.data.data.msg);
+        message.success(response.data.msg);
       } else {
         const { errors } = response.message;
         if (!errors[0]) {

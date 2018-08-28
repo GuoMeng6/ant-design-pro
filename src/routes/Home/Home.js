@@ -89,14 +89,6 @@ export default class Home extends Component {
     const { rangePickerValue } = this.state;
     const { home, loading } = this.props;
     const { resourceNum, userNum, notificationNum, standNum, homeStand, homeRank } = home;
-    // console.log('***** Home ****** ', {
-    //   resourceNum,
-    //   userNum,
-    //   notificationNum,
-    //   standNum,
-    //   homeStand,
-    //   homeRank,
-    // });
     // return null;
     const salesExtra = (
       <div className={styles.salesExtraWrap}>
@@ -146,7 +138,7 @@ export default class Home extends Component {
               }
               total={() => <h4>{numeral(resourceNum.totalCount).format('0,0')}</h4>}
               footer={
-                <Field label="使用率" value={Number(resourceNum.liveCount / resourceNum.totalCount*100).toFixed(2)+'%'} />
+                <Field label="使用率" value={Number(resourceNum.liveCount / resourceNum.totalCount * 100).toFixed(2) + '%'} />
               }
               contentHeight={46}
             >
@@ -167,7 +159,7 @@ export default class Home extends Component {
                 </Tooltip>
               }
               total={numeral(userNum.totalCount).format('0,0')}
-              footer={<Field label="当前使用率" value={Number(userNum.liveCount / userNum.totalCount*100).toFixed(2)+'%'} />}
+              footer={<Field label="当前使用率" value={Number(userNum.liveCount / userNum.totalCount * 100).toFixed(2) + '%'} />}
               contentHeight={46}
             >
               <font style={{ marginRight: 16 }}>
@@ -186,18 +178,18 @@ export default class Home extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={numeral(notificationNum.totalCount).format('0,0')}
+              total={numeral(notificationNum.total).format('0,0')}
               footer={
                 <Field
                   label="阅读率"
-                  value={Number(notificationNum.liveCount / notificationNum.totalCount*100).toFixed(2)+'%' || 0}
+                  value={Number(notificationNum.viewTotal / (notificationNum.viewTotal + notificationNum.unreadTotal) * 100).toFixed(2) + '%' || 0}
                 />
               }
               contentHeight={46}
             >
               <font style={{ marginRight: 16 }}>
                 阅读量
-                <span className={styles.trendText}>{notificationNum.liveCount}</span>
+                <span className={styles.trendText}>{notificationNum.viewTotal}</span>
               </font>
             </ChartCard>
           </Col>
@@ -211,8 +203,8 @@ export default class Home extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={`${numeral(100).format('0,0')}天`}
-              footer={<Field label="站坐时间比例" value={standNum.rate} />}
+              total={`${standNum.duration}天`}
+              footer={<Field label="站坐时间比例" value={Number(standNum.rate * 100).toFixed(2) + '%' || 0} />}
               contentHeight={46}
             >
               <font style={{ marginRight: 16 }}>
@@ -246,9 +238,9 @@ export default class Home extends Component {
                         <ul className={styles.rankingList}>
                           {homeRank.map((item, i) => {
                             const { duration, username } = item;
-                            const days = G.moment.duration(duration, 's').days();
-                            const hours = G.moment.duration(duration, 's').hours();
-                            const minutes = G.moment.duration(duration, 's').minutes();
+                            const days = G.moment.duration(duration, 'm').days();
+                            const hours = G.moment.duration(duration, 'm').hours();
+                            const minutes = G.moment.duration(duration, 'm').minutes();
                             return (
                               <li key={`${username}${i}`}>
                                 <div>

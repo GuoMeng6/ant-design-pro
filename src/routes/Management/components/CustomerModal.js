@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Select, Row, Col, Button, message, DatePicker } from 'antd';
+import { Form, Input, Row, Col, Button, message, DatePicker } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 
@@ -19,20 +19,19 @@ class NewCustomer extends Component {
     const { editValue } = this.props.manaCustomer;
     const { form } = this.props;
     if (editValue !== '') {
-      console.log("***** editValue *****", moment(editValue.contractDate).format());
       form.setFieldsValue({
-        account: '11111111',
-        password: '...',
-        email: editValue.email,
+        account: editValue.company.account,
+        password: '******',
+        email: editValue.company.email,
         companyName: editValue.companyName,
-        contacts: editValue.contacts,
-        telephone: editValue.telephone,
-        address: editValue.address,
-        website: editValue.website,
-        industry: editValue.industry,
-        contractNo: editValue.contractNo,
-        contractDate: moment(editValue.contractDate),
-        remark: editValue.remark,
+        contacts: editValue.company.contacts,
+        telephone: editValue.company.telephone,
+        address: editValue.company.address,
+        website: editValue.company.website,
+        industry: editValue.company.industry,
+        contractNo: editValue.company.contractNo,
+        contractDate: moment(editValue.company.contractDate),
+        remark: editValue.company.remark
       });
     }
   }
@@ -45,10 +44,14 @@ class NewCustomer extends Component {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       if (editValue !== '') {
+        const all = form.getFieldsValue();
+        delete all.password;
+        delete all.account;
+        delete all.companyName;
         // 编辑
         dispatch({
           type: 'manaCustomer/editCustomer',
-          payload: { companyId: editValue.companyId + '', ...form.getFieldsValue(), contractDate: moment(form.getFieldsValue().contractDate).format('YYYY-MM-DD'), callback: this.release.bind(this) },
+          payload: { companyId: editValue.companyId, ...all, contractDate: moment(form.getFieldsValue().contractDate).format('YYYY-MM-DD'), callback: this.release.bind(this) },
         });
       } else {
         // 添加
@@ -63,9 +66,8 @@ class NewCustomer extends Component {
 
   // 上传成功或者失败的回调
   release(res) {
-    console.log("回调函数的数据" + JSON.stringify(res));
     if (res.status === 'success') {
-      message.success('添加成功！');
+      message.success(res.data.data.msg || '添加成功！');
       setTimeout(() => {
         this.goBack();
       }, 2000)
@@ -77,8 +79,7 @@ class NewCustomer extends Component {
 
   // 时间选择器
   onChange(date, dateString) {
-    console.log(date);
-    console.log(dateString);
+
   }
 
   //返回上一页
@@ -143,6 +144,8 @@ class NewCustomer extends Component {
               })(<Input placeholder="请输入密码" size="large" disabled={editValue !== ''} />)}
             </FormItem>
           </Col>
+        </Row>
+        <Row>
           <Col span={12}>
             <FormItem
               label="邮箱"
@@ -179,6 +182,8 @@ class NewCustomer extends Component {
               })(<Input placeholder="请输入公司全称" size="large" disabled={editValue !== ''} />)}
             </FormItem>
           </Col>
+        </Row>
+        <Row>
           <Col span={12}>
             <FormItem
               label="管理员姓名"
@@ -215,6 +220,8 @@ class NewCustomer extends Component {
               })(<Input placeholder="请输入管理员手机号码" size="large" />)}
             </FormItem>
           </Col>
+        </Row>
+        <Row>
           <Col span={12}>
             <FormItem
               label="客户详细地址"
@@ -247,6 +254,8 @@ class NewCustomer extends Component {
               })(<Input placeholder="请输入网址" size="large" />)}
             </FormItem>
           </Col>
+        </Row>
+        <Row>
           <Col span={12}>
             <FormItem
               label="客户所属行业"
@@ -279,6 +288,8 @@ class NewCustomer extends Component {
               })(<Input placeholder="请输入合同编号" size="large" />)}
             </FormItem>
           </Col>
+        </Row>
+        <Row>
           <Col span={12}>
             <FormItem
               label="签约时间"
@@ -307,13 +318,11 @@ class NewCustomer extends Component {
               })(<Input placeholder="请输入备注" size="large" />)}
             </FormItem>
           </Col>
-
-
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
             <Button type="primary" htmlType="submit" onClick={this.handleCommit.bind(this)}>
-              添加
+              保存
             </Button>
             <Button
               style={{ marginLeft: 8 }}

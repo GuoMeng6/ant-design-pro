@@ -7,7 +7,7 @@ export default {
     data: {
       rows: [],
       currentPage: 1,
-      currentNum: 15,
+      pageSize: 15,
     },
   },
 
@@ -60,7 +60,7 @@ export default {
         data: {
           ...action.payload,
           currentPage: Number(currentPage),
-          currentNum: state.data.currentNum,
+          pageSize: state.data.pageSize,
         },
       };
     },

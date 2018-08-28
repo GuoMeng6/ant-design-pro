@@ -109,7 +109,6 @@ class BasicLayout extends React.PureComponent {
   componentWillMount() {
     const userInfo = getUserInfo();
     const { dispatch } = this.props;
-    console.log('****** BasicLayout ********',userInfo);
     const user = JSON.parse(userInfo);
     if (user) {
       dispatch({
@@ -194,6 +193,10 @@ class BasicLayout extends React.PureComponent {
     const { dispatch } = this.props;
     if (key === 'triggerError') {
       dispatch(routerRedux.push('/exception/trigger'));
+      return;
+    }
+    if (key === 'change_pass') {
+      dispatch(routerRedux.push('/change/password'));
       return;
     }
     if (key === 'logout') {

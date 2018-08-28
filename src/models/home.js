@@ -16,8 +16,8 @@ export default {
     loading: false,
     resourceNum: { liveCount: 0, totalCount: 0 },
     userNum: { liveCount: 0, totalCount: 0 },
-    notificationNum: { liveCount: 0, totalCount: 0 },
-    standNum: { count: 0, rate: 0 },
+    notificationNum: { total: 0, unreadTotal: 1, viewTotal: 0 },
+    standNum: { duration: 0, count: 0, rate: 0 },
     homeStand: [],
     homeRank: [],
   },
@@ -25,8 +25,6 @@ export default {
   effects: {
     *getResourceNum(_, { call, put }) {
       const response = yield call(getResourceNum);
-      console.log('***** getResourceNum response ***** ', response);
-
       if (response && response.status === 'success') {
         yield put({ type: 'saveResourceNum', payload: response.data });
       } else {
@@ -44,7 +42,6 @@ export default {
     *getNotificationCount(_, { call, put }) {
       const response = yield call(getNotificationCount);
       if (response && response.status === 'success') {
-        // console.log('***** getNotificationNum ****', response);
       } else {
         message.error('通知数获取失败');
       }
