@@ -1,4 +1,6 @@
 const path = require('path');
+const API_URL = process.env.API_URL;
+const PROXY_URL = process.env.PROXY_URL;
 
 export default {
     entry: 'src/index.js',
@@ -9,9 +11,9 @@ export default {
             extraBabelPlugins: ['dva-hmr'],
             publicPath: '/',
         },
-        // build 时的生产环境
+        // 打包时各个文件指向的路径
         "production": {
-            publicPath: 'http://39.108.86.241/home/',
+            publicPath: API_URL,
         }
     },
     "outputPath": `./home/`,
@@ -32,8 +34,7 @@ export default {
     },
     proxy: {
         '/space': {
-            // target: 'http://39.108.86.241:9201', // 测试环境服务器地址
-            target: 'http://192.168.1.141:7001',
+            target: PROXY_URL, // 本地运行时启用代理访问的路由
             changeOrigin: true,
             pathRewrite: { '^/space': '' },
         },

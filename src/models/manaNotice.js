@@ -8,8 +8,8 @@ export default {
   state: {
     data: {
       row: [],
-      currentPage: 1,
-      currentNum: 15,
+      offset: 1,
+      limit: 15,
     },
     copyValue: '',
   },
@@ -45,13 +45,13 @@ export default {
 
   reducers: {
     save(state, action) {
-      const { currentPage } = action.payload;
+      const { offset } = action.payload;
       return {
         ...state,
         data: {
           ...action.payload,
-          currentPage: Number(currentPage),
-          currentNum: state.data.currentNum,
+          offset: Number(offset),
+          limit: state.data.limit,
         },
       };
     },

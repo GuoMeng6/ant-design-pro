@@ -16,6 +16,7 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(login, payload);
+      console.log('********* response *********', response);
       if (response.status === 'success') {
         yield put({
           type: 'changeLoginStatus',
@@ -28,7 +29,12 @@ export default {
         reloadAuthorized();
         yield put(routerRedux.replace('/home'));
       } else {
-        message.error(response.message);
+        if (typeof response.message === 'object') {
+          message.error('登录失败！');
+        } else {
+          message.error(response.message || '登录失败！');
+        }
+
       }
     },
     *logout({ payload = {} }, { call, put }) {

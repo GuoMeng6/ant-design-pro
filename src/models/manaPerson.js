@@ -6,8 +6,8 @@ export default {
   state: {
     data: {
       rows: [],
-      currentPage: 1,
-      pageSize: 15,
+      offset: 1,
+      limit: 15,
     },
   },
 
@@ -54,13 +54,13 @@ export default {
 
   reducers: {
     save(state, action) {
-      const { currentPage } = action.payload;
+      const { offset } = action.payload;
       return {
         ...state,
         data: {
           ...action.payload,
-          currentPage: Number(currentPage),
-          pageSize: state.data.pageSize,
+          offset: Number(offset),
+          limit: state.data.limit,
         },
       };
     },

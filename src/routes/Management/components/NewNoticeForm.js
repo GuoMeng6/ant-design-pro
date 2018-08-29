@@ -35,14 +35,14 @@ class NewNoticeForm extends Component {
 
     if (copyValue) {
       form.setFieldsValue({
-        person: copyValue.receiver,
-        title: copyValue.title,
+        person: copyValue.receivers || [],
+        title: copyValue.title || '',
       });
-      const contentBlock = htmlToDraft(copyValue.editor);
+      const contentBlock = htmlToDraft(copyValue.content);
       if (contentBlock) {
         const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
         const editorState = EditorState.createWithContent(contentState);
-        this.setState({ editor: editorState, editorState: copyValue.editor });
+        this.setState({ editor: editorState, editorState: copyValue.content });
       }
     }
   }
@@ -161,6 +161,13 @@ class NewNoticeForm extends Component {
           })(
             <Editor
               editorState={editor}
+              toolbar={{
+                inline: { inDropdown: true },
+                list: { inDropdown: true },
+                textAlign: { inDropdown: true },
+                link: { inDropdown: true },
+                history: { inDropdown: true },
+              }}
               toolbarClassName="toolbarClassName"
               wrapperClassName="wrapperClassName"
               editorClassName="editorClassName"

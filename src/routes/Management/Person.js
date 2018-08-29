@@ -24,12 +24,12 @@ export default class Wework extends Component {
 
   componentDidMount() {
     const { manaPerson } = this.props;
-    const { currentPage } = manaPerson.data;
-    this.fetchDataList({ currentPage: currentPage });
+    const { offset } = manaPerson.data;
+    this.fetchDataList({ offset: offset });
   }
 
   onSearch() {
-    this.fetchDataList({ currentPage: 1 });
+    this.fetchDataList({ offset: 1 });
   }
 
   onChangeSearchInfo = e => {
@@ -179,8 +179,8 @@ export default class Wework extends Component {
     this.fetchDataList({ filterParam, sortParam });
   };
 
-  pageChange = currentPage => {
-    this.fetchDataList({ currentPage: currentPage });
+  pageChange = offset => {
+    this.fetchDataList({ offset: offset });
   };
 
   fetchDataList(value) {
@@ -190,8 +190,8 @@ export default class Wework extends Component {
     dispatch({
       type: 'manaPerson/fetch',
       payload: {
-        pageSize: (value && value.pageSize) || personData.pageSize,
-        currentPage: (value && value.currentPage) || personData.currentPage,
+        limit: (value && value.limit) || personData.limit,
+        offset: (value && value.offset) || personData.offset,
         query: (value && value.query) || query,
         filterParam: (value && value.filterParam) || filterParam,
         sortParam: (value && value.sortParam) || sortParam,
@@ -219,7 +219,7 @@ export default class Wework extends Component {
     const { manaPerson, user, loading } = this.props;
     const { modalLoading, visible, editValue, query } = this.state;
     const columns = this.getColumns();
-    const { pageSize, currentPage, totalNum } = manaPerson.data;
+    const { limit, offset, count } = manaPerson.data;
     const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     return (
       <div className={styles.main}>
@@ -266,10 +266,10 @@ export default class Wework extends Component {
             />
             <Pagination
               style={{ marginTop: 20, float: 'right' }}
-              current={currentPage}
+              current={offset}
               showQuickJumper
-              total={totalNum}
-              pageSize={pageSize}
+              total={count}
+              limit={limit}
               onChange={this.pageChange.bind(this)}
             />
           </Col>

@@ -11,8 +11,6 @@ export default class NewNotice extends Component {
     const { dispatch, manaCustomer } = this.props;
     return (
       <div className={styles.main}>
-        <h3>新建客户</h3>
-        <br />
         <CustomerModal
           dispatch={dispatch}
           copyValue={manaCustomer.copyValue}

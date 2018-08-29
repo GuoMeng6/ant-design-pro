@@ -31,8 +31,8 @@ export default class Notice extends Component {
 
   componentDidMount() {
     const { dispatch, manaNotice } = this.props;
-    const { currentPage } = manaNotice.data;
-    this.fetchDataList(currentPage);
+    const { offset } = manaNotice.data;
+    this.fetchDataList(offset);
     dispatch({
       type: 'manaNotice/setCopyValue',
       payload: '',
@@ -41,8 +41,8 @@ export default class Notice extends Component {
     dispatch({
       type: 'manaPerson/fetch',
       payload: {
-        currentPage: 1,
-        currentNum: 10000,
+        offset: 1,
+        limit: 10000,
       },
     });
   }
@@ -119,6 +119,9 @@ export default class Notice extends Component {
         title: '发布时间',
         dataIndex: 'createdAt',
         key: 'createdAt',
+        render: (text) => {
+          return <span>{G.moment(text).format('YYYY-MM-DD hh:mm:s')}</span>
+        }
       },
       {
         title: '操作',
@@ -162,6 +165,7 @@ export default class Notice extends Component {
   };
 
   copyPush = value => {
+    console.log('********* value *********', value);
     this.props.dispatch({
       type: 'manaNotice/setCopyValue',
       payload: value,
@@ -173,13 +177,13 @@ export default class Notice extends Component {
     this.fetchDataList(pageNumber);
   };
 
-  fetchDataList(currentPage) {
+  fetchDataList(offset) {
     const { manaNotice, dispatch } = this.props;
-    const { currentNum } = manaNotice.data;
+    const { limit } = manaNotice.data;
     const { query } = this.state;
     dispatch({
       type: 'manaNotice/fetch',
-      payload: { currentPage, currentNum, query },
+      payload: { offset, limit, query },
     });
   }
 
@@ -195,7 +199,7 @@ export default class Notice extends Component {
     const { manaNotice, loading } = this.props;
     const { filteredInfo, query } = this.state;
     const columns = this.getColumns(filteredInfo);
-    const { currentNum, currentPage, totalNum } = manaNotice.data;
+    const { limit, offset, count } = manaNotice.data;
     const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     return (
       <div className={styles.main}>
@@ -232,7 +236,7 @@ export default class Notice extends Component {
           {/* 表单 */}
           <Col span={24}>
             <Table
-              rowKey="id"
+              rowKey="companyId"
               loading={loading}
               dataSource={manaNotice.data.row}
               columns={columns}
@@ -241,10 +245,10 @@ export default class Notice extends Component {
             />
             <Pagination
               style={{ marginTop: 20, float: 'right' }}
-              current={currentPage}
+              current={offset}
               showQuickJumper
-              total={totalNum}
-              pageSize={currentNum}
+              total={count}
+              pageSize={limit}
               onChange={this.pageChange.bind(this)}
             />
           </Col>

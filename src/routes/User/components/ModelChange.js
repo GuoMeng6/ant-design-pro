@@ -8,6 +8,9 @@ const FormItem = Form.Item;
   changePass,
 }))
 class ModalChange extends Component {
+  state = {
+    confirmDirty: false,
+  }
 
   handleCommit() {
     const { form, dispatch } = this.props;
@@ -41,11 +44,23 @@ class ModalChange extends Component {
     }
   }
 
+  compareToFirstPassword = (rule, value, callback) => {
+    const form = this.props.form;
+    if (value && value !== form.getFieldValue('newPassword')) {
+      callback('与第一次输入密码不一致，请从新输入！');
+    } else {
+      callback();
+    }
+  }
+
+  handleConfirmBlur = (e) => {
+    const value = e.target.value;
+    // this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+  }
 
 
 
   render() {
-
     const { getFieldDecorator, changePass } = this.props.form;
     console.log('********* changePass *********', changePass);
     return (
@@ -71,7 +86,7 @@ class ModalChange extends Component {
                       message: '仅支持半角英文数字和下划线'
                     }
                   ],
-                })(<Input placeholder="请输入原始密码" size="large" />)}
+                })(<Input placeholder="请输入原始密码" type="password" size="large" />)}
               </FormItem>
             </Col>
           </Row>
@@ -93,7 +108,7 @@ class ModalChange extends Component {
                       message: '仅支持半角英文数字和下划线'
                     }
                   ],
-                })(<Input placeholder="请输入新密码" size="large" />)}
+                })(<Input placeholder="请输入新密码" type="password" size="large" />)}
               </FormItem>
             </Col>
           </Row>
@@ -107,15 +122,10 @@ class ModalChange extends Component {
                   rules: [
                     { required: true, message: '请再次输入新密码' },
                     {
-                      max: 20,
-                      message: '最大长度20',
-                    },
-                    {
-                      pattern: /[\x00-\xff]+/,
-                      message: '仅支持半角英文数字和下划线'
+                      validator: this.compareToFirstPassword,
                     }
                   ],
-                })(<Input placeholder="请再次输入新密码" size="large" />)}
+                })(<Input placeholder="请再次输入新密码" type="password" size="large" onBlur={this.handleConfirmBlur} />)}
               </FormItem>
             </Col>
           </Row>

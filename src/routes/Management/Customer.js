@@ -33,7 +33,7 @@ export default class Wework extends Component {
   }
 
   onSearch() {
-    this.fetchDataList({ currentPage: 1 });
+    this.fetchDataList({ offset: 1 });
   }
 
   onChangeSearchInfo = e => {
@@ -73,6 +73,11 @@ export default class Wework extends Component {
     window.location.href = `${window.location.origin}/#/management/newCustomer`;
   }
 
+  // 跳转到设备列表
+  jump(text, record) {
+    console.log('********* text, record, index *********', text, record);
+  }
+
   getColumns() {
     const columns = [
       {
@@ -99,6 +104,9 @@ export default class Wework extends Component {
         dataIndex: 'resourceTotal',
         key: 'resourceTotal',
         sorter: true,
+        render: (text, record) => <a onClick={() => {
+          this.jump(text, record);
+        }}>{text}</a>,
       },
       {
         title: '离线设备数',
@@ -157,7 +165,7 @@ export default class Wework extends Component {
   };
 
   pageChange = pageNumber => {
-    this.fetchDataList({ currentPage: pageNumber });
+    this.fetchDataList({ offset: pageNumber });
   };
 
   fetchDataList(value) {
@@ -167,8 +175,8 @@ export default class Wework extends Component {
     dispatch({
       type: 'manaCustomer/fetch',
       payload: {
-        currentPage: (value && value.currentPage) || equipData.currentPage,
-        currentNum: (value && value.currentNum) || equipData.currentNum,
+        offset: (value && value.offset) || equipData.offset,
+        limit: (value && value.limit) || equipData.limit,
         query: (value && value.query) || query,
         sortParam: (value && value.sortParam) || sortParam,
       },
@@ -179,7 +187,7 @@ export default class Wework extends Component {
     const { manaCustomer, loading } = this.props;
     const { filteredInfo, query } = this.state;
     const columns = this.getColumns(filteredInfo);
-    const { currentNum, currentPage, totalNum } = manaCustomer.data;
+    const { limit, offset, count } = manaCustomer.data;
     const suffix = query ? <Icon type="close-circle" onClick={this.emitEmpty.bind(this)} /> : null;
     return (
       <div className={styles.main}>
@@ -225,10 +233,10 @@ export default class Wework extends Component {
             />
             <Pagination
               style={{ marginTop: 20, float: 'right' }}
-              current={currentPage}
+              current={offset}
               showQuickJumper
-              total={totalNum}
-              pageSize={currentNum}
+              total={count}
+              pageSize={limit}
               onChange={this.pageChange.bind(this)}
             />
           </Col>

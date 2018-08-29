@@ -20,6 +20,7 @@ class PersonModal extends Component {
   state = {
     imageUrl: '',
     avatarLoading: false,
+    title: '新增用户'
   };
 
   componentWillReceiveProps(nextProps) {
@@ -34,6 +35,7 @@ class PersonModal extends Component {
           position: editValue.position,
           remark: editValue.remark,
         });
+        this.setState({ title: '编辑用户' })
       } else {
         nextProps.form.setFieldsValue({
           name: '',
@@ -100,7 +102,7 @@ class PersonModal extends Component {
     }
   };
 
-  next(value) {}
+  next(value) { }
 
   error(err) {
     this.setState({ avatarLoading: false });
@@ -145,7 +147,7 @@ class PersonModal extends Component {
     return (
       <Modal
         visible={visible}
-        title="新增用户"
+        title={this.state.title}
         onOk={this.okHandle}
         onCancel={this.onCancel.bind(this, handleCancel)}
         footer={[
@@ -174,8 +176,8 @@ class PersonModal extends Component {
               {imageUrl ? (
                 <img className={styles.avatar} src={imageUrl} alt="avatar" />
               ) : (
-                uploadButton
-              )}
+                  uploadButton
+                )}
             </Upload>
           )}
         </FormItem>
