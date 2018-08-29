@@ -8,7 +8,7 @@
     "start:dev": "cross-env ESLINT=none PROXY_URL=http://39.108.86.241:9201 roadhog dev",
     "start:no-proxy": "cross-env NO_PROXY=true ESLINT=none roadhog dev",
     "build:dev": "cross-env ESLINT=none API_URL=http://39.108.86.241/home/ roadhog build",
-    "build:pro": "cross-env ESLINT=none API_URL=http://39.108.86.242/home/ roadhog build",
+    "build:pro": "cross-env ESLINT=none API_URL=http://39.108.86.242/error/ roadhog build",
     "site": "roadhog-api-doc static && gh-pages -d dist",
     "analyze": "cross-env ANALYZE=true roadhog build",
     "lint:style": "stylelint \"src/**/*.less\" --syntax less",

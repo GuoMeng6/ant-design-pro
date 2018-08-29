@@ -165,7 +165,6 @@ export default class Notice extends Component {
   };
 
   copyPush = value => {
-    console.log('********* value *********', value);
     this.props.dispatch({
       type: 'manaNotice/setCopyValue',
       payload: value,
@@ -188,7 +187,7 @@ export default class Notice extends Component {
   }
 
   newNotice() {
-    if (G.env === 'prod') {
+    if (G.env === 'dev') {
       window.location.href = `${window.location.origin}/home/#/management/newNotice`;
       return;
     }
@@ -264,8 +263,8 @@ export default class Notice extends Component {
           <p>
             <Icon type="eye-o" style={{ marginRight: '6px' }} />
             {this.state.detail.lookNum}
-            <Icon type="clock-circle-o" style={{ marginLeft: '10px', marginRight: '6px' }} />
-            {this.state.detail.lastTime}
+            <Icon type="clock-circle-o" style={{ marginLeft: '18px', marginRight: '6px' }} />
+            {G.moment(this.state.detail.lastTime).format('YYYY-MM-DD hh:mm:s')}
           </p><br /><br />
           <div dangerouslySetInnerHTML={{ __html: this.state.detail.content }} />
         </Drawer>
